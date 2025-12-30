@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Models\Transaction;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PaymentService
 {
@@ -26,6 +27,11 @@ class PaymentService
             'api_key' => $this->paymobApiKey,
         ]);
 
+        if (!$authResponse->successful()) {
+            Log::error('Paymob Auth Failed: ' . $authResponse->body());
+            throw new \Exception('Paymob Authentication Failed');
+        }
+
         $token = $authResponse->json('token');
 
         // 2. Order Registration
@@ -37,7 +43,12 @@ class PaymentService
             'items' => [],
         ]);
 
-        $orderId = $orderResponse->json('id');
+        if (!$orderResponse->successful()) {
+            Log::error('Paymob Order Failed: ' . $orderResponse->body());
+            throw new \Exception('Paymob Order Registration Failed');
+        }
+
+        $orderId = (string) $orderResponse->json('id');
 
         // 3. Payment Key Generation
         $billingData = [
@@ -65,6 +76,11 @@ class PaymentService
             'currency' => 'EGP',
             'integration_id' => $this->paymobIntegrationId,
         ]);
+
+        if (!$paymentKeyResponse->successful()) {
+            Log::error('Paymob Payment Key Failed: ' . $paymentKeyResponse->body());
+            throw new \Exception('Paymob Payment Key Generation Failed');
+        }
 
         $paymentToken = $paymentKeyResponse->json('token');
 
