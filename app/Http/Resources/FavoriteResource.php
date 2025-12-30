@@ -15,10 +15,10 @@ class FavoriteResource extends JsonResource
         return [
             'id' => $this->id,
             'unit' => [
-                'id' => $this->unit->id,
+                'id' => $this->unit_id,
                 'title' => $this->unit->{'title_' . app()->getLocale()} ?? $this->unit->title_ar,
             ],
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at->toISOString(),
         ];
     }
 }

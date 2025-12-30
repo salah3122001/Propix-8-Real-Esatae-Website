@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PageResource;
 use App\Service\PageService;
+use App\Traits\ApiResponse;
 
 class PageController extends Controller
 {
+    use ApiResponse;
+
     protected $pageService;
 
     public function __construct(PageService $pageService)
@@ -21,12 +24,12 @@ class PageController extends Controller
         if ($pages->isEmpty()) {
             return $this->error(__('api.no_pages_yet'), 200);
         }
-        return PageResource::collection($pages);
+        return $this->success(PageResource::collection($pages));
     }
 
     public function show($slug)
     {
         $page = $this->pageService->getBySlug($slug);
-        return new PageResource($page);
+        return $this->success(new PageResource($page));
     }
 }

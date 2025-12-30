@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
 class StatsController extends Controller
 {
+    use ApiResponse;
+
     public function index()
     {
         $stats = [
@@ -27,14 +30,11 @@ class StatsController extends Controller
             ],
             [
                 'label' => app()->getLocale() === 'ar' ? 'سنوات من الخبرة' : 'Years of Experience',
-                'value' => '20+', // Fixed value as per usual business logic or could be from settings
+                'value' => '20+',
                 'icon' => 'experience-icon',
             ],
         ];
 
-        return response()->json([
-            'status' => true,
-            'data' => $stats
-        ]);
+        return $this->success($stats);
     }
 }

@@ -7,15 +7,14 @@ use Illuminate\Http\Request;
 
 class AmenityController extends Controller
 {
+    use \App\Traits\ApiResponse;
+
     public function index()
     {
         $amenities = \App\Models\Amenity::all();
         if ($amenities->isEmpty()) {
-            return response()->json([
-                'status' => true,
-                'data' => []
-            ]);
+            return $this->error(__('api.no_unit_types_yet'), 200);
         }
-        return \App\Http\Resources\AmenityResource::collection($amenities);
+        return $this->success(\App\Http\Resources\AmenityResource::collection($amenities));
     }
 }

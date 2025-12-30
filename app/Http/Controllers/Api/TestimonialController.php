@@ -8,7 +8,6 @@ use App\Service\TestimonialService;
 use App\Http\Resources\TestimonialResource;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 class TestimonialController extends Controller
 {
@@ -51,29 +50,16 @@ class TestimonialController extends Controller
     public function store(\App\Http\Requests\Api\Testimonial\StoreTestimonialRequest $request)
     {
         $testimonial = $this->testimonialService->submitTestimonial($request->user(), $request->validated());
-
-        return response()->json([
-            'status' => true,
-            'message' => __('api.testimonial_submitted'),
-            'data' => new TestimonialResource($testimonial)
-        ], 201);
+        return $this->created(new TestimonialResource($testimonial), __('api.testimonial_submitted'));
     }
 
     public function update(\App\Http\Requests\Api\Testimonial\UpdateTestimonialRequest $request, $id)
     {
         try {
             $testimonial = $this->testimonialService->updateTestimonial($request->user(), $id, $request->validated());
-
-            return response()->json([
-                'status' => true,
-                'message' => __('api.testimonial_updated'),
-                'data' => new TestimonialResource($testimonial)
-            ]);
+            return $this->success(new TestimonialResource($testimonial), __('api.testimonial_updated'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'status' => false,
-                'message' => __('api.testimonial_not_found')
-            ], 403);
+            return $this->error(__('api.testimonial_not_found'), 403);
         }
     }
 
@@ -81,16 +67,9 @@ class TestimonialController extends Controller
     {
         try {
             $this->testimonialService->deleteTestimonial($request->user(), $id);
-
-            return response()->json([
-                'status' => true,
-                'message' => __('api.testimonial_deleted')
-            ]);
+            return $this->success([], __('api.testimonial_deleted'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'status' => false,
-                'message' => __('api.testimonial_not_found')
-            ], 403);
+            return $this->error(__('api.testimonial_not_found'), 403);
         }
     }
 }

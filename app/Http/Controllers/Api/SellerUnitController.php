@@ -26,10 +26,10 @@ class SellerUnitController extends Controller
         $units = $this->sellerUnitService->getSellerUnits($request->user(), $request->all(), $request->get('per_page', 10));
 
         if ($units->isEmpty()) {
-            return $this->success([], __('api.no_units_yet'));
+            return $this->error(__('api.no_units_yet'), 200);
         }
 
-        return UnitListResource::collection($units);
+        return $this->paginated(UnitListResource::class, $units);
     }
 
     public function store(StoreUnitRequest $request)

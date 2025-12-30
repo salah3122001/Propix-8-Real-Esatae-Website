@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Developer\FetchDevelopersRequest;
 use App\Http\Resources\DeveloperResource;
 use App\Service\DeveloperService;
+use App\Traits\ApiResponse;
 
 class DeveloperController extends Controller
 {
+    use ApiResponse;
+
     protected $developerService;
 
     public function __construct(DeveloperService $developerService)
@@ -19,10 +22,7 @@ class DeveloperController extends Controller
     public function index(FetchDevelopersRequest $request)
     {
         $developers = $this->developerService->getAllDevelopers();
-        return response()->json([
-            'success' => true,
-            'data' => DeveloperResource::collection($developers),
-        ]);
+        return $this->success(DeveloperResource::collection($developers));
     }
 
     public function show($id)
@@ -30,15 +30,9 @@ class DeveloperController extends Controller
         $developer = $this->developerService->getDeveloperById($id);
 
         if (!$developer) {
-            return response()->json([
-                'success' => false,
-                'message' => __('api.developer_not_found'),
-            ], 404);
+            return $this->error(__('api.developer_not_found'), 404);
         }
 
-        return response()->json([
-            'success' => true,
-            'data' => new DeveloperResource($developer),
-        ]);
+        return $this->success(new DeveloperResource($developer));
     }
 }

@@ -43,7 +43,7 @@ class UnitController extends Controller
         if ($units->isEmpty()) {
             return $this->error(__('api.no_units_yet'), 200);
         }
-        return UnitListResource::collection($units);
+        return $this->success(UnitListResource::collection($units));
     }
     public function related($id)
     {
@@ -51,7 +51,7 @@ class UnitController extends Controller
         if ($units->isEmpty()) {
             return $this->error(__('api.not_found'), 200);
         }
-        return UnitListResource::collection($units);
+        return $this->success(UnitListResource::collection($units));
     }
 
     // Get all reviews for a specific unit
@@ -61,6 +61,6 @@ class UnitController extends Controller
         if ($reviews->isEmpty()) {
             return $this->error(__('api.no_reviews_found'), 200);
         }
-        return \App\Http\Resources\ReviewResource::collection($reviews->getCollection());
+        return $this->paginated(\App\Http\Resources\ReviewResource::class, $reviews);
     }
 }

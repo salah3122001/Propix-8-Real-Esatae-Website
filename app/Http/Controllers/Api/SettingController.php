@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    use ApiResponse;
+
     /**
      * Get all site settings.
      */
@@ -30,10 +33,7 @@ class SettingController extends Controller
             $settings[$key] = Setting::getValue($key);
         }
 
-        return response()->json([
-            'success' => true,
-            'data' => $settings
-        ]);
+        return $this->success($settings);
     }
 
     /**
@@ -44,17 +44,11 @@ class SettingController extends Controller
         $value = Setting::getValue($key);
 
         if ($value === null) {
-            return response()->json([
-                'success' => false,
-                'message' => __('api.setting_not_found')
-            ], 404);
+            return $this->error(__('api.setting_not_found'), 404);
         }
 
-        return response()->json([
-            'success' => true,
-            'data' => [
-                $key => $value
-            ]
+        return $this->success([
+            $key => $value
         ]);
     }
 }

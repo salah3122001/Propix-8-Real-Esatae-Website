@@ -21,6 +21,6 @@ class UnitTypeController extends Controller
         if ($types->isEmpty()) {
             return $this->error(__('api.no_unit_types_yet'), 200);
         }
-        return UnitTypeResource::collection($types);
+        return $this->success(UnitTypeResource::collection($types));
     }
 }
