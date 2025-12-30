@@ -68,6 +68,19 @@ class PaymentService
 
         $paymentToken = $paymentKeyResponse->json('token');
 
+        // Reserve the unit immediately to prevent double booking
+        if ($unit->offer_type === 'sale') {
+            $unit->update([
+                'status' => 'sold',
+                'sold_at' => now(),
+            ]);
+        } elseif ($unit->offer_type === 'rent') {
+            $unit->update([
+                'status' => 'rented',
+                'rented_at' => now(),
+            ]);
+        }
+
         // Create initial transaction record
         Transaction::create([
             'user_id' => $user->id,
@@ -82,9 +95,17 @@ class PaymentService
 
     public function handleCallback($data)
     {
-        // Verify HMAC (Security requirement) - simplified for now
-        $success = isset($data['success']) && $data['success'] === 'true';
+        // Paymob success can be boolean or string 'true'
+        $success = false;
+        if (isset($data['success'])) {
+            $success = ($data['success'] === true || $data['success'] === 'true');
+        }
+
         $transactionRef = $data['order'] ?? null;
+
+        if (!$transactionRef) {
+            return false;
+        }
 
         $transaction = Transaction::where('transaction_ref', $transactionRef)->first();
 
@@ -93,19 +114,26 @@ class PaymentService
                 'payment_status' => $success ? 'paid' : 'failed',
             ]);
 
-            if ($success) {
-                $unit = $transaction->unit;
-                if ($unit->offer_type === 'sale') {
-                    $unit->update([
-                        'status' => 'sold',
-                        'sold_at' => now(),
-                    ]);
-                }
+            $unit = $transaction->unit;
+            if ($unit) {
+                if ($success) {
+                    // Status is already set to sold/rented in initiatePayment
+                    // We just ensure it's correct here if needed
+                    $status = ($unit->offer_type === 'rent' ? 'rented' : 'sold');
+                    $timestampField = ($unit->offer_type === 'rent' ? 'rented_at' : 'sold_at');
 
-                if ($unit->offer_type === 'rent') {
+                    if ($unit->status !== $status) {
+                        $unit->update([
+                            'status' => $status,
+                            $timestampField => now(),
+                        ]);
+                    }
+                } else {
+                    // Payment failed or was canceled: revert unit to 'approved'
                     $unit->update([
-                        'status' => 'rented',
-                        'rented_at' => now(),
+                        'status' => 'approved',
+                        'sold_at' => null,
+                        'rented_at' => null,
                     ]);
                 }
             }
