@@ -8,6 +8,7 @@ use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Http\Requests\Api\Auth\UpdateProfileRequest;
 use App\Service\AuthService;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
@@ -21,12 +22,14 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
         $response = $this->authService->register($request->validated());
+        $response['user'] = new UserResource($response['user']);
         return $this->success($response, __("api.register_success"), 201);
     }
 
     public function login(LoginRequest $request)
     {
         $response = $this->authService->login($request->validated());
+        $response['user'] = new UserResource($response['user']);
         return $this->success($response, __("api.login_success"));
     }
 
@@ -38,13 +41,13 @@ class AuthController extends Controller
 
     public function profile(Request $request)
     {
-        return $this->success($request->user());
+        return $this->success(new UserResource($request->user()));
     }
 
     public function update(UpdateProfileRequest $request)
     {
         $user = $this->authService->updateProfile($request->user(), $request->validated());
-        return $this->success($user, __('api.profile_updated'));
+        return $this->success(new UserResource($user), __('api.profile_updated'));
     }
 
     public function destroy(Request $request)
