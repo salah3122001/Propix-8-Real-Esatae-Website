@@ -83,6 +83,8 @@ return [
         'description' => 'description',
         'price' => 'price',
         'area' => 'area',
+        'id_photo' => 'identity photo',
+        'city_id' => 'city',
     ],
 
     'custom' => [
@@ -98,6 +100,12 @@ return [
         ],
         'address' => [
             'required_if' => 'The address is required if you are a seller.',
+        ],
+        'id_photo' => [
+            'required_if' => 'identity photo is required to register as a seller for identity verification.',
+            'image' => 'The uploaded file must be an image.',
+            'mimes' => 'The image must be in format: jpg, jpeg, png, webp.',
+            'max' => 'The image size must not exceed 2MB.',
         ],
     ],
 ];

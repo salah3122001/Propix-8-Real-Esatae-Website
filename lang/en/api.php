@@ -59,4 +59,10 @@ return [
     'unit_already_rented' => 'This unit is already rented',
     'search_query_required' => 'The search query is required',
     'no_messages_yet' => 'No messages found yet',
+    'verification' => [
+        'already_verified' => 'Email is already verified.',
+        'invalid_link' => 'Invalid verification link.',
+        'success' => 'Email verified successfully.',
+        'sent' => 'Verification link sent to your email.',
+    ],
 ];
