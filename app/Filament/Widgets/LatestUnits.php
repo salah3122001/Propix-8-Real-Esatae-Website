@@ -35,11 +35,21 @@ class LatestUnits extends TableWidget
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('admin.fields.status'))
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'approved' => 'success',
                         'pending' => 'warning',
                         'rejected' => 'danger',
+                        'sold' => 'info',
+                        'rented' => 'gray',
                         default => 'gray',
+                    })
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'pending' => __('admin.fields.statuses.pending'),
+                        'approved' => __('admin.fields.statuses.approved'),
+                        'rejected' => __('admin.fields.statuses.rejected'),
+                        'sold' => __('admin.fields.statuses.sold'),
+                        'rented' => __('admin.fields.statuses.rented'),
+                        default => $state,
                     }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('admin.fields.created_at'))

@@ -22,6 +22,12 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
+// Email Verification
+Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Api\Auth\VerificationController::class, 'verify'])
+    ->name('verification.verify');
+Route::post('/email/resend', [App\Http\Controllers\Api\Auth\VerificationController::class, 'resend'])
+    ->middleware(['auth:sanctum'])->name('verification.send');
+
 // Informational & Content
 Route::get('/unit-types', [App\Http\Controllers\Api\UnitTypeController::class, 'index']);
 Route::get('/amenities', [App\Http\Controllers\Api\AmenityController::class, 'index']);
@@ -77,7 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Seller Unit Management
-    Route::middleware('approved_seller')->group(function () {
+    Route::middleware(['approved_seller', 'verified'])->group(function () {
         Route::get('/seller/units', [App\Http\Controllers\Api\SellerUnitController::class, 'index']);
         Route::post('/seller/units', [App\Http\Controllers\Api\SellerUnitController::class, 'store']);
         Route::put('/seller/units/{id}', [App\Http\Controllers\Api\SellerUnitController::class, 'update']);
@@ -87,9 +93,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/seller/messages', [App\Http\Controllers\Api\ContactController::class, 'index']);
     });
 
-    // Transactions & Payments
-    Route::get('/transactions', [App\Http\Controllers\Api\TransactionController::class, 'index']);
-    Route::post('/payment/initiate', [App\Http\Controllers\Api\PaymentController::class, 'initiate']);
+    // Transactions & Payments (Restricted to verified users)
+    Route::middleware('verified')->group(function () {
+        Route::get('/transactions', [App\Http\Controllers\Api\TransactionController::class, 'index']);
+        Route::post('/payment/initiate', [App\Http\Controllers\Api\PaymentController::class, 'initiate']);
+    });
     // Callback moved to public routes
 
     // Social & Interaction

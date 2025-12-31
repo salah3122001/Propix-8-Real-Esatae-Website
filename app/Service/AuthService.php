@@ -11,11 +11,14 @@ class AuthService
     public function register(array $data)
     {
         $avatarPath = null;
+        $idPhotoPath = null;
 
-        // لو في avatar مرفوع
         if (isset($data['avatar']) && $data['avatar'] !== null) {
-            // $data['avatar'] متوقع يكون من نوع UploadedFile
             $avatarPath = $data['avatar']->store('avatars', 'public');
+        }
+
+        if (isset($data['id_photo']) && $data['id_photo'] !== null) {
+            $idPhotoPath = $data['id_photo']->store('id_photos', 'public');
         }
 
         $status = ($data['role'] ?? 'buyer') === 'seller' ? 'pending' : 'approved';
@@ -29,7 +32,11 @@ class AuthService
             'address' => $data['address'] ?? null,
             'status' => $status,
             'avatar' => $avatarPath,
+            'id_photo' => $idPhotoPath,
+            'city_id' => $data['city_id'] ?? null,
         ]);
+
+        $user->sendEmailVerificationNotification();
 
         return $this->generateTokenResponse($user);
     }
@@ -62,6 +69,13 @@ class AuthService
             $data['avatar'] = $data['avatar']->store('avatars', 'public');
         }
 
+        if (isset($data['id_photo']) && $data['id_photo'] !== null) {
+            if ($user->id_photo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->id_photo);
+            }
+            $data['id_photo'] = $data['id_photo']->store('id_photos', 'public');
+        }
+
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
@@ -89,6 +103,7 @@ class AuthService
     {
         $token = $user->createToken('auth_token')->plainTextToken;
         $user->avatar_url = $user->avatar ? asset('storage/' . $user->avatar) : null;
+        $user->id_photo_url = $user->id_photo ? asset('storage/' . $user->id_photo) : null;
 
         return [
             'access_token' => $token,

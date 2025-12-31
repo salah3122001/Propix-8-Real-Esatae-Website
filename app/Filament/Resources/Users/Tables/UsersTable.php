@@ -39,7 +39,13 @@ class UsersTable
                     ])
                     ->formatStateUsing(fn(string $state): string => __("admin.fields.statuses.{$state}")),
                 TextColumn::make('phone')->label(__('admin.fields.phone')),
+                TextColumn::make('city.name_ar')->label(__('admin.fields.city')),
                 TextColumn::make('address')->label(__('admin.fields.address'))->limit(30),
+                \Filament\Tables\Columns\ImageColumn::make('id_photo')
+                    ->label(__('admin.fields.id_photo'))
+                    ->disk('public')
+                    ->square()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('role_filter')

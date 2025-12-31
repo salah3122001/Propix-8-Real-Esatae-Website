@@ -46,6 +46,8 @@ return [
         'greeting' => 'Hello :name,',
         'unit_sold_body' => 'Congratulations, your property ":title" has been sold successfully.',
         'unit_rented_body' => 'Congratulations, your property ":title" has been rented successfully.',
+        'new_unit_subject' => 'New property in your city!',
+        'new_unit_body' => 'A new property ":title" has been added in :city. This might be what you are looking for!',
         'view_unit' => 'View Property',
         'thank_you' => 'Thank you for using our platform.',
     ],

@@ -43,6 +43,21 @@ class UserForm
                     ->disk('public')
                     ->visibility('public')
                     ->nullable(),
+                FileUpload::make('id_photo')
+                    ->label(__('admin.fields.id_photo'))
+                    ->helperText(__('admin.fields.keep_current'))
+                    ->image()
+                    ->directory('id_photos')
+                    ->disk('public')
+                    ->visibility('public')
+                    ->nullable()
+                    ->visible(fn(Get $get) => $get('role') === 'seller'),
+                Select::make('city_id')
+                    ->label(__('admin.fields.city'))
+                    ->relationship('city', 'name_ar')
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),
                 TextInput::make('password')
                     ->label(__('admin.fields.password'))
                     ->helperText(__('admin.fields.keep_current_password'))

@@ -18,6 +18,16 @@ class Unit extends Model
                     $unit->owner->notify(new \App\Notifications\UnitSoldNotification($unit));
                 } elseif ($unit->status === 'rented' && $unit->owner) {
                     $unit->owner->notify(new \App\Notifications\UnitRentedNotification($unit));
+                } elseif ($unit->status === 'approved') {
+                    // Notify buyers in the same city
+                    $buyers = \App\Models\User::where('role', 'buyer')
+                        ->where('city_id', $unit->city_id)
+                        ->whereNotNull('email_verified_at')
+                        ->get();
+
+                    foreach ($buyers as $buyer) {
+                        $buyer->notify(new \App\Notifications\NewUnitAddedNotification($unit));
+                    }
                 }
             }
         });

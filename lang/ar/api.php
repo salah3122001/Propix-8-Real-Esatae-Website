@@ -46,6 +46,8 @@ return [
         'greeting' => 'مرحباً :name،',
         'unit_sold_body' => 'نهنئك، لقد تم بيع عقارك ":title" بنجاح.',
         'unit_rented_body' => 'نهنئك، لقد تم تأجير عقارك ":title" بنجاح.',
+        'new_unit_subject' => 'عقار جديد في مدينتك!',
+        'new_unit_body' => 'تم إضافة عقار جديد ":title" في مدينة :city. قد يكون هذا ما تبحث عنه!',
         'view_unit' => 'مشاهدة العقار',
         'thank_you' => 'شكراً لاستخدامك منصتنا.',
     ],

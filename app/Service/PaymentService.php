@@ -23,12 +23,14 @@ class PaymentService
     public function initiatePayment(Unit $unit, $user)
     {
         // 1. Authentication Request
+        Log::info('Initiating Paymob Auth with Key starting with: ' . substr($this->paymobApiKey, 0, 10) . '...');
+
         $authResponse = Http::post('https://egypt.paymob.com/api/auth/tokens', [
             'api_key' => $this->paymobApiKey,
         ]);
 
         if (!$authResponse->successful()) {
-            Log::error('Paymob Auth Failed: ' . $authResponse->body());
+            Log::error('Paymob Auth Failed. Status: ' . $authResponse->status() . ' - Body: ' . $authResponse->body());
             throw new \Exception('Paymob Authentication Failed');
         }
 
