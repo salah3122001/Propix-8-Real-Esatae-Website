@@ -128,4 +128,18 @@ class UnitService
             ->take($limit)
             ->get();
     }
+
+    public function getNearbyUnits($user, $perPage = 10)
+    {
+        $query = Unit::with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'amenities'])
+            ->where('status', 'approved');
+
+        if (!$user || !$user->city_id) {
+            return $query->where('id', 0)->paginate($perPage); // Return empty paginator
+        }
+
+        return $query->where('city_id', $user->city_id)
+            ->latest()
+            ->paginate($perPage);
+    }
 }

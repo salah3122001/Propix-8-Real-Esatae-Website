@@ -63,4 +63,15 @@ class UnitController extends Controller
         }
         return $this->paginated(\App\Http\Resources\ReviewResource::class, $reviews);
     }
+
+    public function nearby(Request $request)
+    {
+        $units = $this->unitService->getNearbyUnits($request->user(), 10);
+
+        if ($units->isEmpty()) {
+            return $this->error(__('api.no_units_yet'), 200);
+        }
+
+        return $this->paginated(UnitListResource::class, $units);
+    }
 }

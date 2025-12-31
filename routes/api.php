@@ -49,6 +49,7 @@ Route::get('/search', [SearchController::class, 'globalSearch']);
 // Listings (Units, Compounds, Cities)
 Route::get('/units', [UnitController::class, 'index']);
 Route::get('/units/latest', [UnitController::class, 'latest']);
+Route::get('/units/nearby', [UnitController::class, 'nearby'])->middleware('auth:sanctum');
 Route::get('/units/{id}', [UnitController::class, 'show']);
 Route::get('/units/{id}/reviews', [UnitController::class, 'reviews']);
 
@@ -99,6 +100,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/payment/initiate', [App\Http\Controllers\Api\PaymentController::class, 'initiate']);
     });
     // Callback moved to public routes
+
 
     // Social & Interaction
     Route::get('/favorites', [App\Http\Controllers\Api\FavoriteController::class, 'index']);
