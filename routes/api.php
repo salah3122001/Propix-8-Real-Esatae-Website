@@ -102,18 +102,20 @@ Route::middleware('auth:sanctum')->group(function () {
     // Callback moved to public routes
 
 
-    // Social & Interaction
-    Route::get('/favorites', [App\Http\Controllers\Api\FavoriteController::class, 'index']);
-    Route::post('/favorites/toggle', [App\Http\Controllers\Api\FavoriteController::class, 'toggle']);
+    // Social & Interaction (Restricted to verified users)
+    Route::middleware('verified')->group(function () {
+        Route::get('/favorites', [App\Http\Controllers\Api\FavoriteController::class, 'index']);
+        Route::post('/favorites/toggle', [App\Http\Controllers\Api\FavoriteController::class, 'toggle']);
 
-    // Reviews
-    Route::get('/reviews', [App\Http\Controllers\Api\ReviewController::class, 'index']);
-    Route::post('/reviews', [App\Http\Controllers\Api\ReviewController::class, 'store']);
-    Route::put('/reviews/{id}', [App\Http\Controllers\Api\ReviewController::class, 'update']);
-    Route::delete('/reviews/{id}', [App\Http\Controllers\Api\ReviewController::class, 'destroy']);
+        // Reviews
+        Route::get('/reviews', [App\Http\Controllers\Api\ReviewController::class, 'index']);
+        Route::post('/reviews', [App\Http\Controllers\Api\ReviewController::class, 'store']);
+        Route::put('/reviews/{id}', [App\Http\Controllers\Api\ReviewController::class, 'update']);
+        Route::delete('/reviews/{id}', [App\Http\Controllers\Api\ReviewController::class, 'destroy']);
 
-    Route::get('/my-testimonials', [App\Http\Controllers\Api\TestimonialController::class, 'myTestimonials']);
-    Route::post('/testimonials', [App\Http\Controllers\Api\TestimonialController::class, 'store']);
-    Route::put('/testimonials/{id}', [App\Http\Controllers\Api\TestimonialController::class, 'update']);
-    Route::delete('/testimonials/{id}', [App\Http\Controllers\Api\TestimonialController::class, 'destroy']);
+        Route::get('/my-testimonials', [App\Http\Controllers\Api\TestimonialController::class, 'myTestimonials']);
+        Route::post('/testimonials', [App\Http\Controllers\Api\TestimonialController::class, 'store']);
+        Route::put('/testimonials/{id}', [App\Http\Controllers\Api\TestimonialController::class, 'update']);
+        Route::delete('/testimonials/{id}', [App\Http\Controllers\Api\TestimonialController::class, 'destroy']);
+    });
 });

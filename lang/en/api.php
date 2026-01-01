@@ -64,5 +64,10 @@ return [
         'invalid_link' => 'Invalid verification link.',
         'success' => 'Email verified successfully.',
         'sent' => 'Verification link sent to your email.',
+        'subject' => 'Verify Email Address',
+        'instruction' => 'Please verify your email address to be able to login and use all features.',
+        'action' => 'Verify Email Address',
+        'footer' => 'If you did not create an account, no further action is required.',
+        'not_verified' => 'Email is not verified.',
     ],
 ];

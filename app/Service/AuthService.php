@@ -38,7 +38,13 @@ class AuthService
 
         $user->sendEmailVerificationNotification();
 
-        return $this->generateTokenResponse($user);
+        $user->avatar_url = $user->avatar ? asset('storage/' . $user->avatar) : null;
+        $user->id_photo_url = $user->id_photo ? asset('storage/' . $user->id_photo) : null;
+
+        return [
+            'user' => $user,
+            'requires_verification' => true
+        ];
     }
 
     public function login(array $data)
@@ -48,6 +54,12 @@ class AuthService
         if (!$user || !Hash::check($data['password'], $user->password)) {
             throw ValidationException::withMessages([
                 'email' => [__('auth.failed')],
+            ]);
+        }
+
+        if (!$user->hasVerifiedEmail()) {
+            throw ValidationException::withMessages([
+                'email' => [__('api.verification.not_verified')],
             ]);
         }
 
