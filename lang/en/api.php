@@ -65,9 +65,11 @@ return [
         'success' => 'Email verified successfully.',
         'sent' => 'Verification link sent to your email.',
         'subject' => 'Verify Email Address',
+        'greeting' => 'Hello!',
         'instruction' => 'Please verify your email address to be able to login and use all features.',
         'action' => 'Verify Email Address',
         'footer' => 'If you did not create an account, no further action is required.',
+        'salutation' => 'Regards, Propix8',
         'not_verified' => 'Email is not verified.',
     ],
 ];

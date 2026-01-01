@@ -38,9 +38,11 @@ class ApiVerifyEmail extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->subject(Lang::get('api.verification.subject'))
+            ->greeting(Lang::get('api.verification.greeting'))
             ->line(Lang::get('api.verification.instruction'))
             ->action(Lang::get('api.verification.action'), $verificationUrl)
-            ->line(Lang::get('api.verification.footer'));
+            ->line(Lang::get('api.verification.footer'))
+            ->salutation(Lang::get('api.verification.salutation'));
     }
 
     /**
