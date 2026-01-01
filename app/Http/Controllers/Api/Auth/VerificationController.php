@@ -21,14 +21,14 @@ class VerificationController extends Controller
         }
 
         if ($user->hasVerifiedEmail()) {
-            return $this->success(new UserResource($user), __('api.verification.already_verified'));
+            return redirect(config('app.frontend_url') . '/login?already_verified=1');
         }
 
         if ($user->markEmailAsVerified()) {
             event(new \Illuminate\Auth\Events\Verified($user));
         }
 
-        return $this->success(new UserResource($user), __('api.verification.success'));
+        return redirect(config('app.frontend_url') . '/login?verified=1');
     }
 
     public function resend(Request $request)
