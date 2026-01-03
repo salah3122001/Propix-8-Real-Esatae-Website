@@ -242,11 +242,19 @@ class UnitForm
                                             'image' => __('admin.fields.media_types.image'),
                                             default => __('admin.fields.file'),
                                         })
-                                        ->helperText(__('admin.fields.keep_current'))
+                                        ->helperText(fn($get) => match ($get('type')) {
+                                            'video' => 'الصيغ المدعومة: MP4, MOV, AVI, WEBM',
+                                            'image' => 'الصيغ المدعومة: JPG, PNG, GIF, WEBP',
+                                            '3d' => 'الملفات المدعومة: OBJ, FBX, GLB, GLTF',
+                                            'floorplan' => 'الملفات المدعومة: JPG, PNG, PDF',
+                                            default => __('admin.fields.keep_current'),
+                                        })
                                         ->acceptedFileTypes(['image/*', 'video/*', 'application/octet-stream'])
                                         ->disk('public')
                                         ->visibility('public')
                                         ->directory('units/media')
+                                        ->downloadable()
+                                        ->openable()
                                         ->required(fn($context) => $context === 'create')
                                         ->live(),
                                     Select::make('type')

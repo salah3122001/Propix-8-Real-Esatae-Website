@@ -19,7 +19,7 @@ class SellerResource extends JsonResource
             'name' => $this->name ?? '',
             'email' => $this->email ?? '',
             'phone' => $this->phone ?? '',
-            'avatar' => $this->avatar ? asset('storage/' . $this->avatar) : '',
+            'avatar' => $this->avatar ? asset('storage/app/public/' . $this->avatar) : '',
             'units_count' => $this->units_count ?? 0,
             'created_at' => $this->created_at->format('Y-m-d') ?? '',
         ];

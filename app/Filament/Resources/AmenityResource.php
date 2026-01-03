@@ -50,8 +50,14 @@ class AmenityResource extends Resource
                     ->maxLength(255),
                 FileUpload::make('icon')
                     ->label(__('admin.fields.icon'))
+                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
                     ->image()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                    ->disk('public')
+                    ->visibility('public')
                     ->directory('amenities')
+                    ->downloadable()
+                    ->openable()
                     ->columnSpanFull(),
             ]);
     }
@@ -61,7 +67,8 @@ class AmenityResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('icon')
-                    ->label(__('admin.fields.icon')),
+                    ->label(__('admin.fields.icon'))
+                    ->disk('public'),
                 Tables\Columns\TextColumn::make('name_ar')
                     ->label(__('admin.fields.name_ar'))
                     ->searchable(),
@@ -82,7 +89,7 @@ class AmenityResource extends Resource
             ])
             ->bulkActions([
                 BulkActionGroup::make([
-                DeleteBulkAction::make(),
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

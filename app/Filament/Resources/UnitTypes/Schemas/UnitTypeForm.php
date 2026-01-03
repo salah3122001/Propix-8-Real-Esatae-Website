@@ -22,11 +22,14 @@ class UnitTypeForm
                     ->required(),
                 FileUpload::make('icon')
                     ->label(__('admin.fields.icon'))
-                    ->helperText(__('admin.fields.keep_current'))
+                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
                     ->image()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
                     ->disk('public')
                     ->visibility('public')
                     ->directory('unit-types')
+                    ->downloadable()
+                    ->openable()
                     ->nullable(),
             ]);
     }

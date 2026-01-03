@@ -55,11 +55,14 @@ class DeveloperForm
                             ->schema([
                                 FileUpload::make('logo')
                                     ->label(__('admin.fields.logo'))
-                                    ->helperText(__('admin.fields.keep_current'))
+                                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
                                     ->image()
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
                                     ->disk('public')
                                     ->visibility('public')
                                     ->directory('developers')
+                                    ->downloadable()
+                                    ->openable()
                                     ->columnSpanFull(),
                             ]),
                     ])

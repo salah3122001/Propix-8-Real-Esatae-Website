@@ -31,8 +31,8 @@ class RegisterRequest extends FormRequest
                 'regex:/^01[0125][0-9]{8}$/',
             ],
             'address' => 'nullable|string|max:500',
-            'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'id_photo' => 'nullable|required_if:role,seller|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
+            'id_photo' => 'nullable|required_if:role,seller|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
             'city_id' => 'nullable|exists:cities,id',
         ];
     }

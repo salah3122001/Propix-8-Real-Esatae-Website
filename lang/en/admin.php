@@ -117,6 +117,7 @@ return [
         'media_types' => [
             'image' => 'Image',
             'video' => 'Video',
+            '3d' => '3d',
             'floorplan' => 'Floorplan',
         ],
         'roles' => [

@@ -33,11 +33,14 @@ class ServiceForm
                     ->columnSpanFull(),
                 FileUpload::make('icon')
                     ->label(__('admin.fields.icon'))
-                    ->helperText(new HtmlString(__('admin.fields.service_icon_desc') . '<br>' . __('admin.fields.keep_current')))
+                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
                     ->image()
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
                     ->disk('public')
                     ->visibility('public')
                     ->directory('services-icons')
+                    ->downloadable()
+                    ->openable()
                     ->nullable(),
             ]);
     }

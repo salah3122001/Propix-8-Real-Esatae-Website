@@ -41,12 +41,14 @@ class TestimonialForm
 
             FileUpload::make('image')
                 ->label(__('admin.fields.image'))
-                ->helperText(__('admin.fields.keep_current'))
+                ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
                 ->image()
-                ->imageEditor()
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
                 ->directory('testimonials')
                 ->disk('public')
-                ->visibility('public'),
+                ->visibility('public')
+                ->downloadable()
+                ->openable(),
 
             Toggle::make('status')
                 ->label(__('admin.fields.active_site'))

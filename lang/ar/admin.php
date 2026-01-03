@@ -119,6 +119,7 @@ return [
         'media_types' => [
             'image' => 'صورة',
             'video' => 'فيديو',
+            '3d' => '3d',
             'floorplan' => 'مخطط',
         ],
         'roles' => [

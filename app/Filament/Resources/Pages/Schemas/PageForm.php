@@ -26,7 +26,7 @@ class PageForm
                             ->label(__('admin.fields.title_en'))
                             ->required()
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+                            ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
                         RichEditor::make('content_ar')
                             ->label(__('admin.fields.content_ar'))
                             ->required()
@@ -52,18 +52,21 @@ class PageForm
                                 TextInput::make('name')->label(__('admin.fields.name'))->required(),
                                 TextInput::make('position')->label(__('admin.fields.position')),
                                 FileUpload::make('photo')
-                                    ->label(fn ($get) => match ($get('type')) {
+                                    ->label(fn($get) => match ($get('type')) {
                                         default => __('admin.fields.image'),
                                     })
+                                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
                                     ->image()
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
                                     ->directory('team')
                                     ->disk('public')
                                     ->visibility('public')
-                                    ->helperText(__('admin.fields.keep_current'))
+                                    ->downloadable()
+                                    ->openable()
                                     ->required(),
                             ])
                             ->columns(2)
-                            ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
+                            ->itemLabel(fn(array $state): ?string => $state['name'] ?? null)
                             ->collapsible()
                             ->collapsed(),
                     ]),

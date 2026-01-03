@@ -66,7 +66,7 @@ class SiteSettings extends Page implements HasForms
                                 TextInput::make('site_name')
                                     ->label(__('admin.site_name'))
                                     ->required(),
-                                
+
                                 TextInput::make('site_email')
                                     ->label(__('admin.site_email'))
                                     ->email(),
@@ -82,18 +82,25 @@ class SiteSettings extends Page implements HasForms
                             ->schema([
                                 FileUpload::make('site_logo')
                                     ->label(__('admin.site_logo'))
+                                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
                                     ->image()
-                                    ->directory('settings')
-                                    ->disk('public')
-                                    ->visibility('public'),
-
-                                FileUpload::make('home_hero_image')
-                                    ->label(__('admin.home_hero_image'))
-                                    ->image()
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
                                     ->directory('settings')
                                     ->disk('public')
                                     ->visibility('public')
-                                    ->hint(__('admin.fields.keep_current')),
+                                    ->downloadable()
+                                    ->openable(),
+
+                                FileUpload::make('home_hero_image')
+                                    ->label(__('admin.home_hero_image'))
+                                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
+                                    ->image()
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                    ->directory('settings')
+                                    ->disk('public')
+                                    ->visibility('public')
+                                    ->downloadable()
+                                    ->openable(),
                             ]),
                     ]),
 
