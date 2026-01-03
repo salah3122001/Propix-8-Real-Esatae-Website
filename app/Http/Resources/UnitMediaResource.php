@@ -11,7 +11,7 @@ class UnitMediaResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'file_path' => \Illuminate\Support\Facades\Storage::url($this->url),
+            'file_path' => asset('storage/app/public/' . $this->url),
             'type' => $this->type ?? 'image',
         ];
     }

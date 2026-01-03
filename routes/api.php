@@ -14,12 +14,6 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Temporary route to fix storage symlink on Hostinger
-// Route::get('/fix-storage', function () {
-//     \Illuminate\Support\Facades\Artisan::call('storage:link');
-//     return 'Storage link created successfully';
-// });
-
 // --- Public Routes ---
 
 // Auth

@@ -13,7 +13,7 @@ class DeveloperResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => ($lang === 'ar' ? $this->name_ar : $this->name_en) ?? '',
-            'logo' => $this->logo ? \Illuminate\Support\Facades\Storage::url($this->logo) : '',
+            'logo' => $this->logo ? asset('storage/app/public/' . $this->logo) : '',
             'email' => $this->email ?? '',
             'phone' => $this->phone ?? '',
             'address' => $this->address ?? '',

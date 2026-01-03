@@ -38,8 +38,8 @@ class AuthService
 
         $user->sendEmailVerificationNotification();
 
-        $user->avatar_url = $user->avatar ? \Illuminate\Support\Facades\Storage::url($user->avatar) : null;
-        $user->id_photo_url = $user->id_photo ? \Illuminate\Support\Facades\Storage::url($user->id_photo) : null;
+        $user->avatar_url = $user->avatar ? asset('storage/' . $user->avatar) : null;
+        $user->id_photo_url = $user->id_photo ? asset('storage/' . $user->id_photo) : null;
 
         return [
             'user' => $user,
@@ -111,7 +111,7 @@ class AuthService
 
         $user->update($data);
 
-        $user->avatar_url = $user->avatar ? \Illuminate\Support\Facades\Storage::url($user->avatar) : null;
+        $user->avatar_url = $user->avatar ? asset('storage/' . $user->avatar) : null;
 
         return $user;
     }
@@ -131,8 +131,8 @@ class AuthService
     protected function generateTokenResponse(User $user)
     {
         $token = $user->createToken('auth_token')->plainTextToken;
-        $user->avatar_url = $user->avatar ? \Illuminate\Support\Facades\Storage::url($user->avatar) : null;
-        $user->id_photo_url = $user->id_photo ? \Illuminate\Support\Facades\Storage::url($user->id_photo) : null;
+        $user->avatar_url = $user->avatar ? asset('storage/' . $user->avatar) : null;
+        $user->id_photo_url = $user->id_photo ? asset('storage/' . $user->id_photo) : null;
 
         return [
             'access_token' => $token,
