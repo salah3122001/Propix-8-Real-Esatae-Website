@@ -80,6 +80,11 @@ class SellerUnitService
             abort(403, 'Unauthorized action.');
         }
 
+        // Filter out empty or null values to keep old values
+        $data = array_filter($data, function ($value) {
+            return $value !== null && $value !== '';
+        });
+
         $unit->update($data);
         $unit->update(['status' => 'pending']);
 

@@ -46,6 +46,11 @@ class TestimonialService
             $data['image'] = $user->avatar;
         }
 
+        // Filter out empty or null values to keep old values
+        $data = array_filter($data, function ($value) {
+            return $value !== null && $value !== '';
+        });
+
         $testimonial->update($data);
 
         return $testimonial->fresh();

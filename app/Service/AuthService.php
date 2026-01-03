@@ -38,8 +38,8 @@ class AuthService
 
         $user->sendEmailVerificationNotification();
 
-        $user->avatar_url = $user->avatar ? asset('storage/' . $user->avatar) : null;
-        $user->id_photo_url = $user->id_photo ? asset('storage/' . $user->id_photo) : null;
+        $user->avatar_url = $user->avatar ? \Illuminate\Support\Facades\Storage::url($user->avatar) : null;
+        $user->id_photo_url = $user->id_photo ? \Illuminate\Support\Facades\Storage::url($user->id_photo) : null;
 
         return [
             'user' => $user,
@@ -73,7 +73,15 @@ class AuthService
 
     public function updateProfile(User $user, array $data)
     {
-        if (isset($data['avatar']) && $data['avatar'] !== null) {
+        // Filter out empty or null values to keep old values
+        $data = array_filter($data, function ($value) {
+            return $value !== null && $value !== '';
+        });
+
+        // Ensure email is not updated
+        unset($data['email']);
+
+        if (isset($data['avatar'])) {
             // Delete old avatar if exists
             if ($user->avatar) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
@@ -81,7 +89,7 @@ class AuthService
             $data['avatar'] = $data['avatar']->store('avatars', 'public');
         }
 
-        if (isset($data['id_photo']) && $data['id_photo'] !== null) {
+        if (isset($data['id_photo'])) {
             if ($user->id_photo) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($user->id_photo);
             }
@@ -89,12 +97,21 @@ class AuthService
         }
 
         if (isset($data['password'])) {
+            // Verify current password
+            if (!isset($data['current_password']) || !Hash::check($data['current_password'], $user->password)) {
+                throw ValidationException::withMessages([
+                    'current_password' => [__('api.current_password_incorrect')],
+                ]);
+            }
             $data['password'] = Hash::make($data['password']);
         }
 
+        // Remove current_password from $data before update
+        unset($data['current_password']);
+
         $user->update($data);
 
-        $user->avatar_url = $user->avatar ? asset('storage/' . $user->avatar) : null;
+        $user->avatar_url = $user->avatar ? \Illuminate\Support\Facades\Storage::url($user->avatar) : null;
 
         return $user;
     }
@@ -114,8 +131,8 @@ class AuthService
     protected function generateTokenResponse(User $user)
     {
         $token = $user->createToken('auth_token')->plainTextToken;
-        $user->avatar_url = $user->avatar ? asset('storage/' . $user->avatar) : null;
-        $user->id_photo_url = $user->id_photo ? asset('storage/' . $user->id_photo) : null;
+        $user->avatar_url = $user->avatar ? \Illuminate\Support\Facades\Storage::url($user->avatar) : null;
+        $user->id_photo_url = $user->id_photo ? \Illuminate\Support\Facades\Storage::url($user->id_photo) : null;
 
         return [
             'access_token' => $token,

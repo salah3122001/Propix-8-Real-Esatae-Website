@@ -40,18 +40,12 @@ class ReviewService
             ->where('user_id', $user->id)
             ->firstOrFail();
 
-        // Only update fields that are present in the request
-        $updateData = [];
-        
-        if (isset($data['rating'])) {
-            $updateData['rating'] = $data['rating'];
-        }
-        
-        if (array_key_exists('comment', $data)) {
-            $updateData['comment'] = $data['comment'];
-        }
+        // Filter out empty or null values to keep old values
+        $data = array_filter($data, function ($value) {
+            return $value !== null && $value !== '';
+        });
 
-        $review->update($updateData);
+        $review->update($data);
 
         return $review->fresh();
     }

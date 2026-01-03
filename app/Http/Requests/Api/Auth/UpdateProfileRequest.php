@@ -15,19 +15,14 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
-            'email' => [
-                'sometimes',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique('users')->ignore($this->user()->id),
-            ],
-            'phone' => ['sometimes', 'string', 'max:20'],
-            'address' => ['sometimes', 'string', 'max:500'],
-            'avatar' => ['sometimes', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'address' => ['nullable', 'string', 'max:500'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'city_id' => ['nullable', 'exists:cities,id'],
+            'current_password' => ['nullable', 'required_with:password', 'string'],
             'password' => [
-                'sometimes',
+                'nullable',
                 'string',
                 'confirmed',
                 \Illuminate\Validation\Rules\Password::min(8)

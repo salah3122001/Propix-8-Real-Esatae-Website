@@ -55,6 +55,7 @@ return [
     'profile_updated' => 'تم تحديث البيانات الشخصية بنجاح',
     'profile_deleted' => 'تم حذف الحساب بنجاح',
     'not_found' => 'المورد المطلوب غير موجود',
+    'current_password_incorrect' => 'كلمة المرور الحالية غير صحيحة',
     'unit_already_sold' => 'هذا العقار تم بيعه بالفعل',
     'unit_already_rented' => 'هذه الوحدة مؤجرة بالفعل',
     'search_query_required' => 'كلمة البحث مطلوبة',

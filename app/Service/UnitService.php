@@ -41,6 +41,18 @@ class UnitService
             $query->where('unit_type_id', $filters['unit_type_id']);
         }
 
+        if (isset($filters['unit_type'])) {
+            $unitType = $filters['unit_type'];
+            if (is_numeric($unitType)) {
+                $query->where('unit_type_id', $unitType);
+            } else {
+                $query->whereHas('type', function ($q) use ($unitType) {
+                    $q->where('name_ar', 'like', "%{$unitType}%")
+                        ->orWhere('name_en', 'like', "%{$unitType}%");
+                });
+            }
+        }
+
         // Price Range
         if (isset($filters['min_price'])) {
             $query->where('price', '>=', $filters['min_price']);

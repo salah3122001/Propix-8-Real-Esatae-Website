@@ -55,6 +55,7 @@ return [
     'profile_updated' => 'Profile updated successfully',
     'profile_deleted' => 'Account deleted successfully',
     'not_found' => 'The requested resource was not found',
+    'current_password_incorrect' => 'The current password is incorrect',
     'unit_already_sold' => 'This unit is already sold',
     'unit_already_rented' => 'This unit is already rented',
     'search_query_required' => 'The search query is required',
