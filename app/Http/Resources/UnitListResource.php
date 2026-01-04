@@ -19,6 +19,7 @@ class UnitListResource extends JsonResource
         return [
             "id" => $this->id,
             "title" => ($lang === "ar" ? $this->title_ar : $this->title_en) ?? "",
+            "is_visible" => (bool) $this->is_visible,
             "address" => $this->address ?? "",
             "price" => $this->price ?? 0,
             "offer_type" => $this->offer_type ?? "",

@@ -29,6 +29,7 @@ class UnitResource extends JsonResource
             'latitude' => $this->latitude ?? '',
             'longitude' => $this->longitude ?? '',
             'status' => $this->status ?? '',
+            'is_visible' => (bool) $this->is_visible,
             'development_status' => $this->development_status ?? '',
             'owner' => new UserResource($this->whenLoaded('owner')), // Relations usually handled by 'data' wrapper or null if not loaded, but if loaded and null, Resource handles it? No, if relation is null, new Resource(null) might return null resource.
             // However, relation logic with `new Resource` on null often returns null.
