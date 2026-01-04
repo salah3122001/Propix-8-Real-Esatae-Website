@@ -65,4 +65,12 @@ class SellerUnitController extends Controller
         $stats = $this->sellerUnitService->getSellerStats($request->user());
         return $this->success($stats);
     }
+    public function toggleVisibility(Request $request, $id)
+    {
+        $unit = Unit::findOrFail($id);
+        $updatedUnit = $this->sellerUnitService->toggleVisibility($request->user(), $unit);
+
+        $status = $updatedUnit->is_visible ? 'active' : 'inactive';
+        return $this->success(new UnitResource($updatedUnit), __('api.unit_visibility_updated', ['status' => $status]));
+    }
 }

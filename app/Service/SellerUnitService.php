@@ -125,4 +125,16 @@ class SellerUnitService
             'rejected_units' => Unit::where('owner_id', $userId)->where('status', 'rejected')->count(),
         ];
     }
+    public function toggleVisibility($user, Unit $unit): Unit
+    {
+        if ($unit->owner_id !== $user->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $unit->update([
+            'is_visible' => !$unit->is_visible
+        ]);
+
+        return $unit;
+    }
 }

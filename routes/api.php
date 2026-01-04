@@ -90,6 +90,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/seller/units/{id}', [App\Http\Controllers\Api\SellerUnitController::class, 'update']);
         Route::delete('/seller/units/{id}', [App\Http\Controllers\Api\SellerUnitController::class, 'destroy']);
         Route::post('/seller/units/{id}/media', [App\Http\Controllers\Api\SellerUnitController::class, 'uploadMedia']);
+        Route::post('/seller/units/{id}/toggle-visibility', [App\Http\Controllers\Api\SellerUnitController::class, 'toggleVisibility']);
         Route::get('/seller/stats', [App\Http\Controllers\Api\SellerUnitController::class, 'stats']);
         Route::get('/seller/messages', [App\Http\Controllers\Api\ContactController::class, 'index']);
     });

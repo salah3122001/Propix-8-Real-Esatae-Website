@@ -61,6 +61,7 @@ class Unit extends Model
         'sold_at',
         'rented_at',
         'development_status',
+        'is_visible',
     ];
 
     public function owner()
@@ -119,6 +120,7 @@ class Unit extends Model
             'longitude' => 'decimal:8',
             'sold_at' => 'datetime',
             'rented_at' => 'datetime',
+            'is_visible' => 'boolean',
         ];
     }
 }

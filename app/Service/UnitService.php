@@ -11,7 +11,8 @@ class UnitService
     {
         $query = Unit::query()
             ->with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'amenities'])
-            ->where('status', 'approved'); // Only show approved units for public
+            ->where('status', 'approved') // Only show approved units for public
+            ->where('is_visible', true);
 
         // Keyword Search
         if (isset($filters['q']) && !empty($filters['q'])) {
@@ -114,6 +115,7 @@ class UnitService
     {
         return Unit::with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'reviews.user', 'amenities'])
             ->where('status', 'approved')
+            ->where('is_visible', true)
             ->findOrFail($id);
     }
 
@@ -121,6 +123,7 @@ class UnitService
     {
         return Unit::with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'amenities'])
             ->where('status', 'approved')
+            ->where('is_visible', true)
             ->latest()
             ->take($limit)
             ->get();
@@ -131,6 +134,7 @@ class UnitService
 
         return Unit::with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'amenities'])
             ->where('status', 'approved')
+            ->where('is_visible', true)
             ->where('id', '!=', $unitId)
             ->where(function ($query) use ($unit) {
                 $query->where('unit_type_id', $unit->unit_type_id)
@@ -144,7 +148,9 @@ class UnitService
     public function getNearbyUnits($user, $perPage = 10)
     {
         $query = Unit::with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'amenities'])
-            ->where('status', 'approved');
+            ->where('status', 'approved')
+            ->where('is_visible', true);
+
 
         if (!$user || !$user->city_id) {
             return $query->where('id', 0)->paginate($perPage); // Return empty paginator
