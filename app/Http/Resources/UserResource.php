@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'address' => $this->address ?? '',
-            'avatar' => $this->avatar ? asset('public/storage/' . $this->avatar) : '',
+            'avatar' => $this->avatar ? asset('storage/app/public/' . $this->avatar) : '',
             'city' => new CityResource($this->city) ?? '',
             'status' => $this->status,
             'role' => $this->role,

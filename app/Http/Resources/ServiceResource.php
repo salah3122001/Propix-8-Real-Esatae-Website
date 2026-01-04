@@ -14,7 +14,7 @@ class ServiceResource extends JsonResource
             'id' => $this->id,
             'name' => $lang === 'ar' ? $this->title_ar : $this->title_en,
             'description' => $lang === 'ar' ? $this->content_ar : $this->content_en,
-            'icon' => $this->icon ? asset('public/storage/' . $this->icon) : '',
+            'icon' => $this->icon ? asset('storage/app/public/' . $this->icon) : '',
         ];
     }
 }

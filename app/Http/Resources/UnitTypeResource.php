@@ -13,7 +13,7 @@ class UnitTypeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $lang === 'ar' ? $this->name_ar : $this->name_en,
-            'icon' => $this->icon ? asset('public/storage/' . $this->icon) : '',
+            'icon' => $this->icon ? asset('storage/app/public/' . $this->icon) : '',
         ];
     }
 }

@@ -32,11 +32,11 @@ class UnitListResource extends JsonResource
             "unit_type" => [
                 "id" => $this->unit_type_id,
                 "name" => ($lang === "ar" ? ($this->type->name_ar ?? "") : ($this->type->name_en ?? "")),
-                "icon" => $this->type->icon ? asset("public/storage/" . $this->type->icon) : "",
+                "icon" => $this->type->icon ? asset("storage/app/public/" . $this->type->icon) : "",
             ],
             "main_image" => $this->whenLoaded("media", function () {
                 $image = $this->media->where("type", "image")->first();
-                return $image ? asset("public/storage/" . $image->url) : "";
+                return $image ? asset("storage/app/public/" . $image->url) : "";
             }),
             "created_at" => $this->created_at?->toISOString() ?? "",
         ];

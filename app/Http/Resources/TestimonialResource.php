@@ -20,7 +20,7 @@ class TestimonialResource extends JsonResource
             'name' => $this->name,
             'position' => $this->position ?? 'Client',
             'content' => $this->content,
-            'image' => $this->image ? asset('public/storage/' . $this->image) : '',
+            'image' => $this->image ? asset('storage/app/public/' . $this->image) : '',
             'status' => (bool) $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
