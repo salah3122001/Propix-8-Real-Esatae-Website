@@ -7,12 +7,12 @@ Route::get('/', function () {
 });
 
 // Maintenance Routes
-// Maintenance Routes
 Route::get('/debug-storage', function () {
     $link = public_path('storage');
     $target = storage_path('app/public');
 
     $tags = [
+        'app_url' => config('app.url'),
         'is_link' => is_link($link) ? 'YES' : 'NO',
         'exists' => file_exists($link) ? 'YES' : 'NO',
         'link_path' => $link,
@@ -22,12 +22,13 @@ Route::get('/debug-storage', function () {
     ];
 
     // Check specific file availability
-    $relativePath = 'unit-types/01KE4380M282DS0FAMT00G3V4J.png';
+    $relativePath = 'unit-types/01KE44WM384SQWTM70PF8B9PVB.jpeg';
     $targetFile = $target . '/' . $relativePath;
 
     $tags['file_check'] = [
         'path' => $targetFile,
         'exists' => file_exists($targetFile) ? 'YES' : 'NO',
+        'generated_url' => \Illuminate\Support\Facades\Storage::disk('public')->url($relativePath),
         'perms' => file_exists($targetFile) ? substr(sprintf('%o', fileperms($targetFile)), -4) : 'N/A',
         'dir_exists' => is_dir(dirname($targetFile)) ? 'YES' : 'NO',
         'dir_perms' => is_dir(dirname($targetFile)) ? substr(sprintf('%o', fileperms(dirname($targetFile))), -4) : 'N/A',
