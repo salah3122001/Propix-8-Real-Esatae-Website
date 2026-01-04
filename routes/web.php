@@ -21,6 +21,23 @@ Route::get('/debug-storage', function () {
         'is_target_dir' => is_dir($target) ? 'YES' : 'NO',
     ];
 
+    // Check specific file availability
+    $relativePath = 'unit-types/01KE4380M282DS0FAMT00G3V4J.png';
+    $targetFile = $target . '/' . $relativePath;
+
+    $tags['file_check'] = [
+        'path' => $targetFile,
+        'exists' => file_exists($targetFile) ? 'YES' : 'NO',
+        'perms' => file_exists($targetFile) ? substr(sprintf('%o', fileperms($targetFile)), -4) : 'N/A',
+        'dir_exists' => is_dir(dirname($targetFile)) ? 'YES' : 'NO',
+        'dir_perms' => is_dir(dirname($targetFile)) ? substr(sprintf('%o', fileperms(dirname($targetFile))), -4) : 'N/A',
+    ];
+
+    // List files in unit-types if dir exists
+    if (is_dir($target . '/unit-types')) {
+        $tags['dir_content'] = array_slice(scandir($target . '/unit-types'), 0, 10);
+    }
+
     // Try to create if missing
     if (!file_exists($link)) {
         try {
