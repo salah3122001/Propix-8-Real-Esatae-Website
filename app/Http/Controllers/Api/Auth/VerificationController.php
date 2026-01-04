@@ -33,7 +33,12 @@ class VerificationController extends Controller
 
     public function resend(Request $request)
     {
-        $user = $request->user();
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
         if ($user->hasVerifiedEmail()) {
             return $this->error(__('api.verification.already_verified'), 400);
         }

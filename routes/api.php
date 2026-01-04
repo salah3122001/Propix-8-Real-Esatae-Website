@@ -26,7 +26,7 @@ Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordContr
 Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Api\Auth\VerificationController::class, 'verify'])
     ->name('api.verification.verify');
 Route::post('/email/resend', [App\Http\Controllers\Api\Auth\VerificationController::class, 'resend'])
-    ->middleware(['auth:sanctum'])->name('api.verification.send');
+    ->name('api.verification.send');
 
 // Informational & Content
 Route::get('/unit-types', [App\Http\Controllers\Api\UnitTypeController::class, 'index']);
