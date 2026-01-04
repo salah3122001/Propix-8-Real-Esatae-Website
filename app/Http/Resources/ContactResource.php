@@ -25,7 +25,7 @@ class ContactResource extends JsonResource
                 'id' => $this->unit->id,
                 'title' => $this->unit->{'title_' . app()->getLocale()},
                 'price' => $this->unit->price,
-            ] : null,
+            ] : '',
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }

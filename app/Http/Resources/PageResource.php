@@ -18,7 +18,7 @@ class PageResource extends JsonResource
             'team_members' => collect($this->team_members)->map(fn ($member) => [
                 'name' => $member['name'] ?? '',
                 'position' => $member['position'] ?? '',
-                'photo' => isset($member['photo']) ? asset('storage/app/public/' . $member['photo']) : null,
+                'photo' => isset($member['photo']) ? asset('public/storage/' . $member['photo']) : null,
             ]),
         ];
     }
