@@ -12,7 +12,9 @@ Route::get('/debug-storage', function () {
     $target = storage_path('app/public');
 
     $tags = [
-        'app_url' => config('app.url'),
+        'timestamp' => time(), // Cache buster
+        'active_app_url' => config('app.url'),
+        'active_filesystem_url' => config('filesystems.disks.public.url'),
         'is_link' => is_link($link) ? 'YES' : 'NO',
         'exists' => file_exists($link) ? 'YES' : 'NO',
         'link_path' => $link,
