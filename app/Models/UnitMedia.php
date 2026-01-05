@@ -10,9 +10,10 @@ class UnitMedia extends Model
     //
     use HasFactory;
 
-    protected $fillable = ['unit_id', 'type', 'url', 'order'];
+    protected $fillable = ['unit_id', 'type', 'url', 'order', 'processed_url', 'processing_status'];
 
-    public function unit() {
+    public function unit()
+    {
         return $this->belongsTo(Unit::class);
     }
 }

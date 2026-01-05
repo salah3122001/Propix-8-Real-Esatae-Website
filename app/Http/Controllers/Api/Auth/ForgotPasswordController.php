@@ -10,12 +10,21 @@ class ForgotPasswordController extends Controller
 {
     public function sendResetLinkEmail(ForgotPasswordRequest $request)
     {
-        $status = Password::broker()->sendResetLink(
-            $request->only('email')
-        );
+        $user = \App\Models\User::where('email', $request->email)->first();
 
-        return $status === Password::RESET_LINK_SENT
-            ? $this->success([], __('api.passwords.sent'))
-            : $this->error(__("api." . $status));
+        $broker = Password::broker();
+
+        // Check if a token was recently created to respect throttling
+        if ($broker->getRepository()->recentlyCreatedToken($user)) {
+            return $this->error(__('api.passwords.throttled'), 429);
+        }
+
+        // Generate Token
+        $token = $broker->createToken($user);
+
+        // Send the notification manually to bypass the broker's second throttle check
+        $user->sendPasswordResetNotification($token);
+
+        return $this->success(['token' => $token], __('api.passwords.sent'));
     }
 }

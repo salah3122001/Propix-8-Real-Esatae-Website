@@ -108,10 +108,16 @@ class SellerUnitService
     {
         $path = $file->store('units/media', 'public');
 
-        return $unit->media()->create([
+        $media = $unit->media()->create([
             'url' => $path,
             'type' => $type,
         ]);
+
+        if ($type === 'video') {
+            \App\Jobs\ProcessVideoHLS::dispatch($media);
+        }
+
+        return $media;
     }
 
     public function getSellerStats($user): array
