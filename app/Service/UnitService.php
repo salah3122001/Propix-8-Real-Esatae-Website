@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Models\Unit;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 
 class UnitService
 {
@@ -42,6 +43,14 @@ class UnitService
             $query->where('unit_type_id', $filters['unit_type_id']);
         }
 
+        if (isset($filters['developer_id'])) {
+            $query->where('developer_id', $filters['developer_id']);
+        }
+
+        if (isset($filters['owner_id'])) {
+            $query->where('owner_id', $filters['owner_id']);
+        }
+
         if (isset($filters['unit_type'])) {
             $unitType = $filters['unit_type'];
             if (is_numeric($unitType)) {
@@ -63,6 +72,15 @@ class UnitService
             $query->where('price', '<=', $filters['max_price']);
         }
 
+        // Price per m2 Range
+        if (isset($filters['min_price_per_m2'])) {
+            $query->where('price_per_m2', '>=', $filters['min_price_per_m2']);
+        }
+
+        if (isset($filters['max_price_per_m2'])) {
+            $query->where('price_per_m2', '<=', $filters['max_price_per_m2']);
+        }
+
         // Rooms & Bathrooms
         if (isset($filters['rooms'])) {
             $query->where('rooms', '>=', $filters['rooms']);
@@ -81,11 +99,34 @@ class UnitService
             $query->where('area', '<=', $filters['max_area']);
         }
 
-        // Amenities Filter
+        // Internal Area Range
+        if (isset($filters['min_internal_area'])) {
+            $query->where('internal_area', '>=', $filters['min_internal_area']);
+        }
+
+        if (isset($filters['max_internal_area'])) {
+            $query->where('internal_area', '<=', $filters['max_internal_area']);
+        }
+
+        if (isset($filters['build_year'])) {
+            $query->where('build_year', $filters['build_year']);
+        }
+
+        if (isset($filters['garages'])) {
+            $query->where('garages', '>=', $filters['garages']);
+        }
+
+        if (isset($filters['min_land_area'])) {
+            $query->where('land_area', '>=', $filters['min_land_area']);
+        }
+
+        // Amenities Filter (AND logic: must have ALL specified amenities)
         if (isset($filters['amenities']) && is_array($filters['amenities'])) {
-            $query->whereHas('amenities', function ($q) use ($filters) {
-                $q->whereIn('amenities.id', $filters['amenities']);
-            });
+            foreach ($filters['amenities'] as $amenityId) {
+                $query->whereHas('amenities', function ($q) use ($amenityId) {
+                    $q->where('amenities.id', $amenityId);
+                });
+            }
         }
 
         // Development Status Filter
@@ -102,11 +143,20 @@ class UnitService
             case 'price_desc':
                 $query->orderBy('price', 'desc');
                 break;
+            case 'area_asc':
+                $query->orderBy('area', 'asc');
+                break;
+            case 'area_desc':
+                $query->orderBy('area', 'desc');
+                break;
             case 'latest':
             default:
                 $query->latest();
                 break;
         }
+
+        Log::info('Unit Filter SQL: ' . $query->toSql());
+        Log::info('Unit Filter Bindings: ', $query->getBindings());
 
         return $query->paginate($perPage);
     }

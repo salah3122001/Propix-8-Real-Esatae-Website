@@ -73,4 +73,7 @@ return [
         'salutation' => 'Regards, Propix8',
         'not_verified' => 'Email is not verified.',
     ],
+    'payment_initiated_successfully' => 'Payment initiated successfully',
+    'payment_successful' => 'Payment successful',
+    'payment_failed_or_canceled' => 'Payment failed or was canceled',
 ];

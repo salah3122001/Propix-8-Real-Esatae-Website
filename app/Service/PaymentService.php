@@ -4,87 +4,40 @@ namespace App\Service;
 
 use App\Models\Transaction;
 use App\Models\Unit;
-use Illuminate\Support\Facades\Http;
+use App\Services\PaymobService;
 use Illuminate\Support\Facades\Log;
 
 class PaymentService
 {
-    protected $paymobApiKey;
-    protected $paymobIntegrationId;
-    protected $paymobIframeId;
+    protected $paymob;
 
-    public function __construct()
+    public function __construct(PaymobService $paymob)
     {
-        $this->paymobApiKey = config('services.paymob.api_key');
-        $this->paymobIntegrationId = config('services.paymob.integration_id');
-        $this->paymobIframeId = config('services.paymob.iframe_id');
+        $this->paymob = $paymob;
     }
 
     public function initiatePayment(Unit $unit, $user)
     {
-        // 1. Authentication Request
-        Log::info('Initiating Paymob Auth with Key starting with: ' . substr($this->paymobApiKey, 0, 10) . '...');
-
-        $authResponse = Http::post('https://egypt.paymob.com/api/auth/tokens', [
-            'api_key' => $this->paymobApiKey,
-        ]);
-
-        if (!$authResponse->successful()) {
-            Log::error('Paymob Auth Failed. Status: ' . $authResponse->status() . ' - Body: ' . $authResponse->body());
+        // 1. Get Auth Token
+        $authToken = $this->paymob->getAuthToken();
+        if (!$authToken) {
+            Log::error('Paymob Auth Failed for unit ID: ' . $unit->id);
             throw new \Exception('Paymob Authentication Failed');
         }
 
-        $token = $authResponse->json('token');
-
-        // 2. Order Registration
-        $orderResponse = Http::post('https://egypt.paymob.com/api/ecommerce/orders', [
-            'auth_token' => $token,
-            'delivery_needed' => 'false',
-            'amount_cents' => $unit->price * 100,
-            'currency' => 'EGP',
-            'items' => [],
-        ]);
-
-        if (!$orderResponse->successful()) {
-            Log::error('Paymob Order Failed: ' . $orderResponse->body());
+        // 2. Create Order
+        $paymobOrderId = $this->paymob->createOrder($authToken, $unit->id, $unit->price);
+        if (!$paymobOrderId) {
+            Log::error('Paymob Order Failed for unit ID: ' . $unit->id);
             throw new \Exception('Paymob Order Registration Failed');
         }
 
-        $orderId = (string) $orderResponse->json('id');
-
-        // 3. Payment Key Generation
-        $billingData = [
-            'apartment' => 'NA',
-            'email' => $user->email,
-            'floor' => 'NA',
-            'first_name' => $user->name,
-            'street' => $user->address ?? 'NA',
-            'building' => 'NA',
-            'phone_number' => $user->phone ?? 'NA',
-            'shipping_method' => 'NA',
-            'postal_code' => 'NA',
-            'city' => 'NA',
-            'country' => 'EG',
-            'last_name' => 'NA',
-            'state' => 'NA',
-        ];
-
-        $paymentKeyResponse = Http::post('https://egypt.paymob.com/api/ecommerce/payment_keys', [
-            'auth_token' => $token,
-            'amount_cents' => $unit->price * 100,
-            'expiration' => 3600,
-            'order_id' => $orderId,
-            'billing_data' => $billingData,
-            'currency' => 'EGP',
-            'integration_id' => $this->paymobIntegrationId,
-        ]);
-
-        if (!$paymentKeyResponse->successful()) {
-            Log::error('Paymob Payment Key Failed: ' . $paymentKeyResponse->body());
+        // 3. Get Payment Key
+        $paymentKey = $this->paymob->getPaymentKey($authToken, $paymobOrderId, $unit->price, $user);
+        if (!$paymentKey) {
+            Log::error('Paymob Payment Key Failed for unit ID: ' . $unit->id);
             throw new \Exception('Paymob Payment Key Generation Failed');
         }
-
-        $paymentToken = $paymentKeyResponse->json('token');
 
         // Reserve the unit immediately to prevent double booking
         if ($unit->offer_type === 'sale') {
@@ -105,10 +58,10 @@ class PaymentService
             'unit_id' => $unit->id,
             'amount' => $unit->price,
             'payment_status' => 'pending',
-            'transaction_ref' => $orderId,
+            'transaction_ref' => $paymobOrderId,
         ]);
 
-        return 'https://egypt.paymob.com/api/acceptance/iframes/' . $this->paymobIframeId . '?payment_token=' . $paymentToken;
+        return $this->paymob->getIframeUrl($paymentKey);
     }
 
     public function handleCallback($data)
@@ -127,33 +80,34 @@ class PaymentService
 
         $transaction = Transaction::where('transaction_ref', $transactionRef)->first();
 
-        if ($transaction) {
-            $transaction->update([
-                'payment_status' => $success ? 'paid' : 'failed',
-            ]);
+        if (!$transaction) {
+            Log::error('Paymob Callback: Transaction not found for ref: ' . $transactionRef);
+            return false;
+        }
 
-            $unit = $transaction->unit;
-            if ($unit) {
-                if ($success) {
-                    // Status is already set to sold/rented in initiatePayment
-                    // We just ensure it's correct here if needed
-                    $status = ($unit->offer_type === 'rent' ? 'rented' : 'sold');
-                    $timestampField = ($unit->offer_type === 'rent' ? 'rented_at' : 'sold_at');
+        $transaction->update([
+            'payment_status' => $success ? 'paid' : 'failed',
+        ]);
 
-                    if ($unit->status !== $status) {
-                        $unit->update([
-                            'status' => $status,
-                            $timestampField => now(),
-                        ]);
-                    }
-                } else {
-                    // Payment failed or was canceled: revert unit to 'approved'
+        $unit = $transaction->unit;
+        if ($unit) {
+            if ($success) {
+                $status = ($unit->offer_type === 'rent' ? 'rented' : 'sold');
+                $timestampField = ($unit->offer_type === 'rent' ? 'rented_at' : 'sold_at');
+
+                if ($unit->status !== $status) {
                     $unit->update([
-                        'status' => 'approved',
-                        'sold_at' => null,
-                        'rented_at' => null,
+                        'status' => $status,
+                        $timestampField => now(),
                     ]);
                 }
+            } else {
+                // Payment failed or was canceled: revert unit to 'approved'
+                $unit->update([
+                    'status' => 'approved',
+                    'sold_at' => null,
+                    'rented_at' => null,
+                ]);
             }
         }
 

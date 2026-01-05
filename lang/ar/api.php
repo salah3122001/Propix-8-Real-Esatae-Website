@@ -73,4 +73,7 @@ return [
         'salutation' => 'مع تحيات فريق Propix8',
         'not_verified' => 'البريد الإلكتروني غير مفعل.',
     ],
+    'payment_initiated_successfully' => 'تم بدء عملية الدفع بنجاح',
+    'payment_successful' => 'تمت عملية الدفع بنجاح',
+    'payment_failed_or_canceled' => 'فشلت عملية الدفع أو تم إلغاؤها',
 ];

@@ -67,7 +67,7 @@ Route::get('/sellers', [App\Http\Controllers\Api\SellerController::class, 'index
 Route::get('/sellers/{id}', [App\Http\Controllers\Api\SellerController::class, 'show']);
 
 // Payment Callbacks
-Route::get('/payment/callback', [App\Http\Controllers\Api\PaymentController::class, 'callback']);
+Route::get('/payment/callback', [App\Http\Controllers\Api\PaymentController::class, 'callback'])->name('api.payment.callback');
 
 
 // --- Protected Routes ---
@@ -98,7 +98,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Transactions & Payments (Restricted to verified users)
     Route::middleware('verified')->group(function () {
         Route::get('/transactions', [App\Http\Controllers\Api\TransactionController::class, 'index']);
-        Route::post('/payment/initiate', [App\Http\Controllers\Api\PaymentController::class, 'initiate']);
+        Route::post('/payment/initiate', [App\Http\Controllers\Api\PaymentController::class, 'initiate'])->name('api.payment.initiate');
     });
     // Callback moved to public routes
 
