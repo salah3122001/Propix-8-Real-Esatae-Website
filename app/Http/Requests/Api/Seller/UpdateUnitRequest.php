@@ -38,6 +38,9 @@ class UpdateUnitRequest extends FormRequest
             'development_status' => 'nullable|required_if:offer_type,sale|in:primary,resale',
             'amenities' => 'nullable|array',
             'amenities.*' => 'exists:amenities,id',
+            'media' => 'nullable|array',
+            'media.*.file' => 'required|file|mimes:jpg,jpeg,png,mp4,mov,obj,glb,pdf|max:20480',
+            'media.*.type' => 'required|in:image,video,3d,floorplan',
         ];
     }
 }

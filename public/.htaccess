@@ -3,6 +3,10 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    <IfModule mod_mime.c>
+        AddType image/jpeg .jfif .gfif
+    </IfModule>
+
     RewriteEngine On
 
     # Handle Authorization Header

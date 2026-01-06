@@ -244,12 +244,12 @@ class UnitForm
                                         })
                                         ->helperText(fn($get) => match ($get('type')) {
                                             'video' => 'الصيغ المدعومة: MP4, MOV, AVI, WEBM',
-                                            'image' => 'الصيغ المدعومة: JPG, PNG, GIF, WEBP, JFIF',
+                                            'image' => 'الصيغ المدعومة: JPG, PNG, JPEG',
                                             '3d' => 'الملفات المدعومة: OBJ, FBX, GLB, GLTF',
-                                            'floorplan' => 'الملفات المدعومة: JPG, PNG, PDF, JFIF',
+                                            'floorplan' => 'الملفات المدعومة: JPG, PNG, JPEG, PDF',
                                             default => __('admin.fields.keep_current'),
                                         })
-                                        ->acceptedFileTypes(['image/*', 'video/*', 'application/octet-stream', 'image/jfif'])
+                                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'video/*', 'application/octet-stream', 'application/pdf'])
                                         ->disk('public')
                                         ->visibility('public')
                                         ->directory('units/media')

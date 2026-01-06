@@ -37,9 +37,9 @@ class UserForm
                     ->maxLength(500),
                 FileUpload::make('avatar')
                     ->label(__('admin.fields.avatar'))
-                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP, JFIF')
+                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, JPEG')
                     ->image()
-                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jfif'])
+                    ->acceptedFileTypes(['image/jpeg', 'image/png'])
                     ->directory('avatars')
                     ->disk('public')
                     ->visibility('public')
@@ -48,9 +48,9 @@ class UserForm
                     ->nullable(),
                 FileUpload::make('id_photo')
                     ->label(__('admin.fields.id_photo'))
-                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP, JFIF')
+                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, JPEG')
                     ->image()
-                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jfif'])
+                    ->acceptedFileTypes(['image/jpeg', 'image/png'])
                     ->directory('id_photos')
                     ->disk('public')
                     ->visibility('public')

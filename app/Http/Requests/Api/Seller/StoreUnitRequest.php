@@ -38,7 +38,7 @@ class StoreUnitRequest extends FormRequest
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'media' => 'nullable|array',
-            'media.*.file' => 'required|file|mimes:jpg,jpeg,png,jfif,mp4,mov,obj,glb|max:20480',
+            'media.*.file' => 'required|file|mimes:jpg,jpeg,png,mp4,mov,obj,glb,pdf|max:20480',
             'media.*.type' => 'required|in:image,video,3d,floorplan',
             'development_status' => 'nullable|required_if:offer_type,sale|in:primary,resale',
             'amenities' => 'nullable|array',
