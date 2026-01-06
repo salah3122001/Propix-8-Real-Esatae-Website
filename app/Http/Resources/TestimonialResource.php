@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TestimonialResource extends JsonResource
@@ -20,7 +21,7 @@ class TestimonialResource extends JsonResource
             'name' => $this->name,
             'position' => $this->position ?? 'Client',
             'content' => $this->content,
-            'image' => $this->image ? asset('storage/app/public/' . $this->image) : '',
+            'image' => $this->image ? Storage::disk('public')->url($this->image) : '',
             'status' => (bool) $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

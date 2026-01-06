@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UnitResource extends JsonResource
@@ -43,7 +44,7 @@ class UnitResource extends JsonResource
             'unit_type' => [
                 'id' => $this->whenLoaded('type', fn() => $this->type->id ?? 0),
                 'name' => $this->whenLoaded('type', fn() => (app()->getLocale() === 'ar' ? $this->type->name_ar : $this->type->name_en) ?? ''),
-                'icon' => $this->whenLoaded('type', fn() => $this->type->icon ? asset('storage/app/public/' . $this->type->icon) : ''),
+                'icon' => $this->whenLoaded('type', fn() => $this->type->icon ? Storage::disk('public')->url($this->type->icon) : ''),
             ],
             'compound' => new CompoundResource($this->whenLoaded('compound')),
             'developer' => new DeveloperResource($this->whenLoaded('developer')),

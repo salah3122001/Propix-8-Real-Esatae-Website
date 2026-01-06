@@ -24,19 +24,19 @@ class UnitMediaForm
                 ])->label(__('admin.fields.type'))->required()->live(),
                 Placeholder::make('video_preview')
                     ->label(__('admin.fields.video_preview'))
-                    ->content(fn ($get) => $get('type') === 'video' && $get('url') 
-                        ? new HtmlString('<video controls width="100%" src="' . asset('storage/' . $get('url')) . '"></video>') 
+                    ->content(fn($get) => $get('type') === 'video' && $get('url')
+                        ? new HtmlString('<video controls width="100%" src="' . \Illuminate\Support\Facades\Storage::disk('public')->url($get('url')) . '"></video>')
                         : null)
-                    ->hidden(fn ($get) => $get('type') !== 'video' || !$get('url'))
+                    ->hidden(fn($get) => $get('type') !== 'video' || !$get('url'))
                     ->columnSpanFull(),
                 FileUpload::make('url')
-                    ->label(fn ($get) => match ($get('type')) {
+                    ->label(fn($get) => match ($get('type')) {
                         'video' => __('admin.fields.media_types.video'),
                         'image' => __('admin.fields.media_types.image'),
                         default => __('admin.fields.file'),
                     })
                     ->directory('units/media')
-                    ->acceptedFileTypes(['image/*', 'video/*', 'application/octet-stream'])
+                    ->acceptedFileTypes(['image/*', 'video/*', 'application/octet-stream', 'image/jfif'])
                     ->disk('public')
                     ->visibility('public')
                     ->helperText(__('admin.fields.keep_current'))

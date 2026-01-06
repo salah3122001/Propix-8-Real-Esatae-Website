@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PageResource extends JsonResource
@@ -15,10 +16,10 @@ class PageResource extends JsonResource
             'slug' => $this->slug,
             'title' => $lang === 'ar' ? $this->title_ar : $this->title_en,
             'content' => $lang === 'ar' ? $this->content_ar : $this->content_en,
-            'team_members' => collect($this->team_members)->map(fn ($member) => [
+            'team_members' => collect($this->team_members)->map(fn($member) => [
                 'name' => $member['name'] ?? '',
                 'position' => $member['position'] ?? '',
-                'photo' => isset($member['photo']) ? asset('storage/app/public/' . $member['photo']) : null,
+                'photo' => isset($member['photo']) ? Storage::disk('public')->url($member['photo']) : '',
             ]),
         ];
     }

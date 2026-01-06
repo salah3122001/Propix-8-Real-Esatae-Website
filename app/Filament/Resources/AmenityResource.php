@@ -50,9 +50,9 @@ class AmenityResource extends Resource
                     ->maxLength(255),
                 FileUpload::make('icon')
                     ->label(__('admin.fields.icon'))
-                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
+                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP, JFIF')
                     ->image()
-                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jfif'])
                     ->disk('public')
                     ->visibility('public')
                     ->directory('amenities')

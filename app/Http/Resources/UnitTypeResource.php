@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UnitTypeResource extends JsonResource
@@ -13,7 +14,7 @@ class UnitTypeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $lang === 'ar' ? $this->name_ar : $this->name_en,
-            'icon' => $this->icon ? asset('storage/app/public/' . $this->icon) : '',
+            'icon' => $this->icon ? Storage::disk('public')->url($this->icon) : '',
         ];
     }
 }

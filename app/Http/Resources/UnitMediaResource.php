@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UnitMediaResource extends JsonResource
@@ -11,8 +12,8 @@ class UnitMediaResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'file_path' => asset('storage/app/public/' . $this->url) ?? '',
-            'hls_path' => $this->processed_url ? asset('storage/app/public/' . $this->processed_url) : '',
+            'file_path' => $this->url ? Storage::disk('public')->url($this->url) : '',
+            'hls_path' => $this->processed_url ? Storage::disk('public')->url($this->processed_url) : '',
             'processing_status' => $this->processing_status ?? 'pending',
             'type' => $this->type ?? 'image',
         ];

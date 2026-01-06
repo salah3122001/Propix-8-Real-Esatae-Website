@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SellerResource extends JsonResource
@@ -19,7 +20,7 @@ class SellerResource extends JsonResource
             'name' => $this->name ?? '',
             'email' => $this->email ?? '',
             'phone' => $this->phone ?? '',
-            'avatar' => $this->avatar ? asset('storage/app/public/' . $this->avatar) : '',
+            'avatar' => $this->avatar ? Storage::disk('public')->url($this->avatar) : '',
             'units_count' => $this->units_count ?? 0,
             'created_at' => $this->created_at->format('Y-m-d') ?? '',
         ];

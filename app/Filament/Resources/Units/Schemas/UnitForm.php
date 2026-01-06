@@ -232,7 +232,7 @@ class UnitForm
                                     Placeholder::make('video_preview')
                                         ->label(__('admin.fields.media'))
                                         ->content(fn($get) => $get('type') === 'video' && $get('url')
-                                            ? new HtmlString('<video controls width="100%" src="' . asset('storage/' . $get('url')) . '"></video>')
+                                            ? new HtmlString('<video controls width="100%" src="' . \Illuminate\Support\Facades\Storage::disk('public')->url($get('url')) . '"></video>')
                                             : null)
                                         ->hidden(fn($get) => $get('type') !== 'video' || !$get('url'))
                                         ->columnSpanFull(),
@@ -244,12 +244,12 @@ class UnitForm
                                         })
                                         ->helperText(fn($get) => match ($get('type')) {
                                             'video' => 'الصيغ المدعومة: MP4, MOV, AVI, WEBM',
-                                            'image' => 'الصيغ المدعومة: JPG, PNG, GIF, WEBP',
+                                            'image' => 'الصيغ المدعومة: JPG, PNG, GIF, WEBP, JFIF',
                                             '3d' => 'الملفات المدعومة: OBJ, FBX, GLB, GLTF',
-                                            'floorplan' => 'الملفات المدعومة: JPG, PNG, PDF',
+                                            'floorplan' => 'الملفات المدعومة: JPG, PNG, PDF, JFIF',
                                             default => __('admin.fields.keep_current'),
                                         })
-                                        ->acceptedFileTypes(['image/*', 'video/*', 'application/octet-stream'])
+                                        ->acceptedFileTypes(['image/*', 'video/*', 'application/octet-stream', 'image/jfif'])
                                         ->disk('public')
                                         ->visibility('public')
                                         ->directory('units/media')

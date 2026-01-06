@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UnitListResource extends JsonResource
@@ -33,11 +34,11 @@ class UnitListResource extends JsonResource
             "unit_type" => [
                 "id" => $this->unit_type_id,
                 "name" => ($lang === "ar" ? ($this->type->name_ar ?? "") : ($this->type->name_en ?? "")),
-                "icon" => $this->type->icon ? asset("storage/app/public/" . $this->type->icon) : "",
+                "icon" => $this->type->icon ? Storage::disk("public")->url($this->type->icon) : "",
             ],
             "main_image" => $this->whenLoaded("media", function () {
                 $image = $this->media->where("type", "image")->first();
-                return $image ? asset("storage/app/public/" . $image->url) : "";
+                return $image ? Storage::disk("public")->url($image->url) : "";
             }),
             "created_at" => $this->created_at?->toISOString() ?? "",
         ];

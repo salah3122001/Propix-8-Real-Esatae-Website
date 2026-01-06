@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CompoundResource;
 use App\Http\Resources\UnitResource;
@@ -57,7 +58,7 @@ class SearchController extends Controller
             $data['developers'] = $results['developers']->map(fn($d) => [
                 'id' => $d->id,
                 'name' => $d->{"name_" . app()->getLocale()} ?: $d->name_ar ?: $d->name_en,
-                'logo' => $d->logo ? asset('storage/' . $d->logo) : '',
+                'logo' => $d->logo ? Storage::disk('public')->url($d->logo) : '',
             ]);
         }
 
@@ -65,7 +66,7 @@ class SearchController extends Controller
             $data['sellers'] = $results['sellers']->map(fn($s) => [
                 'id' => $s->id,
                 'name' => $s->name,
-                'avatar' => $s->avatar ? asset('storage/' . $s->avatar) : '',
+                'avatar' => $s->avatar ? Storage::disk('public')->url($s->avatar) : '',
             ]);
         }
 

@@ -82,9 +82,9 @@ class SiteSettings extends Page implements HasForms
                             ->schema([
                                 FileUpload::make('site_logo')
                                     ->label(__('admin.site_logo'))
-                                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
+                                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP, JFIF')
                                     ->image()
-                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jfif'])
                                     ->directory('settings')
                                     ->disk('public')
                                     ->visibility('public')
@@ -93,9 +93,9 @@ class SiteSettings extends Page implements HasForms
 
                                 FileUpload::make('home_hero_image')
                                     ->label(__('admin.home_hero_image'))
-                                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP')
+                                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP, JFIF')
                                     ->image()
-                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jfif'])
                                     ->directory('settings')
                                     ->disk('public')
                                     ->visibility('public')
