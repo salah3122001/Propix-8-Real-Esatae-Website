@@ -12,6 +12,23 @@ class UnitMedia extends Model
 
     protected $fillable = ['unit_id', 'type', 'url', 'order', 'processed_url', 'processing_status'];
 
+    protected static function booted()
+    {
+        static::creating(function ($media) {
+            if ($media->type !== 'video' && empty($media->processing_status)) {
+                $media->processing_status = 'completed';
+            } elseif ($media->type === 'video' && empty($media->processing_status)) {
+                $media->processing_status = 'pending';
+            }
+        });
+
+        static::created(function ($media) {
+            if ($media->type === 'video') {
+                \App\Jobs\ProcessVideoHLS::dispatch($media);
+            }
+        });
+    }
+
     public function unit()
     {
         return $this->belongsTo(Unit::class);
