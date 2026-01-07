@@ -55,4 +55,11 @@ class AuthController extends Controller
         $this->authService->deleteProfile($request->user());
         return $this->success([], __('api.profile_deleted'));
     }
+
+    public function refresh(Request $request)
+    {
+        $response = $this->authService->refreshToken($request->user());
+        $response['user'] = new UserResource($response['user']);
+        return $this->success($response, __('api.token_refreshed'));
+    }
 }

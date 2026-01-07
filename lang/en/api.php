@@ -76,4 +76,5 @@ return [
     'payment_initiated_successfully' => 'Payment initiated successfully',
     'payment_successful' => 'Payment successful',
     'payment_failed_or_canceled' => 'Payment failed or was canceled',
+    'token_refreshed' => 'Token refreshed successfully',
 ];

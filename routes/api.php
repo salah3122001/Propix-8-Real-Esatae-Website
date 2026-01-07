@@ -83,6 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/profile', [AuthController::class, 'update']);
     Route::delete('/profile', [AuthController::class, 'destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/refresh-token', [AuthController::class, 'refresh']);
 
     // Seller Unit Management
     Route::middleware(['approved_seller', 'verified'])->group(function () {

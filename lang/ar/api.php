@@ -77,4 +77,5 @@ return [
     'payment_initiated_successfully' => 'تم بدء عملية الدفع بنجاح',
     'payment_successful' => 'تمت عملية الدفع بنجاح',
     'payment_failed_or_canceled' => 'فشلت عملية الدفع أو تم إلغاؤها',
+    'token_refreshed' => 'تم تجديد التوكن بنجاح',
 ];

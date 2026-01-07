@@ -128,6 +128,14 @@ class AuthService
         return $user->delete();
     }
 
+    public function refreshToken(User $user)
+    {
+        // Delete the current token (optional: strictly rotating)
+        $user->currentAccessToken()->delete();
+
+        return $this->generateTokenResponse($user);
+    }
+
     protected function generateTokenResponse(User $user)
     {
         $token = $user->createToken('auth_token')->plainTextToken;
