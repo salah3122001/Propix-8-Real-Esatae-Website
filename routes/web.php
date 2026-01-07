@@ -154,6 +154,46 @@ Route::get('/fix-images', function () {
     return implode('<br>', $log);
 });
 
+Route::get('/fix-storage', function () {
+    $target = storage_path('app/public');
+    $link = public_path('public_storage');
+
+    $data = [
+        'target_path' => $target,
+        'link_path' => $link,
+        'target_exists' => is_dir($target) ? 'YES' : 'NO',
+        'link_exists' => file_exists($link) ? 'YES' : 'NO',
+        'link_is_link' => is_link($link) ? 'YES' : 'NO',
+        'env_filesystem_public_url' => env('FILESYSTEM_PUBLIC_URL'),
+    ];
+
+    // Attempt to create symlink if missing
+    if (!file_exists($link)) {
+        try {
+            // PHP Native
+            symlink($target, $link);
+            $data['action_php_symlink'] = 'Executed';
+        } catch (\Exception $e) {
+            $data['error_php_symlink'] = $e->getMessage();
+
+            // Shell Fallback
+            if (function_exists('exec')) {
+                $cmd = "ln -s " . escapeshellarg($target) . " " . escapeshellarg($link);
+                exec($cmd, $output, $return);
+                $data['action_shell_exec'] = $cmd;
+                $data['shell_output'] = $output;
+                $data['shell_return'] = $return;
+            }
+        }
+    }
+
+    // Check again
+    clearstatcache();
+    $data['final_status'] = file_exists($link) ? 'FIXED/EXISTS' : 'MISSING';
+
+    return $data;
+});
+
 Route::get('/login', function () {
     return response()->json([
         'message' => 'Login via POST /api/login',
