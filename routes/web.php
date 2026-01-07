@@ -169,21 +169,30 @@ Route::get('/fix-storage', function () {
 
     // Attempt to create symlink if missing
     if (!file_exists($link)) {
-        try {
-            // PHP Native
-            symlink($target, $link);
-            $data['action_php_symlink'] = 'Executed';
-        } catch (\Exception $e) {
-            $data['error_php_symlink'] = $e->getMessage();
+        $created = false;
 
-            // Shell Fallback
-            if (function_exists('exec')) {
-                $cmd = "ln -s " . escapeshellarg($target) . " " . escapeshellarg($link);
-                exec($cmd, $output, $return);
-                $data['action_shell_exec'] = $cmd;
-                $data['shell_output'] = $output;
-                $data['shell_return'] = $return;
+        // Method 1: PHP Native
+        if (function_exists('symlink')) {
+            try {
+                @symlink($target, $link); // Suppress warnings
+                if (is_link($link)) {
+                    $data['action_php_symlink'] = 'Executed';
+                    $created = true;
+                }
+            } catch (\Throwable $e) {
+                $data['error_php_symlink'] = $e->getMessage();
             }
+        } else {
+            $data['info_php_symlink'] = 'Function disabled';
+        }
+
+        // Method 2: Shell Fallback
+        if (!$created && function_exists('exec')) {
+            $cmd = "ln -s " . escapeshellarg($target) . " " . escapeshellarg($link);
+            @exec($cmd, $output, $return);
+            $data['action_shell_exec'] = $cmd;
+            $data['shell_output'] = $output;
+            $data['shell_return'] = $return;
         }
     }
 
