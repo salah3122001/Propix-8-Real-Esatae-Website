@@ -156,7 +156,8 @@ Route::get('/fix-images', function () {
 
 Route::get('/fix-storage', function () {
     $target = storage_path('app/public');
-    $link = public_path('public_storage');
+    // Use base_path() instead of public_path() because the site is served from root
+    $link = base_path('public_storage');
 
     $data = [
         'target_path' => $target,
