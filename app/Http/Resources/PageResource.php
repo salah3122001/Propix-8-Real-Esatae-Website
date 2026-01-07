@@ -19,7 +19,7 @@ class PageResource extends JsonResource
             'team_members' => collect($this->team_members)->map(fn($member) => [
                 'name' => $member['name'] ?? '',
                 'position' => $member['position'] ?? '',
-                'photo' => isset($member['photo']) ? Storage::disk('public')->url($member['photo']) : '',
+                'photo' => isset($member['photo']) ? env('APP_URL') . Storage::disk('public')->url($member['photo']) : '',
             ]),
         ];
     }
