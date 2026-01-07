@@ -40,8 +40,8 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => $storagePath = storage_path('app/public'),
-            'url' => env('FILESYSTEM_PUBLIC_URL', env('APP_URL') . '/storage'),
+            'root' => storage_path('app/public'),
+            'url' => env('FILESYSTEM_PUBLIC_URL', env('APP_URL') . '/storage/app/public'),
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
