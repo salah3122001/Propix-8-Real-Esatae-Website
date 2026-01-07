@@ -60,11 +60,9 @@ Route::get('/storage-link', function () {
 });
 
 Route::get('/clear-cache', function () {
-    \Illuminate\Support\Facades\Artisan::call('config:cache');
-    \Illuminate\Support\Facades\Artisan::call('route:cache');
-    \Illuminate\Support\Facades\Artisan::call('view:cache');
+    \Illuminate\Support\Facades\Artisan::call('config:clear');
     \Illuminate\Support\Facades\Artisan::call('cache:clear');
-    return 'All caches cleared!';
+    return 'Config and Cache Cleared!';
 });
 
 Route::get('/fix-images', function () {
