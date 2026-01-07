@@ -26,10 +26,10 @@ class ProcessVideoHLS implements ShouldQueue
                 ->open($this->media->url);
 
             $hlsExport = $ffmpeg->exportForHLS()
-                ->addFormat(new \FFMpeg\Format\Video\X264('libx264', 'aac'), function ($media) {
+                ->addFormat(new \FFMpeg\Format\Video\X264('aac', 'libx264'), function ($media) {
                     $media->scale(1280, 720);
                 })
-                ->addFormat(new \FFMpeg\Format\Video\X264('libx264', 'aac'), function ($media) {
+                ->addFormat(new \FFMpeg\Format\Video\X264('aac', 'libx264'), function ($media) {
                     $media->scale(640, 360);
                 });
 

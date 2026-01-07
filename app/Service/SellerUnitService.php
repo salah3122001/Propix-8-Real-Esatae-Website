@@ -111,6 +111,7 @@ class SellerUnitService
         $media = $unit->media()->create([
             'url' => $path,
             'type' => $type,
+            'processing_status' => $type === 'video' ? 'pending' : 'completed',
         ]);
 
         if ($type === 'video') {
