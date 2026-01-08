@@ -50,6 +50,17 @@ class TestimonialController extends Controller
     public function store(\App\Http\Requests\Api\Testimonial\StoreTestimonialRequest $request)
     {
         $testimonial = $this->testimonialService->submitTestimonial($request->user(), $request->validated());
+
+        // Notify Admins via Filament (Synchronous)
+        try {
+            $admins = \App\Models\User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notifyNow(new \App\Notifications\NewTestimonialNotification($testimonial));
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Testimonial Notification failed: ' . $e->getMessage());
+        }
+
         return $this->created(new TestimonialResource($testimonial), __('api.testimonial_submitted'));
     }
 

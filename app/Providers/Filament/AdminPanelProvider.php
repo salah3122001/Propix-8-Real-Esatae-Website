@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName(fn () => Setting::getValue('site_name', 'Real Estate'))
+            ->brandName(fn() => Setting::getValue('site_name', 'Real Estate'))
             ->colors([
                 'primary' => Color::Indigo,
                 'danger' => Color::Rose,
@@ -49,23 +49,24 @@ class AdminPanelProvider extends PanelProvider
                 AccountWidget::class,
             ])
             ->middleware([
-            EncryptCookies::class,
-            AddQueuedCookiesToResponse::class,
-            StartSession::class,
-            AuthenticateSession::class,
-            ShareErrorsFromSession::class,
-            VerifyCsrfToken::class,
-            SubstituteBindings::class,
-            DisableBladeIconComponents::class,
-            DispatchServingFilamentEvent::class,
-        ])
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                StartSession::class,
+                AuthenticateSession::class,
+                ShareErrorsFromSession::class,
+                VerifyCsrfToken::class,
+                SubstituteBindings::class,
+                DisableBladeIconComponents::class,
+                DispatchServingFilamentEvent::class,
+            ])
             ->authMiddleware([
                 Authenticate::class,
             ])
             ->renderHook(
                 'panels::head.end',
-                fn () => view('filament.custom-css'),
-            );
+                fn() => view('filament.custom-css'),
+            )
+            ->databaseNotifications();
     }
 
     public function boot(): void

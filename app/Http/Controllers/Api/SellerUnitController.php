@@ -35,6 +35,17 @@ class SellerUnitController extends Controller
     public function store(StoreUnitRequest $request)
     {
         $unit = $this->sellerUnitService->createUnit($request->user(), $request->validated());
+
+        // Notify Admins via Filament (Synchronous)
+        try {
+            $admins = \App\Models\User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notifyNow(new \App\Notifications\NewUnitNotification($unit));
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Notification failed: ' . $e->getMessage());
+        }
+
         return $this->success(new UnitResource($unit), __('api.unit_created'), 201);
     }
 

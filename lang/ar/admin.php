@@ -186,5 +186,15 @@ return [
 
     'notifications' => [
         'error_saving' => 'خطأ أثناء حفظ الإعدادات',
+        'new_unit_added' => 'وحدة جديدة مضافة',
+        'new_unit_body' => 'تم إضافة وحدة جديدة ":title" بواسطة :seller',
+        'new_contact_message' => 'رسالة تواصل جديدة',
+        'new_contact_body' => 'من: :name - :subject',
+        'new_review_posted' => 'تقييم جديد',
+        'new_review_body' => 'الوحدة #:unit_id حصلت على تقييم :rating نجوم',
+        'new_testimonial' => 'رأي عميل جديد',
+        'new_testimonial_body' => 'تم إرسال رأي جديد بواسطة :name',
+        'successful_transaction' => 'عملية ناجحة',
+        'successful_transaction_body' => 'عملية جديدة بقيمة :amount جنيه للوحدة #:unit_id',
     ],
 ];

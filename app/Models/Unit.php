@@ -113,6 +113,13 @@ class Unit extends Model
     {
         return $this->belongsToMany(Amenity::class);
     }
+
+    public function getTitleAttribute()
+    {
+        $locale = app()->getLocale();
+        return $locale === 'ar' ? $this->title_ar : $this->title_en;
+    }
+
     protected function casts(): array
     {
         return [

@@ -183,5 +183,15 @@ return [
     'social_twitter' => 'Twitter (X) Link',
     'notifications' => [
         'error_saving' => 'Error saving settings',
+        'new_unit_added' => 'New Unit Added',
+        'new_unit_body' => 'A new unit ":title" has been added by :seller',
+        'new_contact_message' => 'New Contact Message',
+        'new_contact_body' => 'From: :name - :subject',
+        'new_review_posted' => 'New Review Posted',
+        'new_review_body' => 'Unit #:unit_id received a :rating-star review',
+        'new_testimonial' => 'New Testimonial',
+        'new_testimonial_body' => 'New testimonial submitted by :name',
+        'successful_transaction' => 'Successful Transaction',
+        'successful_transaction_body' => 'New transaction of :amount EGP for unit #:unit_id',
     ],
 ];

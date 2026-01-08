@@ -33,6 +33,17 @@ class ReviewController extends Controller
     public function store(StoreReviewRequest $request)
     {
         $review = $this->reviewService->submitReview($request->user(), $request->validated());
+
+        // Notify Admins via Filament (Synchronous)
+        try {
+            $admins = \App\Models\User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notifyNow(new \App\Notifications\NewReviewNotification($review));
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Review Notification failed: ' . $e->getMessage());
+        }
+
         return new \App\Http\Resources\ReviewResource($review);
     }
 

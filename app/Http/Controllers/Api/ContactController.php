@@ -20,6 +20,17 @@ class ContactController extends Controller
     public function store(StoreContactRequest $request)
     {
         $contact = $this->contactService->submitInquiry($request->validated());
+
+        // Notify Admins via Filament (Synchronous)
+        try {
+            $admins = \App\Models\User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notifyNow(new \App\Notifications\NewContactMessageNotification($contact));
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Contact Notification failed: ' . $e->getMessage());
+        }
+
         return $this->created($contact, __('api.contact_submitted'));
     }
 
