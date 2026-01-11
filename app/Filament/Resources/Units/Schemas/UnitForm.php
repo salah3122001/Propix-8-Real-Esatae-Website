@@ -24,19 +24,23 @@ class UnitForm
                         ->schema([
                             TextInput::make('title_ar')
                                 ->label(__('admin.fields.title_ar'))
+                                ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                 ->required(),
 
                             TextInput::make('title_en')
                                 ->label(__('admin.fields.title_en'))
+                                ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                 ->nullable(),
 
                             Textarea::make('description_ar')
                                 ->label(__('admin.fields.description_ar'))
+                                ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                 ->required()
                                 ->rows(5),
 
                             Textarea::make('description_en')
                                 ->label(__('admin.fields.description_en'))
+                                ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                 ->nullable()
                                 ->rows(5),
 
@@ -55,9 +59,13 @@ class UnitForm
                             Select::make('development_status')
                                 ->label(__('admin.fields.development_status'))
                                 ->options([
+                                    'under_construction' => __('admin.fields.development_statuses.under_construction'),
+                                    'ready' => __('admin.fields.development_statuses.ready'),
+                                    'handover_soon' => __('admin.fields.development_statuses.handover_soon'),
                                     'primary' => __('admin.fields.development_statuses.primary'),
                                     'resale' => __('admin.fields.development_statuses.resale'),
                                 ])
+                                ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                 ->default('primary')
                                 ->visible(fn(Get $get) => $get('offer_type') === 'sale')
                                 ->required(fn(Get $get) => $get('offer_type') === 'sale')
@@ -70,6 +78,7 @@ class UnitForm
                                 ->schema([
                                     TextInput::make('price')
                                         ->label(__('admin.fields.price'))
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->numeric()
                                         ->prefix('EGP')
                                         ->required(),
@@ -92,6 +101,7 @@ class UnitForm
 
                                     TextInput::make('price_per_m2')
                                         ->label(__('admin.fields.price_per_m2'))
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->numeric()
                                         ->nullable(),
 
@@ -101,22 +111,26 @@ class UnitForm
                                             'sale' => __('admin.fields.offer_types.sale'),
                                             'rent' => __('admin.fields.offer_types.rent'),
                                         ])
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->live()
                                         ->required(),
 
                                     TextInput::make('area')
                                         ->label(__('admin.fields.area'))
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->numeric()
                                         ->suffix('m²')
                                         ->required(),
 
                                     TextInput::make('land_area')
                                         ->label(__('admin.fields.land_area'))
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->numeric()
                                         ->nullable(),
 
                                     TextInput::make('internal_area')
                                         ->label(__('admin.fields.internal_area'))
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->numeric()
                                         ->nullable(),
                                 ]),
@@ -127,21 +141,25 @@ class UnitForm
                                         ->schema([
                                             TextInput::make('rooms')
                                                 ->label(__('admin.fields.rooms'))
+                                                ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                                 ->numeric()
                                                 ->nullable(),
 
                                             TextInput::make('bathrooms')
                                                 ->label(__('admin.fields.bathrooms'))
+                                                ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                                 ->numeric()
                                                 ->nullable(),
 
                                             TextInput::make('garages')
                                                 ->label(__('admin.fields.garages'))
+                                                ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                                 ->numeric()
                                                 ->nullable(),
 
                                             TextInput::make('build_year')
                                                 ->label(__('admin.fields.build_year'))
+                                                ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                                 ->numeric()
                                                 ->minValue(1900)
                                                 ->maxValue(date('Y') + 5)
@@ -150,6 +168,7 @@ class UnitForm
                                     \Filament\Forms\Components\CheckboxList::make('amenities')
                                         ->label(__('admin.resources.amenities'))
                                         ->relationship('amenities', 'name_' . app()->getLocale())
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->columns(2)
                                         // ->grid(2)
                                         ->bulkToggleable()
@@ -164,6 +183,7 @@ class UnitForm
                                     Select::make('owner_id')
                                         ->label(__('admin.resources.user'))
                                         ->relationship('owner', 'name')
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->searchable()
                                         ->preload()
                                         ->nullable(),
@@ -178,6 +198,7 @@ class UnitForm
                                     Select::make('city_id')
                                         ->label(__('admin.resources.city'))
                                         ->relationship('city', 'name_' . app()->getLocale())
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->searchable()
                                         ->preload()
                                         ->required(),
@@ -185,6 +206,7 @@ class UnitForm
                                     Select::make('unit_type_id')
                                         ->label(__('admin.resources.unit_type'))
                                         ->relationship('type', 'name_' . app()->getLocale())
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->searchable()
                                         ->preload()
                                         ->required(),
@@ -192,6 +214,7 @@ class UnitForm
                                     Select::make('compound_id')
                                         ->label(__('admin.resources.compound'))
                                         ->relationship('compound', 'name_' . app()->getLocale())
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->searchable()
                                         ->preload()
                                         ->nullable(),
@@ -199,6 +222,7 @@ class UnitForm
                                     Select::make('developer_id')
                                         ->label(__('admin.resources.developer'))
                                         ->relationship('developer', 'name_' . app()->getLocale())
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->searchable()
                                         ->preload()
                                         ->nullable(),
@@ -211,6 +235,7 @@ class UnitForm
                                 ->schema([
                                     TextInput::make('latitude')
                                         ->label(__('admin.fields.latitude'))
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->numeric()
                                         ->minValue(-90)
                                         ->maxValue(90)
@@ -218,12 +243,14 @@ class UnitForm
 
                                     TextInput::make('longitude')
                                         ->label(__('admin.fields.longitude'))
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->numeric()
                                         ->minValue(-180)
                                         ->maxValue(180)
                                         ->nullable(),
                                     Textarea::make('address')
                                         ->label(__('admin.fields.address'))
+                                        ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                         ->columnSpanFull()
                                         ->required()
                                         ->maxLength(500),
@@ -235,6 +262,7 @@ class UnitForm
                             Repeater::make('media')
                                 ->label(__('admin.fields.media'))
                                 ->relationship('media')
+                                ->disabled(fn($record) => $record && $record->owner_id !== \Illuminate\Support\Facades\Auth::id())
                                 ->schema([
                                     Placeholder::make('video_preview')
                                         ->label(__('admin.fields.media'))
