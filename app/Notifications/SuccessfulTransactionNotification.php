@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 use Filament\Notifications\Notification as FilamentNotification;
-use Filament\Notifications\Actions\Action;
+use Filament\Actions\Action;
 
 class SuccessfulTransactionNotification extends Notification
 {
@@ -41,18 +41,31 @@ class SuccessfulTransactionNotification extends Notification
      */
     public function toDatabase(object $notifiable): array
     {
+        $arTitle = __('admin.notifications.successful_transaction', [], 'ar');
+        $enTitle = __('admin.notifications.successful_transaction', [], 'en');
+
+        $arBody = __('admin.notifications.successful_transaction_body', [
+            'amount' => number_format($this->transaction->amount, 2),
+            'unit_id' => $this->transaction->unit_id
+        ], 'ar');
+
+        $enBody = __('admin.notifications.successful_transaction_body', [
+            'amount' => number_format($this->transaction->amount, 2),
+            'unit_id' => $this->transaction->unit_id
+        ], 'en');
+
+        $titleHtml = "<span class='lang-ar'>$arTitle</span><span class='lang-en'>$enTitle</span>";
+        $bodyHtml = "<span class='lang-ar'>$arBody</span><span class='lang-en'>$enBody</span>";
+
         return FilamentNotification::make()
-            ->title(__('admin.notifications.successful_transaction'))
-            ->body(__('admin.notifications.successful_transaction_body', [
-                'amount' => number_format($this->transaction->amount, 2),
-                'unit_id' => $this->transaction->unit_id
-            ]))
+            ->title(new \Illuminate\Support\HtmlString($titleHtml))
+            ->body(new \Illuminate\Support\HtmlString($bodyHtml))
             ->icon('heroicon-o-currency-dollar')
             ->iconColor('success')
             ->actions([
                 Action::make('view')
-                    ->label(__('admin.resources.transaction'))
-                    ->url("/admin/transactions")
+                    ->label(__('admin.resources.transaction', [], 'ar'))
+                    ->url(\App\Filament\Resources\Transactions\TransactionResource::getUrl('edit', ['record' => $this->transaction]))
                     ->markAsRead(),
             ])
             ->getDatabaseMessage();

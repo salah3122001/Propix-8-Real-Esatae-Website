@@ -50,7 +50,7 @@ class ContactResource extends Resource
 
     public static function canEdit($record): bool
     {
-        return false;
+        return true;
     }
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -76,6 +76,7 @@ class ContactResource extends Resource
     {
         return [
             'index' => ListContacts::route('/'),
+            'edit' => EditContact::route('/{record}/edit'),
         ];
     }
 }

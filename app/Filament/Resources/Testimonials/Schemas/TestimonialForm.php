@@ -16,13 +16,24 @@ class TestimonialForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
+            \Filament\Forms\Components\Placeholder::make('user_link')
+                ->label(__('admin.resources.user'))
+                ->content(fn($record) => $record?->user ? new \Illuminate\Support\HtmlString('<a href="' . \App\Filament\Resources\Users\UserResource::getUrl('edit', ['record' => $record->user_id]) . '" class="text-primary-600 hover:underline font-bold">' . $record->user->name . '</a>') : '-'),
             Select::make('user_id')
                 ->label(__('admin.resources.user'))
                 ->relationship('user', 'name')
                 ->searchable()
                 ->preload()
                 ->live()
+                ->hidden(fn($record) => $record !== null)
                 ->afterStateUpdated(fn($state, $set) => $set('name', \App\Models\User::find($state)?->name)),
+
+            \Filament\Forms\Components\Placeholder::make('user_email')
+                ->label(__('admin.fields.email'))
+                ->content(fn($record) => $record?->user?->email ?? '-'),
+            \Filament\Forms\Components\Placeholder::make('user_phone')
+                ->label(__('admin.fields.phone'))
+                ->content(fn($record) => $record?->user?->phone ?? '-'),
 
             TextInput::make('name')
                 ->label(__('admin.fields.name'))

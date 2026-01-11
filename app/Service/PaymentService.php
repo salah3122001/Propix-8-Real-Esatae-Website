@@ -92,19 +92,9 @@ class PaymentService
 
             // Notify Admins via Filament (Synchronous)
             try {
-                $notification = \Filament\Notifications\Notification::make()
-                    ->title('Successful Transaction')
-                    ->body("New transaction of {$transaction->amount} EGP for unit #{$transaction->unit_id}.")
-                    ->icon('heroicon-o-currency-dollar')
-                    ->iconColor('success')
-                    ->actions([
-                        \Filament\Actions\Action::make('view')
-                            ->url("/admin/transactions"),
-                    ]);
-
                 $admins = \App\Models\User::where('role', 'admin')->get();
                 foreach ($admins as $admin) {
-                    $admin->notifyNow($notification->toDatabase());
+                    $admin->notifyNow(new \App\Notifications\SuccessfulTransactionNotification($transaction));
                 }
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error('Transaction Notification failed: ' . $e->getMessage());

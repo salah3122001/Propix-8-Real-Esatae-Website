@@ -168,6 +168,13 @@ class UnitForm
                                         ->preload()
                                         ->nullable(),
 
+                                    \Filament\Forms\Components\Placeholder::make('owner_email')
+                                        ->label(__('admin.fields.email'))
+                                        ->content(fn($record) => $record?->owner?->email ?? '-'),
+                                    \Filament\Forms\Components\Placeholder::make('owner_phone')
+                                        ->label(__('admin.fields.phone'))
+                                        ->content(fn($record) => $record?->owner?->phone ?? '-'),
+
                                     Select::make('city_id')
                                         ->label(__('admin.resources.city'))
                                         ->relationship('city', 'name_' . app()->getLocale())

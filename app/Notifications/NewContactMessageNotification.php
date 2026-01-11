@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 use Filament\Notifications\Notification as FilamentNotification;
-use Filament\Notifications\Actions\Action;
+use Filament\Actions\Action;
 
 class NewContactMessageNotification extends Notification
 {
@@ -41,18 +41,31 @@ class NewContactMessageNotification extends Notification
      */
     public function toDatabase(object $notifiable): array
     {
+        $arTitle = __('admin.notifications.new_contact_message', [], 'ar');
+        $enTitle = __('admin.notifications.new_contact_message', [], 'en');
+
+        $arBody = __('admin.notifications.new_contact_body', [
+            'name' => $this->contact->name,
+            'subject' => $this->contact->subject
+        ], 'ar');
+
+        $enBody = __('admin.notifications.new_contact_body', [
+            'name' => $this->contact->name,
+            'subject' => $this->contact->subject
+        ], 'en');
+
+        $titleHtml = "<span class='lang-ar'>$arTitle</span><span class='lang-en'>$enTitle</span>";
+        $bodyHtml = "<span class='lang-ar'>$arBody</span><span class='lang-en'>$enBody</span>";
+
         return FilamentNotification::make()
-            ->title(__('admin.notifications.new_contact_message'))
-            ->body(__('admin.notifications.new_contact_body', [
-                'name' => $this->contact->name,
-                'subject' => $this->contact->subject
-            ]))
+            ->title(new \Illuminate\Support\HtmlString($titleHtml))
+            ->body(new \Illuminate\Support\HtmlString($bodyHtml))
             ->icon('heroicon-o-envelope')
             ->iconColor('info')
             ->actions([
                 Action::make('view')
-                    ->label(__('admin.resources.contact'))
-                    ->url("/admin/contacts")
+                    ->label(__('admin.resources.contact', [], 'ar'))
+                    ->url(\App\Filament\Resources\Contacts\ContactResource::getUrl('edit', ['record' => $this->contact]))
                     ->markAsRead(),
             ])
             ->getDatabaseMessage();

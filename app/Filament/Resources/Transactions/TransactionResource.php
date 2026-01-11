@@ -54,7 +54,7 @@ class TransactionResource extends Resource
     }
     public static function canEdit($record): bool
     {
-        return false;
+        return true;
     }
 
     public static function canDelete($record): bool
@@ -88,6 +88,7 @@ class TransactionResource extends Resource
     {
         return [
             'index' => ListTransactions::route('/'),
+            'edit' => EditTransaction::route('/{record}/edit'),
         ];
     }
 }

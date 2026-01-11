@@ -63,7 +63,12 @@ class StatsOverview extends StatsOverviewWidget
                 ->url(route('filament.admin.resources.reviews.index', [
                     'tableFilters' => [
                         'rating_filter' => [
-                            'value' => '<3',
+                            'value' => 'bad',
+                        ],
+                    ],
+                    'filters' => [
+                        'rating_filter' => [
+                            'value' => 'bad',
                         ],
                     ],
                 ])),

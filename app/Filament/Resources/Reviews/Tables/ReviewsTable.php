@@ -27,9 +27,12 @@ class ReviewsTable
                         '3' => '⭐ 3',
                         '4' => '⭐ 4',
                         '5' => '⭐ 5',
+                        'bad' => __('admin.widgets.stats_overview.bad_reviews'),
                     ])
                     ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data) {
-                        if ($data['value']) {
+                        if ($data['value'] === 'bad') {
+                            $query->where('rating', '<', 3);
+                        } elseif ($data['value']) {
                             $query->where('rating', $data['value']);
                         }
                     }),

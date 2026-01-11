@@ -24,7 +24,7 @@ class ReviewResource extends Resource
     }
     public static function canEdit($record): bool
     {
-        return false;
+        return true;
     }
 
     public static function canDelete($record): bool
@@ -63,7 +63,7 @@ class ReviewResource extends Resource
         return (string) Review::count();
     }
 
-    
+
 
     protected static ?string $recordTitleAttribute = 'comment';
 
@@ -88,6 +88,7 @@ class ReviewResource extends Resource
     {
         return [
             'index' => ListReviews::route('/'),
+            'edit' => EditReview::route('/{record}/edit'),
         ];
     }
 }

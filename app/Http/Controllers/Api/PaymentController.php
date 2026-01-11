@@ -58,9 +58,11 @@ class PaymentController extends Controller
         $success = $this->paymentService->handleCallback($data);
 
         if ($success) {
-            return $this->success([], __('api.payment_successful'));
+            // return $this->success([], __('api.payment_successful'));
+            return redirect()->to(config('app.frontend_url') . '/payment-success');
         }
 
-        return $this->error(__('api.payment_failed_or_canceled'), 400);
+        // return $this->error(__('api.payment_failed_or_canceled'), 400);
+        return redirect()->to(config('app.frontend_url') . '/payment-failed');
     }
 }
