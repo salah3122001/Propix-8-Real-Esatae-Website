@@ -31,12 +31,15 @@ class UnitExporter extends Exporter
             ExportColumn::make('build_year'),
             ExportColumn::make('land_area'),
             ExportColumn::make('internal_area'),
-            ExportColumn::make('status'),
-            ExportColumn::make('owner_id'),
-            ExportColumn::make('city_id'),
-            ExportColumn::make('unit_type_id'),
-            ExportColumn::make('compound_id'),
-            ExportColumn::make('developer_id'),
+            ExportColumn::make('status'), // الحالة
+
+            // --- تصدير الأسماء بدلاً من الأرقام لسهولة القراءة والاستخدام كنموذج ---
+            ExportColumn::make('owner.email')->label('إيميل المالك'),
+            ExportColumn::make('city.name_ar')->label('المدينة'),
+            ExportColumn::make('type.name_ar')->label('نوع العقار'),
+            ExportColumn::make('compound.name_ar')->label('الكمبوند'),
+            ExportColumn::make('developer.name_ar')->label('المطور العقاري'),
+
             ExportColumn::make('created_at'),
             ExportColumn::make('updated_at'),
             ExportColumn::make('latitude'),

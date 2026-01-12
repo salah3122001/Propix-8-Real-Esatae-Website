@@ -65,9 +65,15 @@ class NewUnitNotification extends Notification
             ->icon('heroicon-o-home-modern')
             ->iconColor('info')
             ->actions([
-                Action::make('view')
-                    ->label(__('admin.resources.unit', [], 'ar')) // Action labels are harder to make dynamic without a custom view, keeping one for now
+                Action::make('view_ar')
+                    ->label(__('admin.resources.unit', [], 'ar'))
                     ->url("/admin/units/{$this->unit->id}/edit")
+                    ->extraAttributes(['class' => 'lang-ar'])
+                    ->markAsRead(),
+                Action::make('view_en')
+                    ->label(__('admin.resources.unit', [], 'en'))
+                    ->url("/admin/units/{$this->unit->id}/edit")
+                    ->extraAttributes(['class' => 'lang-en'])
                     ->markAsRead(),
             ])
             ->getDatabaseMessage();

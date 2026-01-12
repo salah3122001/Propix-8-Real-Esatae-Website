@@ -63,9 +63,15 @@ class SuccessfulTransactionNotification extends Notification
             ->icon('heroicon-o-currency-dollar')
             ->iconColor('success')
             ->actions([
-                Action::make('view')
+                Action::make('view_ar')
                     ->label(__('admin.resources.transaction', [], 'ar'))
                     ->url(\App\Filament\Resources\Transactions\TransactionResource::getUrl('edit', ['record' => $this->transaction]))
+                    ->extraAttributes(['class' => 'lang-ar'])
+                    ->markAsRead(),
+                Action::make('view_en')
+                    ->label(__('admin.resources.transaction', [], 'en'))
+                    ->url(\App\Filament\Resources\Transactions\TransactionResource::getUrl('edit', ['record' => $this->transaction]))
+                    ->extraAttributes(['class' => 'lang-en'])
                     ->markAsRead(),
             ])
             ->getDatabaseMessage();

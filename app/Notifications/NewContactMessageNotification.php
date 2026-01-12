@@ -63,9 +63,15 @@ class NewContactMessageNotification extends Notification
             ->icon('heroicon-o-envelope')
             ->iconColor('info')
             ->actions([
-                Action::make('view')
+                Action::make('view_ar')
                     ->label(__('admin.resources.contact', [], 'ar'))
                     ->url(\App\Filament\Resources\Contacts\ContactResource::getUrl('edit', ['record' => $this->contact]))
+                    ->extraAttributes(['class' => 'lang-ar'])
+                    ->markAsRead(),
+                Action::make('view_en')
+                    ->label(__('admin.resources.contact', [], 'en'))
+                    ->url(\App\Filament\Resources\Contacts\ContactResource::getUrl('edit', ['record' => $this->contact]))
+                    ->extraAttributes(['class' => 'lang-en'])
                     ->markAsRead(),
             ])
             ->getDatabaseMessage();

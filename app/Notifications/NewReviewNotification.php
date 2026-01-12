@@ -63,9 +63,15 @@ class NewReviewNotification extends Notification
             ->icon('heroicon-o-star')
             ->iconColor('info')
             ->actions([
-                Action::make('view')
+                Action::make('view_ar')
                     ->label(__('admin.resources.review', [], 'ar'))
                     ->url(\App\Filament\Resources\Reviews\ReviewResource::getUrl('edit', ['record' => $this->review]))
+                    ->extraAttributes(['class' => 'lang-ar'])
+                    ->markAsRead(),
+                Action::make('view_en')
+                    ->label(__('admin.resources.review', [], 'en'))
+                    ->url(\App\Filament\Resources\Reviews\ReviewResource::getUrl('edit', ['record' => $this->review]))
+                    ->extraAttributes(['class' => 'lang-en'])
                     ->markAsRead(),
             ])
             ->getDatabaseMessage();

@@ -170,6 +170,7 @@ return [
         'approve' => 'موافقة',
         'reject' => 'رفض',
         'export' => 'تصدير بيانات (Excel)',
+        'import' => 'استيراد بيانات (Excel)',
         'export_pdf' => 'تصدير بيانات (PDF)',
     ],
     'site_settings' => 'إعدادات الموقع',

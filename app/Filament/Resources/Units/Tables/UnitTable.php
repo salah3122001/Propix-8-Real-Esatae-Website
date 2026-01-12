@@ -10,7 +10,9 @@ use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\ExportAction;
 use Filament\Actions\ExportBulkAction;
+use Filament\Actions\ImportAction;
 use App\Filament\Exports\UnitExporter;
+use App\Filament\Imports\UnitImporter;
 use Filament\Actions\BulkAction;
 use Filament\Tables\Table;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -147,6 +149,12 @@ class UnitTable
                     ])),
             ])
             ->headerActions([
+                // زر الاستيراد: يسمح برفع ملف إكسيل لإضافة وحدات كثيرة مرة واحدة
+                ImportAction::make()
+                    ->importer(UnitImporter::class)
+                    ->label(__('admin.actions.import' ?? 'Import'))
+                    ->icon('heroicon-o-document-arrow-up'),
+
                 ExportAction::make()
                     ->exporter(UnitExporter::class)
                     ->label(__('admin.actions.export' ?? 'Export')),

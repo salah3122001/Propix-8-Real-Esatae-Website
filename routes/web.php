@@ -202,11 +202,11 @@ Route::get('/fix-storage', function () {
     return $data;
 });
 
-Route::get('/login', function () {
-    return response()->json([
-        'message' => 'Login via POST /api/login',
-        'info' => 'This page is a placeholder for the frontend login page. If you arrived here after email verification, your email has been successfully verified.'
-    ]);
-})->name('login');
+// Route::get('/login', function () {
+//     return response()->json([
+//         'message' => 'Login via POST /api/login',
+//         'info' => 'This page is a placeholder for the frontend login page. If you arrived here after email verification, your email has been successfully verified.'
+//     ]);
+// })->name('login');
 
 require __DIR__ . '/auth.php';

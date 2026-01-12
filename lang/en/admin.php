@@ -168,6 +168,7 @@ return [
         'approve' => 'Approve',
         'reject' => 'Reject',
         'export' => 'Export Data (Excel)',
+        'import' => 'Import Data (Excel)',
         'export_pdf' => 'Export Data (PDF)',
     ],
     'social_media' => 'Social Media',

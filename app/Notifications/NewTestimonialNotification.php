@@ -61,9 +61,15 @@ class NewTestimonialNotification extends Notification
             ->icon('heroicon-o-chat-bubble-left-right')
             ->iconColor('info')
             ->actions([
-                Action::make('view')
+                Action::make('view_ar')
                     ->label(__('admin.resources.testimonial', [], 'ar'))
                     ->url(\App\Filament\Resources\Testimonials\TestimonialResource::getUrl('edit', ['record' => $this->testimonial]))
+                    ->extraAttributes(['class' => 'lang-ar'])
+                    ->markAsRead(),
+                Action::make('view_en')
+                    ->label(__('admin.resources.testimonial', [], 'en'))
+                    ->url(\App\Filament\Resources\Testimonials\TestimonialResource::getUrl('edit', ['record' => $this->testimonial]))
+                    ->extraAttributes(['class' => 'lang-en'])
                     ->markAsRead(),
             ])
             ->getDatabaseMessage();
