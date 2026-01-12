@@ -13,7 +13,6 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->api(prepend: [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \App\Http\Middleware\SetLocale::class,
         ]);
 
@@ -21,8 +20,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'approved_seller' => \App\Http\Middleware\EnsureSellerIsApproved::class,
         ]);
-
-        //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, \Illuminate\Http\Request $request) {
@@ -38,6 +35,16 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'message' => __('api.not_found'),
                 ], 404);
+            }
+        });
+
+        // التعامل مع أي خطأ آخر في الـ API ليعود بصيغة JSON بدلاً من HTML
+        $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'error' => class_basename($e)
+                ], method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500);
             }
         });
     })->create();
