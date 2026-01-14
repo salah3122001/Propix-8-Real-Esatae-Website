@@ -15,13 +15,13 @@ class Setting extends Model
     public static function getValue(string $key, $default = null)
     {
         $setting = self::where('key', $key)->first();
-        
+
         if (!$setting) {
             return $default;
         }
 
         if ($setting->type === 'image' && $setting->value) {
-            return Storage::disk('public')->url($setting->value);
+            return env('APP_URL') . Storage::disk('public')->url($setting->value);
         }
 
         if ($setting->type === 'json') {

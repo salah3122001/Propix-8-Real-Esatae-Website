@@ -283,10 +283,10 @@ class UnitForm
                                             'video' => 'الصيغ المدعومة: MP4, MOV, AVI, WEBM',
                                             'image' => 'الصيغ المدعومة: JPG, PNG, JPEG',
                                             '3d' => 'الملفات المدعومة: OBJ, FBX, GLB, GLTF',
-                                            'floorplan' => 'الملفات المدعومة: JPG, PNG, JPEG, PDF',
+                                            'floorplan' => 'الملفات المدعومة: JPG, PNG, JPEG',
                                             default => __('admin.fields.keep_current'),
                                         })
-                                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'video/*', 'application/octet-stream', 'application/pdf'])
+                                        ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg', 'video/*', 'application/octet-stream'])
                                         ->disk('public')
                                         ->visibility('public')
                                         ->directory('units/media')

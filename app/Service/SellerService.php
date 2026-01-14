@@ -25,6 +25,9 @@ class SellerService
             ->withCount(['units' => function ($query) {
                 $query->where('status', 'approved');
             }])
+            ->with(['units' => function ($query) {
+                $query->where('status', 'approved');
+            }])
             ->find($id);
     }
 }

@@ -33,9 +33,9 @@ class ServiceForm
                     ->columnSpanFull(),
                 FileUpload::make('icon')
                     ->label(__('admin.fields.icon'))
-                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP, JFIF')
+                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, JPEG')
                     ->image()
-                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jfif'])
+                    ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
                     ->disk('public')
                     ->visibility('public')
                     ->directory('services-icons')

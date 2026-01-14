@@ -57,7 +57,7 @@ class DeveloperForm
                                     ->label(__('admin.fields.logo'))
                                     ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, JPEG')
                                     ->image()
-                                    ->acceptedFileTypes(['image/jpeg', 'image/png'])
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
                                     ->disk('public')
                                     ->visibility('public')
                                     ->directory('developers')

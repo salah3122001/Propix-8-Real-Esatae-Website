@@ -18,6 +18,7 @@ class DeveloperResource extends JsonResource
             'email' => $this->email ?? '',
             'phone' => $this->phone ?? '',
             'address' => $this->address ?? '',
+            'units' => UnitListResource::collection($this->whenLoaded('units')),
         ];
     }
 }

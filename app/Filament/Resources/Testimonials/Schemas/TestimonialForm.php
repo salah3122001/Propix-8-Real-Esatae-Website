@@ -52,9 +52,9 @@ class TestimonialForm
 
             FileUpload::make('image')
                 ->label(__('admin.fields.image'))
-                ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP, JFIF')
+                ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG,JPEG')
                 ->image()
-                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jfif'])
+                ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
                 ->directory('testimonials')
                 ->disk('public')
                 ->visibility('public')

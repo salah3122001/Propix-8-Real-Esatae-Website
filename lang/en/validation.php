@@ -104,7 +104,7 @@ return [
         'id_photo' => [
             'required_if' => 'identity photo is required to register as a seller for identity verification.',
             'image' => 'The uploaded file must be an image.',
-            'mimes' => 'The image must be in format: jpg, jpeg, png, webp.',
+            'mimes' => 'The image must be in format: jpg, jpeg, png.',
             'max' => 'The image size must not exceed 2MB.',
         ],
     ],

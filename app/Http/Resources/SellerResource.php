@@ -23,6 +23,7 @@ class SellerResource extends JsonResource
             'avatar' => $this->avatar ? env('APP_URL') . Storage::disk('public')->url($this->avatar) : '',
             'units_count' => $this->units_count ?? 0,
             'created_at' => $this->created_at->format('Y-m-d') ?? '',
+            'units' => UnitListResource::collection($this->whenLoaded('units')),
         ];
     }
 }

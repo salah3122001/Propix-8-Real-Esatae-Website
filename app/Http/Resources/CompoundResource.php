@@ -14,6 +14,7 @@ class CompoundResource extends JsonResource
             'id' => $this->id,
             'name' => ($lang === 'ar' ? $this->name_ar : $this->name_en) ?? '',
             'description' => ($lang === 'ar' ? $this->description_ar : $this->description_en) ?? '',
+            'units' => UnitListResource::collection($this->whenLoaded('units')),
         ];
     }
 }

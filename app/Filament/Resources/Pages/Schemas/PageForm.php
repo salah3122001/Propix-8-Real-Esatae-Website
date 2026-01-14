@@ -57,9 +57,9 @@ class PageForm
                                     ->label(fn($get) => match ($get('type')) {
                                         default => __('admin.fields.image'),
                                     })
-                                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, GIF, WEBP, JFIF')
+                                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, JPEG')
                                     ->image()
-                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jfif'])
+                                    ->acceptedFileTypes(['image/jpg', 'image/png', 'image/jpeg'])
                                     ->directory('team')
                                     ->disk('public')
                                     ->visibility('public')

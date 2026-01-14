@@ -39,7 +39,7 @@ class UpdateUnitRequest extends FormRequest
             'amenities' => 'nullable|array',
             'amenities.*' => 'exists:amenities,id',
             'media' => 'nullable|array',
-            'media.*.file' => 'required|file|mimes:jpg,jpeg,png,mp4,mov,obj,glb,pdf|max:20480',
+            'media.*.file' => 'required|file|mimes:jpg,jpeg,png,mp4,mov,obj,glb|max:20480',
             'media.*.type' => 'required|in:image,video,3d,floorplan',
         ];
     }

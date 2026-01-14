@@ -13,6 +13,6 @@ class DeveloperService
 
     public function getDeveloperById($id)
     {
-        return Developer::where('status', 1)->find($id);
+        return Developer::where('status', 1)->with('units')->find($id);
     }
 }
