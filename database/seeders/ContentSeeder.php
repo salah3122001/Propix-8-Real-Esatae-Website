@@ -65,42 +65,42 @@ class ContentSeeder extends Seeder
                 'title_en' => 'Property Search',
                 'content_ar' => 'نساعدك في العثور على العقار المثالي الذي يناسب احتياجاتك وميزانيتك من خلال قاعدة بيانات شاملة ومحدثة باستمرار.',
                 'content_en' => 'We help you find the perfect property that matches your needs and budget through a comprehensive and constantly updated database.',
-                'icon' => null,
+                'icon' => '',
             ],
             [
                 'title_ar' => 'التقييم العقاري',
                 'title_en' => 'Property Valuation',
                 'content_ar' => 'نقدم خدمات تقييم عقاري دقيقة ومعتمدة لمساعدتك في اتخاذ قرارات استثمارية صحيحة.',
                 'content_en' => 'We provide accurate and certified property valuation services to help you make informed investment decisions.',
-                'icon' => null,
+                'icon' => '',
             ],
             [
                 'title_ar' => 'الاستشارات القانونية',
                 'title_en' => 'Legal Consultation',
                 'content_ar' => 'فريقنا القانوني المتخصص يوفر لك الاستشارات والإرشادات اللازمة لضمان سلامة المعاملات العقارية.',
                 'content_en' => 'Our specialized legal team provides you with the necessary consultations and guidance to ensure safe real estate transactions.',
-                'icon' => null,
+                'icon' => '',
             ],
             [
                 'title_ar' => 'إدارة الممتلكات',
                 'title_en' => 'Property Management',
                 'content_ar' => 'نوفر خدمات إدارة شاملة لممتلكاتك العقارية، من الصيانة إلى التأجير وتحصيل الإيجارات.',
                 'content_en' => 'We provide comprehensive management services for your real estate properties, from maintenance to leasing and rent collection.',
-                'icon' => null,
+                'icon' => '',
             ],
             [
                 'title_ar' => 'التسويق العقاري',
                 'title_en' => 'Real Estate Marketing',
                 'content_ar' => 'نستخدم أحدث استراتيجيات التسويق الرقمي لضمان وصول عقارك إلى أكبر عدد من المشترين المحتملين.',
                 'content_en' => 'We use the latest digital marketing strategies to ensure your property reaches the maximum number of potential buyers.',
-                'icon' => null,
+                'icon' => '',
             ],
             [
                 'title_ar' => 'التمويل العقاري',
                 'title_en' => 'Mortgage Financing',
                 'content_ar' => 'نساعدك في الحصول على أفضل عروض التمويل العقاري من خلال شراكاتنا مع البنوك الرائدة.',
                 'content_en' => 'We help you get the best mortgage financing offers through our partnerships with leading banks.',
-                'icon' => null,
+                'icon' => '',
             ],
         ];
 
@@ -116,7 +116,7 @@ class ContentSeeder extends Seeder
                 'title_en' => 'About Us',
                 'content_ar' => 'نحن شركة رائدة في مجال العقارات، نقدم خدمات متكاملة للبحث عن العقارات وشرائها وبيعها. مع أكثر من 15 عاماً من الخبرة في السوق المصري، نفخر بتقديم أفضل الحلول العقارية لعملائنا. فريقنا المتخصص يعمل على مدار الساعة لضمان رضاكم الكامل وتحقيق أهدافكم الاستثمارية.',
                 'content_en' => 'We are a leading real estate company, offering comprehensive services for property search, buying, and selling. With over 15 years of experience in the Egyptian market, we pride ourselves on providing the best real estate solutions to our clients. Our specialized team works around the clock to ensure your complete satisfaction and achieve your investment goals.',
-                'team_members' => null,
+                'team_members' => '',
             ],
             [
                 'slug' => 'contact-us',
@@ -124,39 +124,16 @@ class ContentSeeder extends Seeder
                 'title_en' => 'Contact Us',
                 'content_ar' => 'نحن هنا لخدمتك! يمكنك التواصل معنا عبر الهاتف، البريد الإلكتروني، أو زيارة مكتبنا الرئيسي. فريق خدمة العملاء لدينا جاهز للإجابة على جميع استفساراتك ومساعدتك في العثور على العقار المثالي.',
                 'content_en' => 'We are here to serve you! You can contact us by phone, email, or visit our main office. Our customer service team is ready to answer all your inquiries and help you find the perfect property.',
-                'team_members' => null,
+                'team_members' => '',
             ],
-            [
-                'slug' => 'our-team',
-                'title_ar' => 'فريقنا',
-                'title_en' => 'Our Team',
-                'content_ar' => 'فريقنا يتكون من نخبة من المتخصصين في مجال العقارات، الاستشارات القانونية، والتسويق. نعمل معاً لتقديم أفضل تجربة عقارية لعملائنا.',
-                'content_en' => 'Our team consists of elite specialists in real estate, legal consulting, and marketing. We work together to provide the best real estate experience for our clients.',
-                'team_members' => json_encode([
-                    [
-                        'name' => 'أحمد محمد',
-                        'position' => 'المدير التنفيذي',
-                        'photo' => null,
-                    ],
-                    [
-                        'name' => 'سارة علي',
-                        'position' => 'مديرة المبيعات',
-                        'photo' => null,
-                    ],
-                    [
-                        'name' => 'محمود حسن',
-                        'position' => 'مستشار قانوني',
-                        'photo' => null,
-                    ],
-                ]),
-            ],
+
             [
                 'slug' => 'privacy-policy',
                 'title_ar' => 'سياسة الخصوصية',
                 'title_en' => 'Privacy Policy',
                 'content_ar' => 'نحن نحترم خصوصيتك ونلتزم بحماية بياناتك الشخصية. جميع المعلومات التي تقدمها لنا يتم التعامل معها بسرية تامة ولا يتم مشاركتها مع أي جهات خارجية دون موافقتك الصريحة.',
                 'content_en' => 'We respect your privacy and are committed to protecting your personal data. All information you provide us is handled with complete confidentiality and is not shared with any third parties without your explicit consent.',
-                'team_members' => null,
+                'team_members' => '',
             ],
             [
                 'slug' => 'terms-and-conditions',
@@ -164,7 +141,7 @@ class ContentSeeder extends Seeder
                 'title_en' => 'Terms and Conditions',
                 'content_ar' => 'باستخدامك لموقعنا وخدماتنا، فإنك توافق على الالتزام بالشروط والأحكام التالية. يرجى قراءتها بعناية قبل استخدام أي من خدماتنا.',
                 'content_en' => 'By using our website and services, you agree to comply with the following terms and conditions. Please read them carefully before using any of our services.',
-                'team_members' => null,
+                'team_members' => '',
             ],
         ];
 

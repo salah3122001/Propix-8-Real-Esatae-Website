@@ -14,14 +14,9 @@ class StatsController extends Controller
     {
         $stats = [
             [
-                'label' => app()->getLocale() === 'ar' ? 'مشاريع عقارية' : 'Real Estate Projects',
-                'value' => \App\Models\Compound::count() . '+',
-                'icon' => 'projects-icon',
-            ],
-            [
-                'label' => app()->getLocale() === 'ar' ? 'وحدات تم تأجيرها' : 'Rented Units',
-                'value' => \App\Models\Unit::where('status', 'rented')->count() . '+',
-                'icon' => 'rented-icon',
+                'label' => app()->getLocale() === 'ar' ? 'مدن نغطيها' : 'Cities Covered',
+                'value' => \App\Models\City::count() . '+',
+                'icon' => 'location-icon',
             ],
             [
                 'label' => app()->getLocale() === 'ar' ? 'عملاء سعداء' : 'Happy Clients',
@@ -29,9 +24,14 @@ class StatsController extends Controller
                 'icon' => 'clients-icon',
             ],
             [
-                'label' => app()->getLocale() === 'ar' ? 'سنوات من الخبرة' : 'Years of Experience',
-                'value' => '20+',
-                'icon' => 'experience-icon',
+                'label' => app()->getLocale() === 'ar' ? 'عقارات تم بيعها' : 'Properties Sold',
+                'value' => \App\Models\Unit::where('status', 'sold')->count() . '+',
+                'icon' => 'sold-icon',
+            ],
+            [
+                'label' => app()->getLocale() === 'ar' ? 'مشروعات تم تنفيذها' : 'Projects Executed',
+                'value' => \App\Models\Compound::count() . '+',
+                'icon' => 'projects-icon',
             ],
         ];
 

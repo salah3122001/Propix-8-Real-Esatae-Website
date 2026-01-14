@@ -239,6 +239,7 @@ class UnitForm
                                         ->numeric()
                                         ->minValue(-90)
                                         ->maxValue(90)
+                                        ->helperText('الرقم الأول في خرائط جوجل (قبل الفاصلة)')
                                         ->nullable(),
 
                                     TextInput::make('longitude')
@@ -247,6 +248,7 @@ class UnitForm
                                         ->numeric()
                                         ->minValue(-180)
                                         ->maxValue(180)
+                                        ->helperText('الرقم الثاني في خرائط جوجل (بعد الفاصلة)')
                                         ->nullable(),
                                     Textarea::make('address')
                                         ->label(__('admin.fields.address'))

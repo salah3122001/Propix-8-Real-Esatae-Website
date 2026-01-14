@@ -31,6 +31,18 @@ class UnitListResource extends JsonResource
                 "id" => $this->city_id,
                 "name" => ($lang === "ar" ? ($this->city->name_ar ?? "") : ($this->city->name_en ?? "")),
             ],
+            "compound" => $this->whenLoaded("compound", function () use ($lang) {
+                return [
+                    "id" => $this->compound_id,
+                    "name" => ($lang === "ar" ? ($this->compound->name_ar ?? "") : ($this->compound->name_en ?? "")),
+                ];
+            }),
+            "developer" => $this->whenLoaded("developer", function () use ($lang) {
+                return [
+                    "id" => $this->developer_id,
+                    "name" => ($lang === "ar" ? ($this->developer->name_ar ?? "") : ($this->developer->name_en ?? "")),
+                ];
+            }),
             "unit_type" => [
                 "id" => $this->unit_type_id,
                 "name" => ($lang === "ar" ? ($this->type->name_ar ?? "") : ($this->type->name_en ?? "")),
@@ -40,6 +52,8 @@ class UnitListResource extends JsonResource
                 $image = $this->media->where("type", "image")->first();
                 return $image ? env('APP_URL') . Storage::disk("public")->url($image->url) : "";
             }),
+            "average_rating" => (float) ($this->reviews_avg_rating ?? 0),
+            "reviews_count" => (int) ($this->reviews_count ?? 0),
             "created_at" => $this->created_at?->toISOString() ?? "",
         ];
     }

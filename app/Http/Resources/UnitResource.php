@@ -49,6 +49,8 @@ class UnitResource extends JsonResource
             'compound' => new CompoundResource($this->whenLoaded('compound')),
             'developer' => new DeveloperResource($this->whenLoaded('developer')),
             'amenities' => AmenityResource::collection($this->whenLoaded('amenities')),
+            'average_rating' => (float) ($this->reviews_avg_rating ?? 0),
+            'reviews_count' => (int) ($this->reviews_count ?? 0),
             'created_at' => $this->created_at?->toISOString() ?? '',
         ];
     }

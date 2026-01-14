@@ -18,6 +18,7 @@ return [
         'user' => "We can't find a user with that email address",
         'reset' => 'Your password has been reset',
         'token' => 'This password reset token is invalid',
+        'link_not_clicked' => 'You must click the link in the email before trying to change your password.',
     ],
     'testimonial_updated' => 'Testimonial updated successfully',
     'testimonial_deleted' => 'Testimonial deleted successfully',

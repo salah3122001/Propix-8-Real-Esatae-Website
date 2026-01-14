@@ -12,6 +12,8 @@ class UnitService
     {
         $query = Unit::query()
             ->with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'amenities'])
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
             ->where('status', 'approved') // Only show approved units for public
             ->where('is_visible', true);
 
@@ -164,6 +166,8 @@ class UnitService
     public function getUnitById(int $id): Unit
     {
         return Unit::with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'reviews.user', 'amenities'])
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
             ->where('status', 'approved')
             ->where('is_visible', true)
             ->findOrFail($id);
