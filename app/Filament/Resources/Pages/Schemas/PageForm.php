@@ -72,31 +72,6 @@ class PageForm
                             ->collapsible()
                             ->collapsed(),
                     ]),
-
-                Section::make(__('admin.fields.features'))
-                    ->description(__('admin.fields.features_desc'))
-                    ->visible(fn($get) => $get('slug') === 'about-us')
-                    ->schema([
-                        Repeater::make('features')
-                            ->label(__('admin.fields.features'))
-                            ->addActionLabel(__('admin.actions.add_feature'))
-                            ->schema([
-                                TextInput::make('title_ar')->label('العنوان (عربي)')->required(),
-                                TextInput::make('title_en')->label('العنوان (إنجليزي)'),
-                                TextInput::make('description_ar')->label('الوصف (عربي)'),
-                                TextInput::make('description_en')->label('الوصف (إنجليزي)'),
-                                FileUpload::make('icon')
-                                    ->label('الأيقونة')
-                                    ->image()
-                                    ->directory('pages/icons')
-                                    ->disk('public'),
-
-                            ])
-                            ->columns(2)
-                            ->itemLabel(fn(array $state): ?string => $state['title_ar'] ?? null)
-                            ->collapsible()
-                            ->collapsed(),
-                    ]),
             ]);
     }
 }
