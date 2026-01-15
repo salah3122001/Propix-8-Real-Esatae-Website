@@ -41,6 +41,10 @@ class ViewingResource extends Resource
     {
         return 'إدارة المحتوى';
     }
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) Viewing::count();
+    }
 
     public static function form(Schema $schema): Schema
     {

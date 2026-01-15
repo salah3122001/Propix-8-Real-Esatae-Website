@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Viewing;
+use Filament\Actions\Action;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Filament\Notifications\Notification as FilamentNotification;
@@ -74,7 +75,7 @@ class NewViewingRequestNotification extends Notification
             ->icon('heroicon-o-calendar')
             ->iconColor('info')
             ->actions([
-                \Filament\Notifications\Actions\Action::make('view')
+                Action::make('view')
                     ->label($locale === 'ar' ? 'عرض التفاصيل' : 'View Details')
                     ->url('/admin/viewings/' . $this->viewing->id . '/edit')
                     ->markAsRead(),

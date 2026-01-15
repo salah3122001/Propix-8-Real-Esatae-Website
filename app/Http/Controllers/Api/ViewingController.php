@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateViewingRequest;
 use App\Http\Resources\ViewingResource;
 use App\Service\ViewingService;
 use App\Traits\ApiResponse;
+use Filament\Actions\Action;
 
 class ViewingController extends Controller
 {
@@ -43,8 +44,23 @@ class ViewingController extends Controller
         // Notify Admins via Filament (Synchronous)
         try {
             $admins = \App\Models\User::where('role', 'admin')->get();
+            $locale = app()->getLocale();
+
             foreach ($admins as $admin) {
-                $admin->notifyNow(new \App\Notifications\NewViewingRequestNotification($viewing));
+                \Filament\Notifications\Notification::make()
+                    ->title($locale === 'ar' ? 'طلب معاينة جديد' : 'New Viewing Request')
+                    ->body($locale === 'ar'
+                        ? "طلب معاينة جديد من {$viewing->name} للوحدة #{$viewing->unit_id}"
+                        : "New viewing request from {$viewing->name} for unit #{$viewing->unit_id}")
+                    ->icon('heroicon-o-calendar')
+                    ->iconColor('info')
+                    ->actions([
+                        Action::make('view')
+                            ->label($locale === 'ar' ? 'عرض التفاصيل' : 'View Details')
+                            ->url('/admin/viewings/' . $viewing->id . '/edit')
+                            ->markAsRead(),
+                    ])
+                    ->sendToDatabase($admin);
             }
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Viewing Notification failed: ' . $e->getMessage());
