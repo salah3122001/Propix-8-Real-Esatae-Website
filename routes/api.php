@@ -120,5 +120,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/testimonials', [App\Http\Controllers\Api\TestimonialController::class, 'store']);
         Route::put('/testimonials/{id}', [App\Http\Controllers\Api\TestimonialController::class, 'update']);
         Route::delete('/testimonials/{id}', [App\Http\Controllers\Api\TestimonialController::class, 'destroy']);
+
+        // Bookings
+        Route::get('/bookings', [App\Http\Controllers\Api\ViewingController::class, 'index']);
+        Route::post('/bookings', [App\Http\Controllers\Api\ViewingController::class, 'store']);
+        Route::put('/bookings/{id}', [App\Http\Controllers\Api\ViewingController::class, 'update']);
+        Route::delete('/bookings/{id}', [App\Http\Controllers\Api\ViewingController::class, 'destroy']);
     });
 });

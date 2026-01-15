@@ -23,6 +23,7 @@ return [
     'testimonial_updated' => 'تم تحديث الرأي بنجاح',
     'testimonial_deleted' => 'تم حذف الرأي بنجاح',
     'testimonial_not_found' => 'الرأي غير موجود أو ليس لديك صلاحية للوصول إليه',
+    'testimonial_already_submitted' => 'لقد قمت بإضافة رأيك مسبقاً. شكراً لك!',
     'fetched_successfully' => 'تم جلب البيانات بنجاح',
     'no_reviews_found' => 'لا توجد مراجعات بعد',
     'review_updated' => 'تم تحديث المراجعة بنجاح',
@@ -78,4 +79,20 @@ return [
     'payment_successful' => 'تمت عملية الدفع بنجاح',
     'payment_failed_or_canceled' => 'فشلت عملية الدفع أو تم إلغاؤها',
     'token_refreshed' => 'تم تجديد التوكن بنجاح',
+
+    // Viewing Messages
+    'viewing' => [
+        'retrieved_successfully' => 'تم جلب طلبات المعاينة بنجاح',
+        'created_successfully' => 'طلبك قيد المراجعة وسيتم الرد قريباً',
+        'cancelled' => 'تم إلغاء طلب المعاينة',
+        'accepted' => 'تم قبول طلب المعاينة',
+        'updated_pending_approval' => 'تم تحديث طلب المعاينة، في انتظار موافقة الإدارة',
+        'no_changes_made' => 'لم يتم إجراء أي تغييرات',
+        'not_found' => 'طلب المعاينة غير موجود أو ليس لديك صلاحية للوصول إليه',
+    ],
+
+    // Review Messages
+    'review' => [
+        'already_reviewed' => 'لقد قمت بتقييم هذه الوحدة من قبل. يمكنك تعديل تقييمك السابق بدلاً من ذلك.',
+    ],
 ];

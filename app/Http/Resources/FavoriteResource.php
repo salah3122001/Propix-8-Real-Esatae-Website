@@ -14,10 +14,7 @@ class FavoriteResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'unit' => [
-                'id' => $this->unit_id,
-                'title' => $this->unit->{'title_' . app()->getLocale()} ?? $this->unit->title_ar,
-            ],
+            'unit' => $this->unit ? new UnitListResource($this->unit) : '',
             'created_at' => $this->created_at->toISOString(),
         ];
     }

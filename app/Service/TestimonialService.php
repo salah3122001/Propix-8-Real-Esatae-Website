@@ -73,6 +73,6 @@ class TestimonialService
      */
     public function getActiveTestimonials()
     {
-        return Testimonial::where('status', true)->latest()->paginate(10);
+        return Testimonial::where('status', true)->latest()->paginate(3);
     }
 }

@@ -23,6 +23,7 @@ return [
     'testimonial_updated' => 'Testimonial updated successfully',
     'testimonial_deleted' => 'Testimonial deleted successfully',
     'testimonial_not_found' => 'Testimonial not found or you do not have permission to access it',
+    'testimonial_already_submitted' => 'You have already submitted a testimonial. Thank you!',
     'fetched_successfully' => 'Fetched successfully',
     'no_reviews_found' => 'No reviews found yet',
     'review_updated' => 'Review updated successfully',
@@ -78,4 +79,20 @@ return [
     'payment_successful' => 'Payment successful',
     'payment_failed_or_canceled' => 'Payment failed or was canceled',
     'token_refreshed' => 'Token refreshed successfully',
+
+    // Viewing Messages
+    'viewing' => [
+        'retrieved_successfully' => 'Viewings retrieved successfully',
+        'created_successfully' => 'Your request is under review and will be responded to soon',
+        'cancelled' => 'Viewing cancelled',
+        'accepted' => 'Viewing accepted',
+        'updated_pending_approval' => 'Viewing updated, pending admin approval',
+        'no_changes_made' => 'No changes made',
+        'not_found' => 'Viewing not found or you do not have permission to access it',
+    ],
+
+    // Review Messages
+    'review' => [
+        'already_reviewed' => 'You have already reviewed this unit. You can update your previous review instead.',
+    ],
 ];

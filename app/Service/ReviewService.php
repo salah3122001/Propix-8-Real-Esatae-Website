@@ -30,7 +30,7 @@ class ReviewService
         return Review::with('user:id,name')
             ->where('unit_id', $unitId)
             ->latest()
-            ->paginate(10);
+            ->paginate(3);
     }
 
     // Update a review (only if it belongs to the user)
