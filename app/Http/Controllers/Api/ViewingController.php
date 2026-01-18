@@ -28,6 +28,10 @@ class ViewingController extends Controller
     {
         $viewings = $this->viewingService->getUserViewings();
 
+        if ($viewings->isEmpty()) {
+            return $this->success([], __('api.viewing.no_viewings_found'));
+        }
+
         return $this->success(
             ViewingResource::collection($viewings),
             __('api.viewing.retrieved_successfully')

@@ -91,6 +91,7 @@ return [
         'deleted_successfully' => 'تم حذف طلب المعاينة بنجاح',
         'no_changes_made' => 'لم يتم إجراء أي تغييرات',
         'not_found' => 'طلب المعاينة غير موجود أو ليس لديك صلاحية للوصول إليه',
+        'no_viewings_found' => 'لم تقم بطلب معاينة لأي وحدة بعد',
     ],
 
     // Review Messages

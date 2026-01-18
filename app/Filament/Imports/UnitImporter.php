@@ -84,31 +84,31 @@ class UnitImporter extends Importer
             // البحث عن المدينة باسمها العربي
             ImportColumn::make('city')
                 ->label('المدينة')
-                ->relationship(lookupColumn: 'name_ar')
+                ->relationship(resolveUsing: 'name_ar')
                 ->requiredMapping()
                 ->rules(['required']),
 
             // البحث عن نوع الوحدة باسمها العربي
             ImportColumn::make('type')
                 ->label('نوع العقار')
-                ->relationship(lookupColumn: 'name_ar')
+                ->relationship(resolveUsing: 'name_ar')
                 ->requiredMapping()
                 ->rules(['required']),
 
             // البحث عن المجمع السكني (الكمبوند) باسمه
             ImportColumn::make('compound')
                 ->label('الكمبوند')
-                ->relationship(lookupColumn: 'name_ar'),
+                ->relationship(resolveUsing: 'name_ar'),
 
             // البحث عن المطور العقاري باسمه
             ImportColumn::make('developer')
                 ->label('المطور العقاري')
-                ->relationship(lookupColumn: 'name_ar'),
+                ->relationship(resolveUsing: 'name_ar'),
 
             // البحث عن المالك (البائع) بالإيميل لضمان الدقة
             ImportColumn::make('owner')
                 ->label('إيميل المالك')
-                ->relationship(lookupColumn: 'email'),
+                ->relationship(resolveUsing: 'email'),
 
             ImportColumn::make('latitude')
                 ->label('خط العرض')

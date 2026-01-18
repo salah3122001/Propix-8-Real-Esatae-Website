@@ -15,7 +15,7 @@ class ViewingService
     public function getUserViewings()
     {
         return Viewing::where('user_id', Auth::id())
-            ->with(['unit:id,title_ar,title_en,address'])
+            ->with(['unit.media', 'unit.city', 'unit.type', 'unit.compound', 'unit.developer'])
             ->latest()
             ->get();
     }
@@ -134,6 +134,8 @@ class ViewingService
      */
     public function getUserViewing(int $id): Viewing
     {
-        return Viewing::where('user_id', Auth::id())->findOrFail($id);
+        return Viewing::where('user_id', Auth::id())
+            ->with(['unit.media', 'unit.city', 'unit.type', 'unit.compound', 'unit.developer'])
+            ->findOrFail($id);
     }
 }

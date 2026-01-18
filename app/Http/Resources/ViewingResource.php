@@ -22,11 +22,7 @@ class ViewingResource extends JsonResource
                 'name' => $this->user?->name,
                 'email' => $this->user?->email,
             ],
-            'unit' => [
-                'id' => $this->unit?->id,
-                'title' => $this->unit?->title,
-                'address' => $this->unit?->address,
-            ],
+            'unit' => new UnitListResource($this->whenLoaded('unit')),
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,

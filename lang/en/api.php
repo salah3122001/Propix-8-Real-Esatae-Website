@@ -91,6 +91,7 @@ return [
         'deleted_successfully' => 'Viewing deleted successfully',
         'no_changes_made' => 'No changes made',
         'not_found' => 'Viewing not found or you do not have permission to access it',
+        'no_viewings_found' => 'No viewing requests found yet',
     ],
 
     // Review Messages
