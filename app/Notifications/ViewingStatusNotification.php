@@ -12,15 +12,17 @@ class ViewingStatusNotification extends Notification
     use Queueable;
 
     protected $viewing;
-    protected $type; // 'accepted', 'reschedule_admin', 'user_response'
+    protected $type; // 'accepted', 'reschedule_admin', 'user_response', 'cancelled'
+    protected $channels;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Viewing $viewing, string $type)
+    public function __construct(Viewing $viewing, string $type, array $channels = null)
     {
         $this->viewing = $viewing;
         $this->type = $type;
+        $this->channels = $channels;
     }
 
     /**
@@ -30,8 +32,12 @@ class ViewingStatusNotification extends Notification
      */
     public function via(object $notifiable): array
     {
+        if ($this->channels) {
+            return $this->channels;
+        }
+
         // Send to both database and email for users, only database for admins
-        if ($this->type === 'user_response') {
+        if ($this->type === 'user_response' || $this->type === 'cancelled') {
             return ['database']; // Admin notifications
         }
 
@@ -105,6 +111,10 @@ class ViewingStatusNotification extends Notification
                 'time' => $this->viewing->time
             ]),
             'user_response' => __('notifications.user_modified_time', [
+                'name' => $this->viewing->name,
+                'unit_id' => $this->viewing->unit_id
+            ]),
+            'cancelled' => __('notifications.user_cancelled_viewing', [
                 'name' => $this->viewing->name,
                 'unit_id' => $this->viewing->unit_id
             ]),

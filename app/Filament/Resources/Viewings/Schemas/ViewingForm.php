@@ -9,6 +9,12 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Schema;
 
+use Filament\Forms\Components\Actions\Action;
+use App\Filament\Resources\Units\UnitResource;
+use Filament\Actions\Action as ActionsAction;
+
+use App\Filament\Resources\Users\UserResource;
+
 class ViewingForm
 {
     public static function configure(Schema $schema): Schema
@@ -16,43 +22,75 @@ class ViewingForm
         return $schema
             ->components([
                 Select::make('user_id')
+                    ->label(__('viewing.fields.user'))
                     ->relationship('user', 'name')
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->disabledOn('edit')
+                    ->suffixAction(
+                        ActionsAction::make('view_user')
+                            ->icon('heroicon-o-arrow-top-right-on-square')
+                            ->tooltip(__('viewing.fields.user'))
+                            ->url(fn($record) => $record?->user_id ? UserResource::getUrl('edit', ['record' => $record->user_id]) : null)
+                            ->openUrlInNewTab()
+                            ->visible(fn($record) => $record?->user_id !== null)
+                    ),
                 Select::make('unit_id')
-                    ->relationship('unit', 'title')
+                    ->label(__('viewing.fields.unit'))
+                    ->relationship('unit')
+                    ->getOptionLabelFromRecordUsing(fn($record) => $record->title)
+                    ->searchable(['title_ar', 'title_en'])
+                    ->preload()
                     ->required()
-                    ->searchable()
-                    ->preload(),
+                    ->disabledOn('edit')
+                    ->suffixAction(
+                        ActionsAction::make('view_unit')
+                            ->icon('heroicon-o-arrow-top-right-on-square')
+                            ->tooltip(__('viewing.fields.unit'))
+                            ->url(fn($record) => $record?->unit_id ? UnitResource::getUrl('edit', ['record' => $record->unit_id]) : null)
+                            ->openUrlInNewTab()
+                            ->visible(fn($record) => $record?->unit_id !== null)
+                    ),
                 TextInput::make('name')
-                    ->required(),
+                    ->label(__('viewing.fields.client_name'))
+                    ->required()
+                    ->disabledOn('edit'),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label(__('viewing.fields.email'))
                     ->email()
-                    ->required(),
+                    ->required()
+                    ->disabledOn('edit'),
                 TextInput::make('phone')
+                    ->label(__('viewing.fields.phone'))
                     ->tel()
-                    ->required(),
+                    ->required()
+                    ->disabledOn('edit'),
                 DatePicker::make('date')
+                    ->label(__('viewing.fields.date'))
                     ->required(),
                 TimePicker::make('time')
+                    ->label(__('viewing.fields.time'))
                     ->required(),
                 Select::make('status')
+                    ->label(__('viewing.fields.status'))
                     ->required()
                     ->options([
-                        'pending' => 'Pending',
-                        'accepted' => 'Accepted',
-                        'rejected' => 'Rejected',
-                        'reschedule_admin' => 'Reschedule (Admin)',
-                        'cancelled' => 'Cancelled',
+                        'pending' => __('viewing.statuses.pending'),
+                        'accepted' => __('viewing.statuses.accepted'),
+                        'rejected' => __('viewing.statuses.rejected'),
+                        'reschedule_admin' => __('viewing.statuses.reschedule_admin'),
+                        'cancelled' => __('viewing.statuses.cancelled'),
                     ])
                     ->default('pending'),
                 Textarea::make('notes')
-                    ->columnSpanFull(),
+                    ->label(__('viewing.fields.notes'))
+                    ->columnSpanFull()
+                    ->disabledOn('edit'),
                 Textarea::make('user_message')
-                    ->label('User Message')
-                    ->helperText('Message from user when proposing new time')
-                    ->columnSpanFull(),
+                    ->label(__('viewing.fields.user_message'))
+                    ->helperText(__('viewing.fields.user_message_helper'))
+                    ->columnSpanFull()
+                    ->disabledOn('edit'),
             ]);
     }
 }

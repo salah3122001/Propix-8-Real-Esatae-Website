@@ -84,9 +84,11 @@ return [
     'viewing' => [
         'retrieved_successfully' => 'Viewings retrieved successfully',
         'created_successfully' => 'Your request is under review and will be responded to soon',
+        'already_requested' => 'You have already requested a viewing for this unit.',
         'cancelled' => 'Viewing cancelled',
         'accepted' => 'Viewing accepted',
         'updated_pending_approval' => 'Viewing updated, pending admin approval',
+        'deleted_successfully' => 'Viewing deleted successfully',
         'no_changes_made' => 'No changes made',
         'not_found' => 'Viewing not found or you do not have permission to access it',
     ],

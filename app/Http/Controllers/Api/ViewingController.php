@@ -81,7 +81,7 @@ class ViewingController extends Controller
 
         // Cancel viewing
         if ($request->has('status') && $request->status == 'cancelled') {
-            $this->viewingService->cancelViewing($viewing);
+            $this->viewingService->cancelViewing($viewing, $request->validated());
             return $this->success(
                 new ViewingResource($viewing->fresh()),
                 __('api.viewing.cancelled')
@@ -107,5 +107,16 @@ class ViewingController extends Controller
         }
 
         return $this->error(__('api.viewing.no_changes_made'), 400);
+    }
+
+    /**
+     * Delete a viewing request
+     */
+    public function destroy($id)
+    {
+        $viewing = $this->viewingService->getUserViewing($id);
+        $viewing->delete();
+
+        return $this->success(null, __('api.viewing.deleted_successfully'));
     }
 }

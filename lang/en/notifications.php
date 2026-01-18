@@ -39,4 +39,5 @@ return [
     'viewing_accepted_msg' => 'Viewing request for unit #:unit_id has been accepted on :date at :time',
     'new_time_proposed_msg' => 'New time proposed for viewing unit #:unit_id: :date at :time',
     'user_modified_time' => 'User :name has modified the viewing time for unit #:unit_id',
+    'user_cancelled_viewing' => 'User :name has cancelled the viewing for unit #:unit_id',
 ];

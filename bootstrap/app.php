@@ -37,6 +37,14 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 404);
             }
         });
+        $exceptions->render(function (\Illuminate\Validation\ValidationException $e, \Illuminate\Http\Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+        });
 
         // التعامل مع أي خطأ آخر في الـ API ليعود بصيغة JSON بدلاً من HTML
         $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {

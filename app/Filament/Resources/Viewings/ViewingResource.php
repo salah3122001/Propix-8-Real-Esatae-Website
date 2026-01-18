@@ -24,22 +24,22 @@ class ViewingResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'معاينة';
+        return __('viewing.resource_label');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'المعاينات';
+        return __('viewing.resource_label_plural');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'المعاينات';
+        return __('viewing.navigation_label');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'إدارة المحتوى';
+        return __('admin.navigation_groups.content_management');
     }
     public static function getNavigationBadge(): ?string
     {

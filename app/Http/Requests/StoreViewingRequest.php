@@ -15,6 +15,25 @@ class StoreViewingRequest extends FormRequest
     }
 
     /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $exists = \App\Models\Viewing::where('unit_id', $this->unit_id)
+                ->where('user_id', $this->user()->id)
+                ->exists();
+
+            if ($exists) {
+                $validator->errors()->add('unit_id', __('api.viewing.already_requested'));
+            }
+        });
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>

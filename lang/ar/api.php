@@ -84,9 +84,11 @@ return [
     'viewing' => [
         'retrieved_successfully' => 'تم جلب طلبات المعاينة بنجاح',
         'created_successfully' => 'طلبك قيد المراجعة وسيتم الرد قريباً',
+        'already_requested' => 'لقد قمت بطلب معاينة لهذه الوحدة مسبقاً.',
         'cancelled' => 'تم إلغاء طلب المعاينة',
         'accepted' => 'تم قبول طلب المعاينة',
         'updated_pending_approval' => 'تم تحديث طلب المعاينة، في انتظار موافقة الإدارة',
+        'deleted_successfully' => 'تم حذف طلب المعاينة بنجاح',
         'no_changes_made' => 'لم يتم إجراء أي تغييرات',
         'not_found' => 'طلب المعاينة غير موجود أو ليس لديك صلاحية للوصول إليه',
     ],

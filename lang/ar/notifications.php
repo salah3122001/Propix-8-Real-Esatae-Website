@@ -39,4 +39,5 @@ return [
     'viewing_accepted_msg' => 'تم قبول طلب معاينة الوحدة #:unit_id بتاريخ :date الساعة :time',
     'new_time_proposed_msg' => 'تم اقتراح موعد جديد لمعاينة الوحدة #:unit_id: :date الساعة :time',
     'user_modified_time' => 'قام المستخدم :name بتعديل موعد المعاينة للوحدة #:unit_id',
+    'user_cancelled_viewing' => 'قام المستخدم :name بإلغاء طلب المعاينة للوحدة #:unit_id',
 ];
