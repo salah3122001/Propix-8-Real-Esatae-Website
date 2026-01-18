@@ -5,6 +5,8 @@ namespace App\Filament\Widgets;
 use App\Models\Transaction;
 use Filament\Widgets\ChartWidget;
 
+// Payment system is disabled - Widget commented out to hide from dashboard
+/*
 class TransactionsByMonthChart extends ChartWidget
 {
     public function getHeading(): ?string
@@ -38,3 +40,4 @@ class TransactionsByMonthChart extends ChartWidget
         return 'bar';
     }
 }
+*/

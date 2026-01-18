@@ -18,6 +18,9 @@ class TransactionResource extends Resource
 {
     protected static ?string $model = Transaction::class;
 
+    // Hide from navigation as payment system is not currently needed
+    protected static bool $shouldRegisterNavigation = false;
+
 
     public static function getNavigationGroup(): ?string
     {

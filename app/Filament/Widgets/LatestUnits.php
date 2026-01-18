@@ -55,6 +55,7 @@ class LatestUnits extends TableWidget
                     ->label(__('admin.fields.created_at'))
                     ->dateTime()
                     ->sortable(),
-            ]);
+            ])
+            ->recordUrl(fn (Unit $record): string => \App\Filament\Resources\Units\UnitResource::getUrl('edit', ['record' => $record]));
     }
 }

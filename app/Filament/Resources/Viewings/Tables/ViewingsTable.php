@@ -73,7 +73,57 @@ class ViewingsTable
             ])
             ->searchPlaceholder(__('viewing.search_placeholder'))
             ->filters([
-                //
+                \Filament\Tables\Filters\SelectFilter::make('status')
+                    ->label(__('viewing.filters.status'))
+                    ->options([
+                        'pending' => __('viewing.statuses.pending'),
+                        'accepted' => __('viewing.statuses.accepted'),
+                        'rejected' => __('viewing.statuses.rejected'),
+                        'cancelled' => __('viewing.statuses.cancelled'),
+                        'reschedule_admin' => __('viewing.statuses.reschedule_admin'),
+                    ])
+                    ->placeholder(__('viewing.filters.all_statuses')),
+
+                \Filament\Tables\Filters\Filter::make('date_range')
+                    ->form([
+                        DatePicker::make('date_from')
+                            ->label(__('viewing.filters.date_from'))
+                            ->placeholder(__('viewing.filters.date_from_placeholder')),
+                        DatePicker::make('date_until')
+                            ->label(__('viewing.filters.date_until'))
+                            ->placeholder(__('viewing.filters.date_until_placeholder')),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query
+                            ->when($data['date_from'], fn($q, $date) => $q->whereDate('date', '>=', $date))
+                            ->when($data['date_until'], fn($q, $date) => $q->whereDate('date', '<=', $date));
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['date_from'] ?? null) {
+                            $indicators[] = \Filament\Tables\Filters\Indicator::make(__('viewing.filters.from') . ' ' . \Carbon\Carbon::parse($data['date_from'])->toFormattedDateString())
+                                ->removeField('date_from');
+                        }
+                        if ($data['date_until'] ?? null) {
+                            $indicators[] = \Filament\Tables\Filters\Indicator::make(__('viewing.filters.until') . ' ' . \Carbon\Carbon::parse($data['date_until'])->toFormattedDateString())
+                                ->removeField('date_until');
+                        }
+                        return $indicators;
+                    }),
+
+                \Filament\Tables\Filters\SelectFilter::make('user_id')
+                    ->label(__('viewing.filters.user'))
+                    ->relationship('user', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->placeholder(__('viewing.filters.all_users')),
+
+                \Filament\Tables\Filters\SelectFilter::make('unit_id')
+                    ->label(__('viewing.filters.unit'))
+                    ->relationship('unit', 'title_ar')
+                    ->searchable()
+                    ->preload()
+                    ->placeholder(__('viewing.filters.all_units')),
             ])
             ->actions([
                 Action::make('accept')

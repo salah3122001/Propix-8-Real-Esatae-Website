@@ -14,11 +14,7 @@ class Unit extends Model
     {
         static::updated(function (Unit $unit) {
             if ($unit->wasChanged('status')) {
-                if ($unit->status === 'sold' && $unit->owner) {
-                    $unit->owner->notify(new \App\Notifications\UnitSoldNotification($unit));
-                } elseif ($unit->status === 'rented' && $unit->owner) {
-                    $unit->owner->notify(new \App\Notifications\UnitRentedNotification($unit));
-                } elseif ($unit->status === 'approved') {
+                if ($unit->status === 'approved') {
                     // Notify buyers in the same city
                     $buyers = \App\Models\User::where('role', 'buyer')
                         ->where('city_id', $unit->city_id)
@@ -51,7 +47,6 @@ class Unit extends Model
         'land_area',
         'internal_area',
         'status',
-        'owner_id',
         'city_id',
         'unit_type_id',
         'compound_id',

@@ -6,6 +6,7 @@ use App\Models\Review;
 use App\Models\Transaction;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\Viewing;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -73,6 +74,28 @@ class StatsOverview extends StatsOverviewWidget
                     ],
                 ])),
 
+            Stat::make(__('admin.resources.viewings'), Viewing::count())
+                ->description(__('admin.widgets.stats_overview.total_viewings'))
+                ->descriptionIcon('heroicon-m-calendar-days')
+                ->icon('heroicon-o-calendar')
+                ->color('success')
+                ->url(route('filament.admin.resources.viewings.index')),
+
+            Stat::make(__('admin.widgets.stats_overview.pending_viewings'), Viewing::where('status', 'pending')->count())
+                ->description(__('admin.widgets.stats_overview.pending_viewings_desc'))
+                ->descriptionIcon('heroicon-m-clock')
+                ->icon('heroicon-o-clock')
+                ->color('warning')
+                ->url(route('filament.admin.resources.viewings.index', [
+                    'tableFilters' => [
+                        'status' => [
+                            'value' => 'pending',
+                        ],
+                    ],
+                ])),
+
+            // Payment system disabled - Transaction stats commented out
+            /*
             Stat::make(__('admin.resources.transactions'), Transaction::count())
                 ->description(__('admin.widgets.stats_overview.total_transactions'))
                 ->descriptionIcon('heroicon-m-arrows-right-left')
@@ -86,6 +109,7 @@ class StatsOverview extends StatsOverviewWidget
                 ->icon('heroicon-o-banknotes')
                 ->color('success')
                 ->url(route('filament.admin.resources.transactions.index')),
+            */
         ];
     }
 
@@ -93,7 +117,7 @@ class StatsOverview extends StatsOverviewWidget
     {
         return [
             UnitsByCityChart::class,
-            TransactionsByMonthChart::class,
+            // TransactionsByMonthChart::class, // Commented out - payment system disabled
         ];
     }
 }

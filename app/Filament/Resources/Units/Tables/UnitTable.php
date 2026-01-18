@@ -13,6 +13,7 @@ use Filament\Actions\ExportBulkAction;
 use Filament\Actions\ImportAction;
 use App\Filament\Exports\UnitExporter;
 use App\Filament\Imports\UnitImporter;
+use App\Filament\Actions\ExcelImportAction;
 use Filament\Actions\BulkAction;
 use Filament\Tables\Table;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -150,7 +151,7 @@ class UnitTable
             ])
             ->headerActions([
                 // زر الاستيراد: يسمح برفع ملف إكسيل لإضافة وحدات كثيرة مرة واحدة
-                ImportAction::make()
+                ExcelImportAction::make()
                     ->importer(UnitImporter::class)
                     ->label(__('admin.actions.import' ?? 'Import'))
                     ->icon('heroicon-o-document-arrow-up'),
@@ -158,6 +159,24 @@ class UnitTable
                 ExportAction::make()
                     ->exporter(UnitExporter::class)
                     ->label(__('admin.actions.export' ?? 'Export')),
+
+                Action::make('download_template')
+                    ->label(__('admin.actions.download_template'))
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function () {
+                        $columns = UnitImporter::getColumns();
+
+                        $headers = array_map(fn ($col) => $col->getLabel(), $columns);
+                        $examples = array_map(fn ($col) => $col->getExample() ?? '', $columns);
+
+                        return response()->streamDownload(function () use ($headers, $examples) {
+                            $writer = new \OpenSpout\Writer\XLSX\Writer();
+                            $writer->openToFile('php://output');
+                            $writer->addRow(\OpenSpout\Common\Entity\Row::fromValues($headers));
+                            $writer->addRow(\OpenSpout\Common\Entity\Row::fromValues($examples));
+                            $writer->close();
+                        }, 'units-template.xlsx');
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

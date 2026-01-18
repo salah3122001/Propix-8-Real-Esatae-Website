@@ -36,6 +36,7 @@ class LatestContacts extends TableWidget
                     ->label(__('admin.fields.created_at'))
                     ->dateTime()
                     ->sortable(),
-            ]);
+            ])
+            ->recordUrl(fn (Contact $record): string => \App\Filament\Resources\Contacts\ContactResource::getUrl('edit', ['record' => $record]));
     }
 }
