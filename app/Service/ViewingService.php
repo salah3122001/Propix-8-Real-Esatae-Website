@@ -25,7 +25,7 @@ class ViewingService
      */
     public function createViewing(array $data): Viewing
     {
-        return Viewing::create([
+        $viewing = Viewing::create([
             'user_id' => Auth::id(),
             'unit_id' => $data['unit_id'],
             'name' => $data['name'],
@@ -36,6 +36,8 @@ class ViewingService
             'notes' => $data['notes'] ?? null,
             'status' => 'pending',
         ]);
+
+        return $viewing->load(['unit.media', 'unit.city', 'unit.type', 'unit.compound', 'unit.developer']);
     }
 
     /**
