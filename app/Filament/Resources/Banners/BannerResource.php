@@ -81,6 +81,7 @@ class BannerResource extends Resource
             ->columns([
                 ImageColumn::make('image')
                     ->label(__('admin.fields.image'))
+                    ->disk('public')
                     ->rounded()
                     ->size(100),
                 TextColumn::make('url')
