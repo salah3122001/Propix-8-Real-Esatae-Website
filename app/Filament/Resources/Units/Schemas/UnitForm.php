@@ -65,6 +65,11 @@ class UnitForm
                                 ->visible(fn(Get $get) => $get('offer_type') === 'sale')
                                 ->required(fn(Get $get) => $get('offer_type') === 'sale')
                                 ->nullable(),
+
+                            \Filament\Forms\Components\Toggle::make('is_visible')
+                                ->label(__('admin.fields.is_visible'))
+                                ->default(true)
+                                ->required(),
                         ]),
 
                     \Filament\Schemas\Components\Tabs\Tab::make(__('admin.fields.details' ?? 'Details'))
@@ -241,10 +246,10 @@ class UnitForm
                                             default => __('admin.fields.file'),
                                         })
                                         ->helperText(fn($get) => match ($get('type')) {
-                                            'video' => 'الصيغ المدعومة: MP4, MOV, AVI, WEBM',
-                                            'image' => 'الصيغ المدعومة: JPG, PNG, JPEG',
-                                            '3d' => 'الملفات المدعومة: OBJ, FBX, GLB, GLTF',
-                                            'floorplan' => 'الملفات المدعومة: JPG, PNG, JPEG',
+                                            'video' => __('admin.fields.allowed_formats', ['formats' => 'mp4, mov, avi, webm']),
+                                            'image' => __('admin.fields.allowed_formats', ['formats' => 'jpg, png, jpeg']),
+                                            '3d' => __('admin.fields.allowed_formats', ['formats' => 'obj, fbx, glb, gltf']),
+                                            'floorplan' => __('admin.fields.allowed_formats', ['formats' => 'jpg, png, jpeg']),
                                             default => __('admin.fields.keep_current'),
                                         })
                                         ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg', 'video/*', 'application/octet-stream'])
@@ -276,4 +281,3 @@ class UnitForm
         ]);
     }
 }
-

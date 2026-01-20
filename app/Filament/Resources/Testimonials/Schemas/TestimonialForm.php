@@ -37,18 +37,21 @@ class TestimonialForm
 
             TextInput::make('name')
                 ->label(__('admin.fields.name'))
-                ->helperText(__('admin.fields.auto_generated_name'))
-                ->required(),
+                // ->helperText(__('admin.fields.auto_generated_name'))
+                ->required()
+                ->disabled(fn ($record) => $record !== null),
 
             TextInput::make('position')
-                ->label(__('admin.fields.position')),
+                ->label(__('admin.fields.position'))
+                ->disabled(fn ($record) => $record !== null),
 
             Textarea::make('content')
                 ->label(__('admin.fields.content'))
                 ->required()
                 ->minLength(10)
                 ->maxLength(500)
-                ->columnSpanFull(),
+                ->columnSpanFull()
+                ->disabled(fn ($record) => $record !== null),
 
             FileUpload::make('image')
                 ->label(__('admin.fields.image'))
@@ -59,11 +62,13 @@ class TestimonialForm
                 ->disk('public')
                 ->visibility('public')
                 ->downloadable()
-                ->openable(),
+                ->openable()
+                ->disabled(fn ($record) => $record !== null),
 
             Toggle::make('status')
                 ->label(__('admin.fields.active_site'))
-                ->default(true),
+                ->default(true)
+                ->disabled(fn ($record) => $record !== null),
         ]);
     }
 }

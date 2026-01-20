@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\CompoundController;
 use App\Http\Controllers\Api\UnitController;
 use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\Maintenance\MaintenanceController;
+use App\Http\Controllers\Api\BannerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +44,14 @@ Route::get('/units/{id}/related', [App\Http\Controllers\Api\UnitController::clas
 Route::get('/testimonials', [App\Http\Controllers\Api\TestimonialController::class, 'index']);
 Route::post('/contact', [App\Http\Controllers\Api\ContactController::class, 'store']);
 Route::get('/settings', [App\Http\Controllers\Api\SettingController::class, 'index']);
+Route::get('/banners', [BannerController::class, 'index']);
+Route::get('/maintenance-services', [MaintenanceController::class, 'index']);
+Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'maintenance'], function () {
+    Route::get('my-bookings', [MaintenanceController::class, 'myBookings']);
+    Route::post('bookings', [MaintenanceController::class, 'store']);
+    Route::put('bookings/{booking}', [MaintenanceController::class, 'update']);
+    Route::delete('bookings/{booking}', [MaintenanceController::class, 'destroy']);
+});
 Route::get('/settings/{key}', [App\Http\Controllers\Api\SettingController::class, 'show']);
 Route::get('/stats', [App\Http\Controllers\Api\StatsController::class, 'index']);
 

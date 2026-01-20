@@ -26,7 +26,8 @@ class TestimonialsTable
                 TextColumn::make('name')
                     ->label(__('admin.fields.name'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->url(fn ($record) => $record->user_id ? \App\Filament\Resources\Users\UserResource::getUrl('edit', ['record' => $record->user_id]) : null),
 
                 TextColumn::make('position')
                     ->label(__('admin.fields.position')),
@@ -42,7 +43,7 @@ class TestimonialsTable
                 //
             ])
             ->actions([
-                EditAction::make(),
+                EditAction::make()->label(__('admin.actions.view')),
                 DeleteAction::make(),
             ])
             ->bulkActions([

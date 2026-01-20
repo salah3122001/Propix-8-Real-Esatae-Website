@@ -17,6 +17,7 @@ class UnitImporter extends Importer
         return [
             ImportColumn::make('title_ar')
                 ->label('العنوان (عربي)')
+                ->guess(['العنوان (عربي)', 'العنوان', 'title_ar'])
                 ->requiredMapping()
                 ->rules(['required', 'max:255'])
                 ->example('شقة فاخرة للبيع في المعادي'),
@@ -27,6 +28,7 @@ class UnitImporter extends Importer
                 ->example('Luxury Apartment for Sale in Maadi'),
             ImportColumn::make('description_ar')
                 ->label('الوصف (عربي)')
+                ->guess(['الوصف (عربي)', 'الوصف', 'description_ar'])
                 ->requiredMapping()
                 ->rules(['required'])
                 ->example('شقة 3 غرف نوم وصالة كبيرة...'),
@@ -37,14 +39,16 @@ class UnitImporter extends Importer
                 ->example('3 Bedroom apartment with large hall...'),
             ImportColumn::make('address')
                 ->label('العنوان بالتفصيل')
+                ->guess(['العنوان بالتفصيل', 'العنوان بالكامل', 'address'])
                 ->requiredMapping()
                 ->rules(['required', 'max:255'])
                 ->example('15 شارع النصر، المعادي'),
             ImportColumn::make('price')
                 ->label('السعر')
+                ->guess(['السعر', 'سعر', 'price'])
                 ->requiredMapping()
                 ->numeric()
-                ->rules(['required', 'integer'])
+                ->rules(['required', 'numeric'])
                 ->example('5000000'),
             ImportColumn::make('price_per_m2')
                 ->label('سعر المتر (اختياري)')
@@ -59,14 +63,16 @@ class UnitImporter extends Importer
                 ->example('25000'),
             ImportColumn::make('offer_type')
                 ->label('نوع العرض (sale/rent)')
+                ->guess(['نوع العرض (sale/rent)', 'نوع العرض', 'offer_type'])
                 ->requiredMapping()
                 ->rules(['required', 'in:sale,rent'])
                 ->example('sale'),
             ImportColumn::make('area')
                 ->label('المساحة')
+                ->guess(['المساحة', 'مساحة', 'area'])
                 ->requiredMapping()
                 ->numeric()
-                ->rules(['required', 'integer'])
+                ->rules(['required', 'numeric'])
                 ->example('200'),
             ImportColumn::make('rooms')
                 ->label('الغرف (اختياري)')
@@ -74,7 +80,7 @@ class UnitImporter extends Importer
                 ->rules(['nullable', function ($attribute, $value, $fail) {
                     $cleaned = is_string($value) ? preg_replace('/^[\s\p{Zs}\p{Zl}\p{Zp}\x{00a0}]+|[\s\p{Zs}\p{Zl}\p{Zp}\x{00a0}]+$/u', '', $value) : $value;
                     if (blank($cleaned)) return;
-                    if (filter_var($cleaned, FILTER_VALIDATE_INT) === false) {
+                    if (!is_numeric($cleaned)) {
                         $fail('يجب أن يكون الحقل ' . $attribute . ' عددًا صحيحًا.');
                     }
                 }])
@@ -85,7 +91,7 @@ class UnitImporter extends Importer
                 ->rules(['nullable', function ($attribute, $value, $fail) {
                     $cleaned = is_string($value) ? preg_replace('/^[\s\p{Zs}\p{Zl}\p{Zp}\x{00a0}]+|[\s\p{Zs}\p{Zl}\p{Zp}\x{00a0}]+$/u', '', $value) : $value;
                     if (blank($cleaned)) return;
-                    if (filter_var($cleaned, FILTER_VALIDATE_INT) === false) {
+                    if (!is_numeric($cleaned)) {
                         $fail('يجب أن يكون الحقل ' . $attribute . ' عددًا صحيحًا.');
                     }
                 }])
@@ -96,7 +102,7 @@ class UnitImporter extends Importer
                 ->rules(['nullable', function ($attribute, $value, $fail) {
                     $cleaned = is_string($value) ? preg_replace('/^[\s\p{Zs}\p{Zl}\p{Zp}\x{00a0}]+|[\s\p{Zs}\p{Zl}\p{Zp}\x{00a0}]+$/u', '', $value) : $value;
                     if (blank($cleaned)) return;
-                    if (filter_var($cleaned, FILTER_VALIDATE_INT) === false) {
+                    if (!is_numeric($cleaned)) {
                         $fail('يجب أن يكون الحقل ' . $attribute . ' عددًا صحيحًا.');
                     }
                 }])
@@ -110,17 +116,11 @@ class UnitImporter extends Importer
                 ->label('مساحة الأرض (اختياري)')
                 ->guess(['مساحة الأرض (اختياري)', 'مساحة الأرض', 'land_area'])
                 ->rules(['nullable', function ($attribute, $value, $fail) {
-                    // Clean whitespace and check if empty
                     $cleaned = is_string($value) ? preg_replace('/^[\s\p{Zs}\p{Zl}\p{Zp}\x{00a0}]+|[\s\p{Zs}\p{Zl}\p{Zp}\x{00a0}]+$/u', '', $value) : $value;
+                    if (blank($cleaned)) return;
 
-                    // If value is empty/null after cleaning, allow it
-                    if ($cleaned === null || $cleaned === '' || $cleaned === false) {
-                        return;
-                    }
-
-                    // Validate that it's an integer
-                    if (filter_var($cleaned, FILTER_VALIDATE_INT) === false) {
-                        $fail('يجب أن يكون الحقل ' . $attribute . ' عددًا صحيحًا.');
+                    if (!is_numeric($cleaned)) {
+                        $fail('يجب أن يكون الحقل ' . $attribute . ' رقمًا. القيمة الحالية: ' . $value);
                     }
                 }])
                 ->example('0'),
@@ -128,22 +128,17 @@ class UnitImporter extends Importer
                 ->label('المساحة الداخلية (اختياري)')
                 ->guess(['المساحة الداخلية (اختياري)', 'المساحة الداخلية', 'internal_area'])
                 ->rules(['nullable', function ($attribute, $value, $fail) {
-                    // Clean whitespace and check if empty
                     $cleaned = is_string($value) ? preg_replace('/^[\s\p{Zs}\p{Zl}\p{Zp}\x{00a0}]+|[\s\p{Zs}\p{Zl}\p{Zp}\x{00a0}]+$/u', '', $value) : $value;
+                    if (blank($cleaned)) return;
 
-                    // If value is empty/null after cleaning, allow it
-                    if ($cleaned === null || $cleaned === '' || $cleaned === false) {
-                        return;
-                    }
-
-                    // Validate that it's an integer
-                    if (filter_var($cleaned, FILTER_VALIDATE_INT) === false) {
-                        $fail('يجب أن يكون الحقل ' . $attribute . ' عددًا صحيحًا.');
+                    if (!is_numeric($cleaned)) {
+                        $fail('يجب أن يكون الحقل ' . $attribute . ' رقمًا. القيمة الحالية: ' . $value);
                     }
                 }])
                 ->example('180'),
             ImportColumn::make('is_visible')
                 ->label('مرئي للجمهور (1 أو 0)')
+                ->guess(['مرئي للجمهور (1 أو 0)', 'مرئي للجمهور', 'is_visible'])
                 ->requiredMapping()
                 ->boolean()
                 ->rules(['required', 'boolean'])
@@ -162,6 +157,7 @@ class UnitImporter extends Importer
             // البحث عن المدينة باسمها العربي
             ImportColumn::make('city')
                 ->label('المدينة')
+                ->guess(['المدينة', 'مدينة', 'city'])
                 ->relationship(resolveUsing: 'name_ar')
                 ->requiredMapping()
                 ->rules(['required'])
@@ -170,6 +166,7 @@ class UnitImporter extends Importer
             // البحث عن نوع الوحدة باسمها العربي
             ImportColumn::make('type')
                 ->label('نوع العقار')
+                ->guess(['نوع العقار', 'النوع', 'type'])
                 ->relationship(resolveUsing: 'name_ar')
                 ->requiredMapping()
                 ->rules(['required'])
@@ -178,12 +175,14 @@ class UnitImporter extends Importer
             // البحث عن المجمع السكني (الكمبوند) باسمه
             ImportColumn::make('compound')
                 ->label('الكمبوند (اختياري)')
+                ->guess(['الكمبوند (اختياري)', 'الكمبوند', 'المجمع السكني', 'compound'])
                 ->relationship(resolveUsing: 'name_ar')
                 ->example('بالم هيلز الإسكندرية'),
 
             // البحث عن المطور العقاري باسمه
             ImportColumn::make('developer')
                 ->label('المطور العقاري (اختياري)')
+                ->guess(['المطور العقاري (اختياري)', 'المطور العقاري', 'المطور', 'developer'])
                 ->relationship(resolveUsing: 'name_ar')
                 ->example('اعمار مصر'),
 
@@ -209,6 +208,12 @@ class UnitImporter extends Importer
                     }
                 }])
                 ->example('31.2357'),
+            ImportColumn::make('images')
+                ->label('الوسائط (الأسماء مفصولة بفاصلة). للفيديو: video:name.mp4')
+                ->guess(['الوسائط (الأسماء مفصولة بفاصلة). للفيديو: video:name.mp4', 'الوسائط', 'الصور', 'images'])
+                ->fillRecordUsing(fn () => null)
+                ->rules(['nullable', 'string'])
+                ->example('img1.jpg,video:tour.mp4,floorplan:p1.jpg'),
         ];
     }
 
@@ -224,6 +229,74 @@ class UnitImporter extends Importer
         $unit->owner_id = $adminId; // Set admin as owner
 
         return $unit;
+    }
+
+    protected function afterSave(): void
+    {
+        $unit = $this->record;
+
+        // Handle Images
+        if (!empty($this->data['images'])) {
+            $mediaItems = array_map('trim', explode(',', $this->data['images']));
+
+            // Handle options (decode if string)
+            $options = $this->options;
+            if (is_string($options)) {
+                $options = json_decode($options, true);
+            }
+            $imagesSourcePath = $options['images_source_path'] ?? null;
+
+            if ($imagesSourcePath && is_dir($imagesSourcePath)) {
+                foreach ($mediaItems as $mediaItem) {
+                     // Determine type and filename
+                    $type = 'image';
+                    $filename = $mediaItem;
+
+                    if (str_starts_with($mediaItem, 'video:')) {
+                        $type = 'video';
+                        $filename = substr($mediaItem, 6);
+                    } elseif (str_starts_with($mediaItem, '3d:')) {
+                        $type = '3d';
+                        $filename = substr($mediaItem, 3);
+                    } elseif (str_starts_with($mediaItem, 'floorplan:')) {
+                        $type = 'floorplan';
+                        $filename = substr($mediaItem, 10);
+                    }
+
+                    $filename = trim($filename);
+                    $sourceFile = $imagesSourcePath . DIRECTORY_SEPARATOR . $filename;
+
+                    if (file_exists($sourceFile)) {
+                        // Copy to media destination
+                        // We use a unique name to avoid conflicts
+                        $newFilename = uniqid('unit_' . $unit->id . '_') . '_' . $filename;
+                        $destinationPath = 'units/media/' . $newFilename;
+
+                        // Storage::disk('public')->put() requires content, but copy is better.
+                        // But source is absolute path, destination is relative to disk.
+                        // We can use php copy() to the disk's full path.
+
+                        $disk = \Illuminate\Support\Facades\Storage::disk('public');
+                        $fullDestPath = $disk->path($destinationPath);
+
+                        // Ensure directory exists
+                        if (!file_exists(dirname($fullDestPath))) {
+                            mkdir(dirname($fullDestPath), 0755, true);
+                        }
+
+                        if (copy($sourceFile, $fullDestPath)) {
+                            // Create UnitMedia record
+                            \App\Models\UnitMedia::create([
+                                'unit_id' => $unit->id,
+                                'type' => $type,
+                                'url' => $destinationPath,
+                                'processing_status' => $type === 'video' ? 'pending' : 'completed',
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public static function getCompletedNotificationBody(Import $import): string

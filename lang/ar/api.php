@@ -92,6 +92,14 @@ return [
         'no_changes_made' => 'لم يتم إجراء أي تغييرات',
         'not_found' => 'طلب المعاينة غير موجود أو ليس لديك صلاحية للوصول إليه',
         'no_viewings_found' => 'لم تقم بطلب معاينة لأي وحدة بعد',
+        'cannot_update_non_pending' => 'لا يمكن تحديث طلب المعاينة غير المعلق',
+    ],
+
+    // Maintainenance Messages
+    'maintenance' => [
+        'cannot_update_non_pending' => 'لا يمكن تحديث طلب الخدمة غير المعلق',
+        'deleted_successfully' => 'تم حذف طلب الخدمة بنجاح',
+        'cannot_delete_non_pending' => 'لا يمكن حذف طلب الخدمة غير المعلق',
     ],
 
     // Review Messages

@@ -87,7 +87,12 @@ class StatsOverview extends StatsOverviewWidget
                 ->icon('heroicon-o-clock')
                 ->color('warning')
                 ->url(route('filament.admin.resources.viewings.index', [
-                    'tableFilters' => [
+                     'tableFilters' => [
+                        'status' => [
+                            'value' => 'pending',
+                        ],
+                    ],
+                    'filters' => [
                         'status' => [
                             'value' => 'pending',
                         ],

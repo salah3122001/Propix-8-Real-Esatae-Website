@@ -94,6 +94,13 @@ return [
         'no_viewings_found' => 'No viewing requests found yet',
     ],
 
+    // Maintainenance Messages
+    'maintenance' => [
+        'cannot_update_non_pending' => 'Cannot update non-pending maintenance',
+        'deleted_successfully' => 'Maintenance deleted successfully',
+        'cannot_delete_non_pending' => 'Cannot delete non-pending maintenance',
+    ],
+
     // Review Messages
     'review' => [
         'already_reviewed' => 'You have already reviewed this unit. You can update your previous review instead.',
