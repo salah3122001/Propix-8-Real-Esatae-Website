@@ -21,10 +21,18 @@ class Setting extends Model
         }
 
         if ($setting->type === 'image' && $setting->value) {
+            // Check if it's multiple images (JSON array)
+            $decoded = json_decode($setting->value, true);
+            if (is_array($decoded)) {
+                return array_map(function ($path) {
+                    return env('APP_URL') . Storage::disk('public')->url($path);
+                }, $decoded);
+            }
+
             return env('APP_URL') . Storage::disk('public')->url($setting->value);
         }
 
-        if ($setting->type === 'json') {
+        if ($setting->type === 'json' || is_array(json_decode($setting->value, true))) {
             return json_decode($setting->value, true);
         }
 

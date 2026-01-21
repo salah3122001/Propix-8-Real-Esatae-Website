@@ -21,6 +21,11 @@ class UnitListResource extends JsonResource
             "id" => $this->id,
             "title" => ($lang === "ar" ? $this->title_ar : $this->title_en) ?? "",
             "is_visible" => (bool) $this->is_visible,
+            'is_favourite' => $this->when(auth('sanctum')->check(), function () {
+                return \App\Models\Favorite::where('user_id', auth('sanctum')->id())
+                    ->where('unit_id', $this->id)
+                    ->exists();
+            }),
             "address" => $this->address ?? "",
             "price" => $this->price ?? 0,
             "offer_type" => $this->offer_type ?? "",

@@ -67,8 +67,7 @@ class TestimonialForm
 
             Toggle::make('status')
                 ->label(__('admin.fields.active_site'))
-                ->default(true)
-                ->disabled(fn ($record) => $record !== null),
+                ->default(true),
         ]);
     }
 }

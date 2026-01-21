@@ -23,11 +23,14 @@ return [
 
     // Email subjects
     'viewing_request_accepted' => 'Viewing Request Accepted',
+    'viewing_request_rejected' => 'Viewing Request Rejected',
     'new_time_for_viewing' => 'New Time Proposed for Viewing',
     'viewing_update' => 'Viewing Request Update',
 
     // Email messages
     'viewing_accepted' => 'We are pleased to inform you that your viewing request for :unit has been accepted.',
+    'viewing_rejected' => 'We regret to inform you that your viewing request for :unit has been rejected.',
+    'viewing_rejected_msg' => 'Viewing request for unit #:unit_id has been rejected.',
     'please_attend' => 'Please make sure to attend at the scheduled time.',
     'new_time_proposed' => 'A new time has been proposed for viewing :unit.',
     'review_and_approve' => 'Please review the new time and approve it or suggest another time.',

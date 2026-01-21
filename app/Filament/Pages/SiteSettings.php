@@ -40,8 +40,13 @@ class SiteSettings extends Page implements HasForms
 
     public function mount(): void
     {
+        $heroImage = Setting::where('key', 'home_hero_image')->first()?->value;
+        // Decode if it's a JSON string (multiple images)
+        $decodedHeroImage = json_decode($heroImage, true);
+        $heroImageValue = is_array($decodedHeroImage) ? $decodedHeroImage : $heroImage;
+
         $this->data = [
-            'home_hero_image' => Setting::where('key', 'home_hero_image')->first()?->value,
+            'home_hero_image' => $heroImageValue,
             'site_name' => Setting::where('key', 'site_name')->first()?->value,
             'site_email' => Setting::where('key', 'site_email')->first()?->value,
             'site_phone' => Setting::where('key', 'site_phone')->first()?->value,
@@ -95,6 +100,8 @@ class SiteSettings extends Page implements HasForms
                                     ->label(__('admin.home_hero_image'))
                                     ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG,JPEG')
                                     ->image()
+                                    ->multiple()
+                                    ->reorderable()
                                     ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
                                     ->directory('settings')
                                     ->disk('public')
@@ -137,7 +144,12 @@ class SiteSettings extends Page implements HasForms
         try {
             $data = $this->form->getState();
 
-            Setting::setValue('home_hero_image', $data['home_hero_image'], 'image');
+            $heroImages = $data['home_hero_image'];
+            if (is_array($heroImages)) {
+                $heroImages = json_encode(array_values($heroImages));
+            }
+
+            Setting::setValue('home_hero_image', $heroImages, 'image');
             Setting::setValue('site_logo', $data['site_logo'], 'image');
             Setting::setValue('site_name', $data['site_name'], 'text');
             Setting::setValue('site_email', $data['site_email'], 'text');

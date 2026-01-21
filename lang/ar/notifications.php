@@ -23,11 +23,14 @@ return [
 
     // Email subjects
     'viewing_request_accepted' => 'تم قبول طلب المعاينة',
+    'viewing_request_rejected' => 'تم رفض طلب المعاينة',
     'new_time_for_viewing' => 'موعد جديد مقترح للمعاينة',
     'viewing_update' => 'تحديث على طلب المعاينة',
 
     // Email messages
     'viewing_accepted' => 'نحن سعداء بإبلاغك أنه تم قبول طلب معاينة :unit.',
+    'viewing_rejected' => 'نأسف لإبلاغك بأنه تم رفض طلب معاينة :unit.',
+    'viewing_rejected_msg' => 'تم رفض طلب معاينة الوحدة #:unit_id',
     'please_attend' => 'يرجى التأكد من الحضور في الموعد المحدد.',
     'new_time_proposed' => 'تم اقتراح موعد جديد لمعاينة :unit.',
     'review_and_approve' => 'يرجى مراجعة الموعد الجديد والموافقة عليه أو اقتراح موعد آخر.',
