@@ -165,18 +165,68 @@ class UnitTable
                     ->icon('heroicon-o-arrow-down-tray')
                     ->action(function () {
                         $columns = UnitImporter::getColumns();
+                        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+                        $sheet = $spreadsheet->getActiveSheet();
 
-                        $headers = array_map(fn ($col) => $col->getLabel(), $columns);
-                        $examples = array_map(fn ($col) => $col->getExample() ?? '', $columns);
+                        $columnIndex = 1;
+                        foreach ($columns as $column) {
+                            $headerText = $column->getLabel();
+                            $cellCoordinate = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex) . '1';
+                            $sheet->setCellValue($cellCoordinate, $headerText);
 
-                        return response()->streamDownload(function () use ($headers, $examples) {
-                            $writer = new \OpenSpout\Writer\XLSX\Writer();
-                            $writer->openToFile('php://output');
-                            $writer->addRow(\OpenSpout\Common\Entity\Row::fromValues($headers));
-                            $writer->addRow(\OpenSpout\Common\Entity\Row::fromValues($examples));
-                            $writer->close();
+                            $commentText = '';
+                            $columnName = $column->getName();
+
+                            if ($columnName === 'compound') {
+                                $names = \App\Models\Compound::pluck('name_ar')->toArray();
+                                $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد مجمعات سكنية مسجلة.";
+                            } elseif ($columnName === 'city') {
+                                $names = \App\Models\City::pluck('name_ar')->toArray();
+                                $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد مدن مسجلة.";
+                            } elseif ($columnName === 'type') {
+                                 $names = \App\Models\UnitType::pluck('name_ar')->toArray();
+                                 $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد أنواع عقارات مسجلة.";
+                            } elseif ($columnName === 'developer') {
+                                 $names = \App\Models\Developer::pluck('name_ar')->toArray();
+                                 $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا يوجد مطورين مسجلين.";
+                            } elseif ($columnName === 'offer_type') {
+                                 $commentText = "القيم المسموحة:\n- بيع\n- إيجار";
+                            } elseif ($columnName === 'development_status') {
+                                 $commentText = "القيم المسموحة:\n- أولي\n- إعادة بيع";
+                            } elseif ($columnName === 'status') {
+                                 $commentText = "القيم المسموحة:\n- مقبول\n- قيد الانتظار\n- مرفوض";
+                            } elseif ($columnName === 'is_visible') {
+                                 $commentText = "القيم المسموحة:\n- 1 (مرئي)\n- 0 (مخفي)";
+                            }
+
+                            if (!empty($commentText)) {
+                                if (strlen($commentText) > 32000) {
+                                    $commentText = substr($commentText, 0, 32000) . '...';
+                                }
+                                $sheet->getComment($cellCoordinate)->getText()->createTextRun($commentText);
+                                $sheet->getComment($cellCoordinate)->setWidth('250pt');
+                                $sheet->getComment($cellCoordinate)->setHeight('150pt');
+                            }
+
+                            $sheet->getColumnDimension(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex))->setAutoSize(true);
+                            $columnIndex++;
+                        }
+
+                        // Add Examples
+                        $columnIndex = 1;
+                        foreach ($columns as $column) {
+                            $example = $column->getExample() ?? '';
+                            $cellCoordinate = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex) . '2';
+                            $sheet->setCellValue($cellCoordinate, $example);
+                            $columnIndex++;
+                        }
+
+                        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+                        return response()->streamDownload(function () use ($writer) {
+                            $writer->save('php://output');
                         }, 'units-template.xlsx');
                     }),
+
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

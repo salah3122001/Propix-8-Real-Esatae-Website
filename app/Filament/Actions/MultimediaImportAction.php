@@ -160,8 +160,8 @@ class MultimediaImportAction extends Action
                 ->helperText('ارفع ملف مضغوط يحتوي على جميع الصور والفيديوهات.')
                 ->acceptedFileTypes(['application/zip', 'application/x-zip-compressed'])
                 ->disk('public')
-                ->directory('imports/zips')
-                ->required(),
+                ->directory('imports/zips'),
+                // ->required(), // Made optional
 
             Fieldset::make(__('filament-actions::import.modal.form.columns.label'))
                 ->columns(1)
@@ -236,9 +236,38 @@ class MultimediaImportAction extends Action
                 return;
             }
 
+             // --- Validation: Require ZIP if images are present in CSV ---
+             $columnMap = $data['columnMap'] ?? [];
+             $imagesColumnHeader = $columnMap['images'] ?? null;
+
+             if ($imagesColumnHeader && empty($data['images_zip'])) {
+                 // Check if any row has data in the images column
+                 $hasImages = false;
+                 foreach ($csvResults as $row) {
+                     if (!empty($row[$imagesColumnHeader])) {
+                         $hasImages = true;
+                         break;
+                     }
+                 }
+
+                 if ($hasImages) {
+                     Notification::make()
+                         ->title('يجب رفع ملف الصور المضغوط')
+                         ->body('يحتوي ملف الإكسيل على صور، لذلك يجب رفع ملف الصور المضغوط (ZIP).')
+                         ->danger()
+                         ->send();
+
+                     $action->halt(); // Stop execution
+                     return;
+                 }
+             }
+             // -----------------------------------------------------------
+
             // --- Custom ZIP Extraction Logic ---
             $extractionPath = null;
-            if (isset($data['images_zip'])) {
+            $extractionFullPath = null;
+
+            if (!empty($data['images_zip'])) {
                  $zipPath = $data['images_zip'];
                  $zipFullPath = Storage::disk('public')->path($zipPath);
                  $extractionPath = 'imports/extracted/' . uniqid();
@@ -439,44 +468,80 @@ class MultimediaImportAction extends Action
                 ->action(function (): StreamedResponse {
                     $columns = $this->getImporter()::getColumns();
 
-                    $csv = Writer::createFromFileObject(new SplTempFileObject);
+                    // Use PhpSpreadsheet to create XLSX with comments
+                    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+                    $sheet = $spreadsheet->getActiveSheet();
 
-                    if (filled($csvDelimiter = $this->getCsvDelimiter())) {
-                        $csv->setDelimiter($csvDelimiter);
-                    }
+                    $columnIndex = 1;
+                    foreach ($columns as $column) {
+                        $headerText = $column->getExampleHeader();
+                        $cellCoordinate = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex) . '1';
 
-                    $csv->insertOne(array_map(
-                        fn (ImportColumn $column): string => $column->getExampleHeader(),
-                        $columns,
-                    ));
+                        $sheet->setCellValue($cellCoordinate, $headerText);
 
-                    $columnExamples = array_map(
-                        fn (ImportColumn $column): array => $column->getExamples(),
-                        $columns,
-                    );
+                        // Add Comments for specific columns
+                        $commentText = '';
+                        $columnName = $column->getName();
 
-                    $exampleRowsCount = array_reduce(
-                        $columnExamples,
-                        fn (int $count, array $exampleData): int => max($count, count($exampleData)),
-                        initial: 0,
-                    );
-
-                    $exampleRows = [];
-
-                    foreach ($columnExamples as $exampleData) {
-                        for ($i = 0; $i < $exampleRowsCount; $i++) {
-                            $exampleRows[$i][] = $exampleData[$i] ?? '';
+                        if ($columnName === 'compound') {
+                            $names = \App\Models\Compound::pluck('name_ar')->toArray();
+                            $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد مجمعات سكنية مسجلة.";
+                        } elseif ($columnName === 'city') {
+                            $names = \App\Models\City::pluck('name_ar')->toArray();
+                            $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد مدن مسجلة.";
+                        } elseif ($columnName === 'type') {
+                             $names = \App\Models\UnitType::pluck('name_ar')->toArray();
+                             $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد أنواع عقارات مسجلة.";
+                        } elseif ($columnName === 'developer') {
+                             $names = \App\Models\Developer::pluck('name_ar')->toArray();
+                             $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا يوجد مطورين مسجلين.";
+                        } elseif ($columnName === 'offer_type') {
+                             $commentText = "القيم المسموحة:\n- بيع\n- إيجار";
+                        } elseif ($columnName === 'development_status') {
+                             $commentText = "القيم المسموحة:\n- أولي\n- إعادة بيع";
+                        } elseif ($columnName === 'status') {
+                             $commentText = "القيم المسموحة:\n- مقبول\n- قيد الانتظار\n- مرفوض";
+                        } elseif ($columnName === 'is_visible') {
+                             $commentText = "القيم المسموحة:\n- 1 (مرئي)\n- 0 (مخفي)";
                         }
+
+                        if (!empty($commentText)) {
+                            // Trim if too long
+                            if (strlen($commentText) > 32000) {
+                                $commentText = substr($commentText, 0, 32000) . '...';
+                            }
+
+                            $sheet->getComment($cellCoordinate)->getText()->createTextRun($commentText);
+                            $sheet->getComment($cellCoordinate)->setWidth('250pt');
+                            $sheet->getComment($cellCoordinate)->setHeight('150pt');
+                        }
+
+                        $columnIndex++;
                     }
 
-                    $csv->insertAll($exampleRows);
+                    // Add Example Row
+                    $exampleRows = [];
+                    foreach ($columns as $column) {
+                        $examples = $column->getExamples();
+                        // Assume single example row for simplicity or take max usually
+                        // The original code handled multiple rows.
+                        // For simplicity in template, 1 row is usually enough.
+                        $exampleRows[] = $examples[0] ?? '';
+                    }
 
-                    return response()->streamDownload(function () use ($csv): void {
-                        $csv->setOutputBOM(Bom::Utf8);
+                    // Write example row
+                    $columnIndex = 1;
+                    foreach ($exampleRows as $value) {
+                         $cellCoordinate = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex) . '2';
+                         $sheet->setCellValue($cellCoordinate, $value);
+                         $columnIndex++;
+                    }
 
-                        echo $csv->toString();
-                    }, __('filament-actions::import.example_csv.file_name', ['importer' => (string) str($this->getImporter())->classBasename()->kebab()]), [
-                        'Content-Type' => 'text/csv; charset=UTF-8',
+                    return response()->streamDownload(function () use ($spreadsheet): void {
+                        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+                        $writer->save('php://output');
+                    }, __('filament-actions::import.example_csv.file_name', ['importer' => (string) str($this->getImporter())->classBasename()->kebab()]) . '.xlsx', [
+                        'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                     ]);
                 }),
         ]);

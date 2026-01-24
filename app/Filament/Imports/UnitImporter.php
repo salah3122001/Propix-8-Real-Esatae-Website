@@ -62,11 +62,19 @@ class UnitImporter extends Importer
                 }])
                 ->example('25000'),
             ImportColumn::make('offer_type')
-                ->label('نوع العرض (sale/rent)')
+                ->label('نوع العرض')
                 ->guess(['نوع العرض (sale/rent)', 'نوع العرض', 'offer_type'])
                 ->requiredMapping()
+                ->castStateUsing(function (string $state): string {
+                    $state = trim($state);
+                    return match ($state) {
+                        'بيع', 'sale' => 'sale',
+                        'إيجار', 'ايجار', 'rent' => 'rent',
+                        default => $state,
+                    };
+                })
                 ->rules(['required', 'in:sale,rent'])
-                ->example('sale'),
+                ->example('بيع'),
             ImportColumn::make('area')
                 ->label('المساحة')
                 ->guess(['المساحة', 'مساحة', 'area'])
@@ -137,22 +145,49 @@ class UnitImporter extends Importer
                 }])
                 ->example('180'),
             ImportColumn::make('is_visible')
-                ->label('مرئي للجمهور (1 أو 0)')
+                ->label('مرئي للجمهور')
                 ->guess(['مرئي للجمهور (1 أو 0)', 'مرئي للجمهور', 'is_visible'])
                 ->requiredMapping()
+                ->castStateUsing(function (string $state): int {
+                    $state = trim($state);
+                    return match ($state) {
+                        'نعم', 'مرئي', '1' => 1,
+                        'لا', 'مخفي', '0' => 0,
+                        default => (int) $state,
+                    };
+                })
                 ->boolean()
                 ->rules(['required', 'boolean'])
                 ->example('1'),
             ImportColumn::make('development_status')
-                ->label('حالة التطوير (primary/resale) (اختياري)')
+                ->label('حالة التطوير')
                 ->guess(['حالة التطوير (primary/resale) (اختياري)', 'حالة التطوير', 'development_status'])
-                ->rules(['nullable', 'max:255'])
-                ->example('primary'),
+                ->castStateUsing(function (?string $state): ?string {
+                    if (blank($state)) return null;
+                    $state = trim($state);
+                    return match ($state) {
+                        'أولي', 'اولى', 'جديد', 'primary' => 'primary',
+                        'إعادة بيع', 'اعادة بيع', 'resale' => 'resale',
+                        default => $state,
+                    };
+                })
+                ->rules(['nullable', 'max:255', 'in:primary,resale'])
+                ->example('أولي'),
             ImportColumn::make('status')
-                ->label('الحالة (approved/pending/rejected) (اختياري)')
+                ->label('الحالة')
                 ->guess(['الحالة (approved/pending/rejected) (اختياري)', 'الحالة', 'status'])
+                ->castStateUsing(function (?string $state): ?string {
+                    if (blank($state)) return null;
+                    $state = trim($state);
+                    return match ($state) {
+                        'مقبول', 'موافقة', 'تم الموافقة', 'approved' => 'approved',
+                        'قيد الانتظار', 'انتظار', 'pending' => 'pending',
+                        'مرفوض', 'rejected' => 'rejected',
+                        default => $state,
+                    };
+                })
                 ->rules(['nullable', 'in:approved,pending,rejected'])
-                ->example('approved'),
+                ->example('مقبول'),
 
             // البحث عن المدينة باسمها العربي
             ImportColumn::make('city')
@@ -225,7 +260,9 @@ class UnitImporter extends Importer
         $unit = new Unit();
 
         // Set default values for imported units
-        $unit->status = $this->data['status'] ?? 'approved'; // Default to approved if not specified
+        // Default status logic: pending if no images, approved if images exist
+        $defaultStatus = empty($this->data['images']) ? 'pending' : 'approved';
+        $unit->status = $this->data['status'] ?? $defaultStatus;
         $unit->owner_id = $adminId; // Set admin as owner
 
         return $unit;
