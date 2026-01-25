@@ -1,0 +1,68 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    <IfModule mod_mime.c>
+        AddType image/jpeg .jfif .gfif
+    </IfModule>
+
+    <IfModule mod_headers.c>
+        <FilesMatch "\.(m3u8|ts)$">
+            Header set Access-Control-Allow-Origin "*"
+        </FilesMatch>
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # ============================================
+    # Laravel Routes (Admin & API)
+    # ============================================
+
+    # Route /admin to Laravel
+    RewriteCond %{REQUEST_URI} ^/admin
+    RewriteRule ^(.*)$ index.php [L,QSA]
+
+    # Route /api to Laravel
+    RewriteCond %{REQUEST_URI} ^/api
+    RewriteRule ^(.*)$ index.php [L,QSA]
+
+    # Route /storage to Laravel public storage
+    RewriteCond %{REQUEST_URI} ^/storage
+    RewriteRule ^(.*)$ index.php [L,QSA]
+
+    # ============================================
+    # Frontend Static Files
+    # ============================================
+
+    # Serve static files from /frontend/ directly (CSS, JS, images, etc.)
+    RewriteCond %{REQUEST_URI} ^/frontend/
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # ============================================
+    # Frontend SPA Routing
+    # ============================================
+
+    # Redirect Trailing Slashes If Not A Folder
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send all other requests to frontend index.html (SPA routing)
+    RewriteCond %{REQUEST_URI} !^/admin
+    RewriteCond %{REQUEST_URI} !^/api
+    RewriteCond %{REQUEST_URI} !^/storage
+    RewriteCond %{REQUEST_URI} !^/frontend/
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ /frontend/index.html [L]
+</IfModule>
