@@ -146,7 +146,11 @@ return [
         'roles' => [
             'admin' => 'Admin',
             'buyer' => 'Buyer',
-            'seller'
+            'seller' => 'Seller',
+            'super_admin' => 'Super Admin',
+            'content_manager' => 'Content Manager',
+            'sales_agent' => 'Sales Agent',
+            'financial_viewer' => 'Financial Viewer',
         ],
         'statuses' => [
             'pending' => 'Pending',

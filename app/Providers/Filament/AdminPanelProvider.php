@@ -66,7 +66,10 @@ class AdminPanelProvider extends PanelProvider
                 'panels::head.end',
                 fn() => view('filament.custom-css'),
             )
-            ->databaseNotifications();
+            ->databaseNotifications()
+            ->plugins([
+                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
+            ]);
     }
 
     public function boot(): void

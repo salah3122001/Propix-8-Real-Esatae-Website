@@ -105,6 +105,12 @@ class DemoContentSeeder extends Seeder
         $admin = null;
         foreach ($usersToCreate as $u) {
             $user = User::firstOrCreate(['email' => $u['email']], $u);
+
+            // Assign super_admin role if not already assigned
+            if ($u['role'] === 'admin' && !$user->hasRole('super_admin')) {
+                $user->assignRole('super_admin');
+            }
+
             if ($u['email'] === 'admin@admin.com') {
                 $admin = $user;
             }
@@ -234,6 +240,20 @@ class DemoContentSeeder extends Seeder
                             'type' => 'image',
                             'url' => 'units/' . $unitImageName,
                             'order' => $m,
+                            'processing_status' => 'completed'
+                        ]);
+                    }
+
+                    // Add Floorplan
+                    $floorplanSource = base_path('images/floorplan.png');
+                    if (File::exists($floorplanSource)) {
+                        $floorplanName = "unit-" . $unit->id . "-floorplan.png";
+                        File::copy($floorplanSource, Storage::disk('public')->path('units/' . $floorplanName));
+                        UnitMedia::create([
+                            'unit_id' => $unit->id,
+                            'type' => 'floorplan',
+                            'url' => 'units/' . $floorplanName,
+                            'order' => 4,
                             'processing_status' => 'completed'
                         ]);
                     }

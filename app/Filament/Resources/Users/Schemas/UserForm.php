@@ -71,12 +71,17 @@ class UserForm
                     ->rule(\Illuminate\Validation\Rules\Password::min(8)->letters()->numbers())
                     ->dehydrated(fn($state) => filled($state))
                     ->required(fn(string $operation): bool => $operation === 'create'),
+                Select::make('roles')
+                    ->label(__('admin.resources.roles'))
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable(),
                 Select::make('role')
                     ->label(__('admin.fields.role'))
                     ->options([
                         'admin' => __('admin.fields.roles.admin'),
                         'buyer' => __('admin.fields.roles.buyer'),
-                        'seller' => __('admin.fields.roles.seller'),
                     ])
                     ->required()
                     ->live(),

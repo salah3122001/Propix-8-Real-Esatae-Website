@@ -12,6 +12,7 @@
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",
         "bezhansalleh/filament-language-switch": "^4.0",
+        "bezhansalleh/filament-shield": "^4.1",
         "dotswan/filament-map-picker": "*",
         "filament/filament": "^4.3",
         "laravel/framework": "^12.0",
@@ -20,6 +21,7 @@
         "openspout/openspout": "*",
         "pbmedia/laravel-ffmpeg": "^8.7",
         "phpoffice/phpspreadsheet": "*",
+        "spatie/laravel-permission": "^6.24",
         "symfony/cache": "7.2"
     },
     "require-dev": {

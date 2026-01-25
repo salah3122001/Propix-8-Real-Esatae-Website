@@ -48,6 +48,8 @@ return [
         'maintenance_bookings' => 'طلبات الحجز',
         'banner' => 'بنر إعلاني',
         'banners' => 'البنرات الإعلانية',
+        'role' => 'الدور',
+        'roles' => 'الأدوار والصلاحيات',
     ],
     'widgets' => [
         'stats_overview' => [
@@ -147,7 +149,11 @@ return [
         'roles' => [
             'admin' => 'مدير',
             'buyer' => 'مشتري',
-            'seller' 
+            'seller' => 'بائع',
+            'super_admin' => 'مدير عام (سوبر)',
+            'content_manager' => 'مدير محتوى',
+            'sales_agent' => 'وكيل مبيعات',
+            'financial_viewer' => 'مشاهد مالي',
         ],
         'statuses' => [
             'pending' => 'قيد الانتظار',
