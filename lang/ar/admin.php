@@ -147,6 +147,7 @@ return [
         'roles' => [
             'admin' => 'مدير',
             'buyer' => 'مشتري',
+            'seller' 
         ],
         'statuses' => [
             'pending' => 'قيد الانتظار',

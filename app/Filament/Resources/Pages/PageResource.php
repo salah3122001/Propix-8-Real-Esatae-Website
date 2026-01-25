@@ -9,6 +9,7 @@ use App\Filament\Resources\Pages\Schemas\PageForm;
 use App\Filament\Resources\Pages\Tables\PagesTable;
 use App\Models\Page;
 use BackedEnum;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -58,6 +59,16 @@ class PageResource extends Resource
     public static function table(Table $table): Table
     {
         return PagesTable::configure($table);
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return !in_array($record->slug, [
+            'about-us',
+            'contact-us',
+            'privacy-policy',
+            'terms-and-conditions',
+        ]);
     }
 
     public static function getRelations(): array

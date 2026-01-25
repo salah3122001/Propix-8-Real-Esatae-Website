@@ -146,6 +146,7 @@ return [
         'roles' => [
             'admin' => 'Admin',
             'buyer' => 'Buyer',
+            'seller'
         ],
         'statuses' => [
             'pending' => 'Pending',

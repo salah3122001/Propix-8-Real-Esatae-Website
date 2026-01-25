@@ -4,7 +4,9 @@ namespace App\Filament\Resources\Pages\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -30,10 +32,30 @@ class PagesTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make()
+                    ->hidden(fn (Model $record) => in_array($record->slug, [
+                        'about-us',
+                        // 'contact-us',
+                        // 'privacy-policy',
+                        'terms-and-conditions',
+                    ])),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
+                            $records->each(function (Model $record) {
+                                // Only delete if NOT one of the protected slugs
+                                if (!in_array($record->slug, [
+                                    'about-us',
+                                    // 'contact-us',
+                                    // 'privacy-policy',
+                                    'terms-and-conditions',
+                                ])) {
+                                    $record->delete();
+                                }
+                            });
+                        }),
                 ]),
             ]);
     }
