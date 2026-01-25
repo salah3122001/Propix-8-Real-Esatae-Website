@@ -18,10 +18,12 @@ class Page extends Model
         'content_en',
         'team_members',
         'features',
+        'sections',
     ];
 
     protected $casts = [
         'team_members' => 'array',
         'features' => 'array',
+        'sections' => 'array',
     ];
 }

@@ -5,7 +5,12 @@ namespace Database\Seeders;
 use App\Models\Faq;
 use App\Models\Page;
 use App\Models\Service;
+use App\Models\Banner;
+use App\Models\Testimonial;
+use App\Models\Setting;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ContentSeeder extends Seeder
 {
@@ -55,7 +60,7 @@ class ContentSeeder extends Seeder
         ];
 
         foreach ($faqs as $faq) {
-            Faq::create($faq);
+            Faq::updateOrCreate(['question_ar' => $faq['question_ar']], $faq);
         }
 
         // Seed Services
@@ -105,7 +110,7 @@ class ContentSeeder extends Seeder
         ];
 
         foreach ($services as $service) {
-            Service::create($service);
+            Service::updateOrCreate(['title_ar' => $service['title_ar']], $service);
         }
 
         // Seed Pages
@@ -116,7 +121,11 @@ class ContentSeeder extends Seeder
                 'title_en' => 'About Us',
                 'content_ar' => 'نحن شركة رائدة في مجال العقارات، نقدم خدمات متكاملة للبحث عن العقارات وشرائها وبيعها. مع أكثر من 15 عاماً من الخبرة في السوق المصري، نفخر بتقديم أفضل الحلول العقارية لعملائنا. فريقنا المتخصص يعمل على مدار الساعة لضمان رضاكم الكامل وتحقيق أهدافكم الاستثمارية.',
                 'content_en' => 'We are a leading real estate company, offering comprehensive services for property search, buying, and selling. With over 15 years of experience in the Egyptian market, we pride ourselves on providing the best real estate solutions to our clients. Our specialized team works around the clock to ensure your complete satisfaction and achieve your investment goals.',
-                'team_members' => '',
+                'team_members' => [
+                    ['name' => 'Member 1', 'position' => 'Manager', 'photo' => 'team/team1.jpg'],
+                    ['name' => 'Member 2', 'position' => 'Developer', 'photo' => 'team/team2.jpg'],
+                    ['name' => 'Member 3', 'position' => 'Designer', 'photo' => 'team/team3.jpg'],
+                ],
             ],
             [
                 'slug' => 'contact-us',
@@ -124,7 +133,7 @@ class ContentSeeder extends Seeder
                 'title_en' => 'Contact Us',
                 'content_ar' => 'نحن هنا لخدمتك! يمكنك التواصل معنا عبر الهاتف، البريد الإلكتروني، أو زيارة مكتبنا الرئيسي. فريق خدمة العملاء لدينا جاهز للإجابة على جميع استفساراتك ومساعدتك في العثور على العقار المثالي.',
                 'content_en' => 'We are here to serve you! You can contact us by phone, email, or visit our main office. Our customer service team is ready to answer all your inquiries and help you find the perfect property.',
-                'team_members' => '',
+                'team_members' => [],
             ],
 
             [
@@ -133,7 +142,7 @@ class ContentSeeder extends Seeder
                 'title_en' => 'Privacy Policy',
                 'content_ar' => 'نحن نحترم خصوصيتك ونلتزم بحماية بياناتك الشخصية. جميع المعلومات التي تقدمها لنا يتم التعامل معها بسرية تامة ولا يتم مشاركتها مع أي جهات خارجية دون موافقتك الصريحة.',
                 'content_en' => 'We respect your privacy and are committed to protecting your personal data. All information you provide us is handled with complete confidentiality and is not shared with any third parties without your explicit consent.',
-                'team_members' => '',
+                'team_members' => [],
             ],
             [
                 'slug' => 'terms-and-conditions',
@@ -141,12 +150,136 @@ class ContentSeeder extends Seeder
                 'title_en' => 'Terms and Conditions',
                 'content_ar' => 'باستخدامك لموقعنا وخدماتنا، فإنك توافق على الالتزام بالشروط والأحكام التالية. يرجى قراءتها بعناية قبل استخدام أي من خدماتنا.',
                 'content_en' => 'By using our website and services, you agree to comply with the following terms and conditions. Please read them carefully before using any of our services.',
-                'team_members' => '',
+                'team_members' => [],
+                'sections' => [
+                    [
+                        'title_ar' => 'جدول الدفع',
+                        'title_en' => 'Payment Schedule',
+                        'content_ar' => "- يجب دفع 100% من المبلغ الإجمالي في وقت الحجز\n- الرصيد المتبقي : مستحق لاحقاً",
+                        'content_en' => "- 100% of the total amount must be paid at the time of booking\n- Remaining balance: Due later"
+                    ],
+                    [
+                        'title_ar' => 'سياسة الإلغاء',
+                        'title_en' => 'Cancellation Policy',
+                        'content_ar' => "- 75% من الدفعات المسبقة المدفوعة قابلة للاسترداد عند الإلغاء قبل 41 يوماً من الوصول أو قبل ذلك\n- 50% من الدفعات المقدمة المدفوعة قابلة للاسترداد عند الإلغاء قبل 21 يوماً من الوصول أو قبل ذلك\n- 0% قابلة للاسترداد في حالة الإلغاء بعد ذلك",
+                        'content_en' => "- 75% of prepaid payments are refundable for cancellations 41 days or more before arrival\n- 50% of prepaid payments are refundable for cancellations 21 days or more before arrival\n- 0% refundable for cancellations thereafter"
+                    ],
+                    [
+                        'title_ar' => 'وديعة الضمان',
+                        'title_en' => 'Security Deposit',
+                        'content_ar' => "- يجب دفع وديعة تأمين قابلة للاسترداد بنسبة 25%",
+                        'content_en' => "- A refundable security deposit of 25% must be paid"
+                    ],
+                    [
+                        'title_ar' => 'ملحوظات',
+                        'title_en' => 'Notes',
+                        'content_ar' => "- خصم 5% على الإقامة لمدة 14 ليلة أو أكثر\n- خصم 10% على الإقامة لمدة 30 ليلة أو أكثر",
+                        'content_en' => "- 5% discount for stays of 14 nights or more\n- 10% discount for stays of 30 nights or more"
+                    ]
+                ],
             ],
         ];
 
         foreach ($pages as $page) {
-            Page::create($page);
+            if ($page['slug'] === 'about-us') {
+                foreach ($page['team_members'] as $member) {
+                    $source = base_path('images/' . basename($member['photo']));
+                    if (File::exists($source)) {
+                        Storage::disk('public')->makeDirectory('team');
+                        File::copy($source, Storage::disk('public')->path($member['photo']));
+                    }
+                }
+            }
+            Page::updateOrCreate(['slug' => $page['slug']], $page);
+        }
+
+        // Seed Banners
+        $banners = [
+            [
+                'image' => 'banners/banner1.jpg',
+                'url' => '/units',
+                'is_active' => true,
+                'sort_order' => 1,
+            ],
+            [
+                'image' => 'banners/banner2.jpg',
+                'url' => '/about',
+                'is_active' => true,
+                'sort_order' => 2,
+            ],
+            [
+                'image' => 'banners/banner3.jpg',
+                'url' => '/services',
+                'is_active' => true,
+                'sort_order' => 3,
+            ],
+        ];
+
+        foreach ($banners as $banner) {
+            $source = base_path('images/' . basename($banner['image']));
+            if (File::exists($source)) {
+                Storage::disk('public')->makeDirectory('banners');
+                File::copy($source, Storage::disk('public')->path($banner['image']));
+            }
+            Banner::updateOrCreate(['url' => $banner['url']], $banner);
+        }
+
+        // Seed Testimonials
+        $testimonials = [
+            [
+                'name' => 'Ahmed Ali',
+                'position' => 'CEO',
+                'content' => 'Great service from this company!',
+                'status' => true,
+            ],
+            [
+                'name' => 'mohamed',
+                'position' => 'Client',
+                'content' => 'موقع جميل جدا',
+                'status' => true,
+            ],
+        ];
+
+        foreach ($testimonials as $testimonial) {
+            Testimonial::updateOrCreate(['name' => $testimonial['name'], 'content' => $testimonial['content']], $testimonial);
+        }
+
+        // Seed Settings
+        $settings = [
+            'site_name' => 'Propix 8',
+            'site_email' => 'admin@admin.com',
+            'site_phone' => '01010613746',
+            'site_address' => 'mansoura',
+            'social_facebook' => 'https://facebook.com',
+            'social_instagram' => 'https://instagram.com',
+            'social_twitter' => 'https://twitter.com',
+            'site_logo' => 'settings/looogo.png',
+            'home_hero_image' => json_encode([
+                "settings/heroimage1.jpg",
+                "settings/heroimage2.jpg",
+                "settings/heroimage3.jpg"
+            ]),
+        ];
+
+        foreach ($settings as $key => $value) {
+            if ($key === 'site_logo') {
+                $source = base_path('images/looogo.png');
+                if (File::exists($source)) {
+                    Storage::disk('public')->makeDirectory('settings');
+                    File::copy($source, Storage::disk('public')->path('settings/looogo.png'));
+                }
+            }
+            if ($key === 'home_hero_image') {
+                $images = json_decode($value, true);
+                foreach ($images as $img) {
+                    $source = base_path('images/' . basename($img));
+                    if (File::exists($source)) {
+                        Storage::disk('public')->makeDirectory('settings');
+                        File::copy($source, Storage::disk('public')->path($img));
+                    }
+                }
+            }
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
     }
 }

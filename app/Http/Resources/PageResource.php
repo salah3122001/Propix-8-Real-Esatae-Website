@@ -27,6 +27,10 @@ class PageResource extends JsonResource
                 'description' => $lang === 'ar' ? ($feature['description_ar'] ?? '') : ($feature['description_en'] ?? ($feature['description_ar'] ?? '')),
                 'icon' => isset($feature['icon']) ? env('APP_URL') . Storage::disk('public')->url($feature['icon']) : '',
             ]),
+            'sections' => collect($this->sections)->map(fn($section) => [
+                'title' => $lang === 'ar' ? ($section['title_ar'] ?? '') : ($section['title_en'] ?? ''),
+                'content' => array_values(array_filter(explode("\n", str_replace("\r", "", $lang === 'ar' ? ($section['content_ar'] ?? '') : ($section['content_en'] ?? ''))))),
+            ]),
         ];
     }
 }

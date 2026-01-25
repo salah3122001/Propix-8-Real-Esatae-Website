@@ -4,10 +4,10 @@ namespace App\Filament\Resources\Pages\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -27,14 +27,14 @@ class PageForm
                             ->required()
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
-                        RichEditor::make('content_ar')
+                        Textarea::make('content_ar')
                             ->label(__('admin.fields.content_ar'))
                             ->required()
-                            ->fileAttachmentsDirectory('pages')
+                            ->rows(10)
                             ->columnSpanFull(),
-                        RichEditor::make('content_en')
+                        Textarea::make('content_en')
                             ->label(__('admin.fields.content_en'))
-                            ->fileAttachmentsDirectory('pages')
+                            ->rows(10)
                             ->columnSpanFull(),
 
                         TextInput::make('slug')
@@ -69,6 +69,24 @@ class PageForm
                             ])
                             ->columns(2)
                             ->itemLabel(fn(array $state): ?string => $state['name'] ?? null)
+                            ->collapsible()
+                            ->collapsed(),
+                    ]),
+
+                Section::make(__('admin.fields.sections'))
+                    ->description(__('admin.fields.sections_description'))
+                    ->visible(fn($get) => $get('slug') === 'terms-and-conditions')
+                    ->schema([
+                        Repeater::make('sections')
+                            ->label(__('admin.fields.sections'))
+                            ->schema([
+                                TextInput::make('title_ar')->label(__('admin.fields.title_ar'))->required(),
+                                TextInput::make('title_en')->label(__('admin.fields.title_en'))->required(),
+                                Textarea::make('content_ar')->label(__('admin.fields.content_ar'))->required()->rows(5)->columnSpanFull(),
+                                Textarea::make('content_en')->label(__('admin.fields.content_en'))->required()->rows(5)->columnSpanFull(),
+                            ])
+                            ->columns(2)
+                            ->itemLabel(fn(array $state): ?string => $state['title_ar'] ?? null)
                             ->collapsible()
                             ->collapsed(),
                     ]),

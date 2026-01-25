@@ -135,6 +135,8 @@ return [
         'team_description' => 'Add team members to be displayed on this page.',
         'auto_generated_name' => 'Name is auto-fetched from selected user, you can edit it if you want.',
         'auto_generated_slug' => 'Auto-generated from English title, can be edited manually.',
+        'sections' => 'Sections',
+        'sections_description' => 'Add sections with titles and content (e.g. for Terms and Conditions).',
         'media_types' => [
             'image' => 'Image',
             'video' => 'Video',

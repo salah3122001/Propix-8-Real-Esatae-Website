@@ -21,14 +21,14 @@ class VerificationController extends Controller
         }
 
         if ($user->hasVerifiedEmail()) {
-            return redirect(config('app.frontend_url') . '/login?already_verified=1');
+            return redirect(config('app.frontend_url') . '/signin?already_verified=1');
         }
 
         if ($user->markEmailAsVerified()) {
             event(new \Illuminate\Auth\Events\Verified($user));
         }
 
-        return redirect(config('app.frontend_url') . '/login?verified=1');
+        return redirect(config('app.frontend_url') . '/signin?verified=1');
     }
 
     public function resend(Request $request)
