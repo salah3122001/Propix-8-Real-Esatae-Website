@@ -48,6 +48,11 @@ class BannerResource extends Resource
         return __('admin.navigation_groups.content_management');
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) Banner::count();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema

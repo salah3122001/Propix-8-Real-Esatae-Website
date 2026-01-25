@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\AmenityResource;
 
 use App\Filament\Resources\AmenityResource\Pages;
 use App\Models\Amenity;
@@ -34,6 +34,11 @@ class AmenityResource extends Resource
     public static function getPluralModelLabel(): string
     {
         return __('admin.resources.amenities');
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) Amenity::count();
     }
 
     public static function form(Schema $schema): Schema

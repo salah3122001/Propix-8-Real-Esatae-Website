@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\AmenityResource\Pages;
 
-use App\Filament\Resources\AmenityResource;
+use App\Filament\Resources\AmenityResource\AmenityResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
