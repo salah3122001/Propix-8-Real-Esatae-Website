@@ -30,8 +30,33 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName(fn() => Setting::getValue('site_name', 'Real Estate'))
+            ->brandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('2.5rem')
             ->colors([
-                'primary' => Color::Indigo,
+                'primary' => [
+                    50 => '#f1f5f9',
+                    100 => '#e2e8f0',
+                    200 => '#cbd5e1',
+                    300 => '#94a3b8',
+                    400 => '#64748b',
+                    500 => '#334e68', // Primary brand color (Navy)
+                    600 => '#1e293b',
+                    700 => '#0f172a',
+                    800 => '#020617',
+                    900 => '#000000',
+                ],
+                'teal' => [
+                    50 => '#f0fdfa',
+                    100 => '#ccfbf1',
+                    200 => '#99f6e4',
+                    300 => '#5eead4',
+                    400 => '#2dd4bf',
+                    500 => '#299ea3', // Teal from logo
+                    600 => '#0d9488',
+                    700 => '#0f766e',
+                    800 => '#115e59',
+                    900 => '#134e4a',
+                ],
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
                 'info' => Color::Sky,
