@@ -20,6 +20,8 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
+        'https://propix8.com',
+        'https://www.propix8.com',
         env('FRONTEND_URL', 'https://propix8.com'),
         'http://localhost:5173', // Vite default
         'http://localhost:3000', // React default
