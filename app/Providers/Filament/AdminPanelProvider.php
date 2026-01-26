@@ -19,6 +19,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Models\Setting;
+use Filament\Navigation\NavigationItem;
+use Filament\Navigation\MenuItem;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -30,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName(fn() => Setting::getValue('site_name', 'Real Estate'))
-            ->brandLogo(asset('images/logo.png'))
+            ->brandLogo(asset('images/looogo.png'))
             ->brandLogoHeight('2.5rem')
             ->colors([
                 'primary' => [
@@ -94,6 +96,19 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
+            ])
+            ->navigationItems([
+                NavigationItem::make(__('admin.view_website'))
+                    ->url(fn (): string => config('app.frontend_url', '#'))
+                    ->icon('heroicon-o-globe-alt')
+                    ->group(__('admin.quick_links'))
+                    ->sort(-1),
+            ])
+            ->userMenuItems([
+                'view_website' => MenuItem::make()
+                    ->label(__('admin.view_website'))
+                    ->url(fn (): string => config('app.frontend_url', '#'))
+                    ->icon('heroicon-o-globe-alt'),
             ]);
     }
 

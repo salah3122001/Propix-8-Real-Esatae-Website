@@ -237,4 +237,6 @@ return [
         'successful_transaction' => 'عملية ناجحة',
         'successful_transaction_body' => 'عملية جديدة بقيمة :amount جنيه للوحدة #:unit_id',
     ],
+    'view_website' => 'زيارة الموقع',
+    'quick_links' => 'روابط سريعة',
 ];

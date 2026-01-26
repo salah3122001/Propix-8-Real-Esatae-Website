@@ -77,7 +77,6 @@ class ViewingForm
                     ->options([
                         'pending' => __('viewing.statuses.pending'),
                         'accepted' => __('viewing.statuses.accepted'),
-                        'rejected' => __('viewing.statuses.rejected'),
                         'reschedule_admin' => __('viewing.statuses.reschedule_admin'),
                         'cancelled' => __('viewing.statuses.cancelled'),
                     ])

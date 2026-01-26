@@ -229,4 +229,6 @@ return [
         'successful_transaction' => 'Successful Transaction',
         'successful_transaction_body' => 'New transaction of :amount EGP for unit #:unit_id',
     ],
+    'view_website' => 'View Website',
+    'quick_links' => 'Quick Links',
 ];

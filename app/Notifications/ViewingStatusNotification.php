@@ -41,7 +41,7 @@ class ViewingStatusNotification extends Notification
             return ['database']; // Admin notifications
         }
 
-        return ['database', 'mail']; // User notifications (accepted, rejected, reschedule_admin)
+        return ['database', 'mail']; // User notifications (accepted, reschedule_admin)
     }
 
     /**
@@ -73,9 +73,9 @@ class ViewingStatusNotification extends Notification
                 ->line(__('notifications.review_and_approve'))
                 ->action(__('notifications.approve_time'), config('app.frontend_url') . '/profile/user-booking')
                 ->line(__('notifications.suggest_another_time'));
-        } elseif ($this->type === 'rejected') {
+        } elseif ($this->type === 'cancelled') {
             $mailMessage
-                ->line(__('notifications.viewing_rejected', ['unit' => $unitTitle]))
+                ->line(__('notifications.viewing_cancelled', ['unit' => $unitTitle]))
                 ->action(__('notifications.view_details'), config('app.frontend_url') . '/profile/user-booking');
         }
 
@@ -91,7 +91,7 @@ class ViewingStatusNotification extends Notification
     {
         return match ($this->type) {
             'accepted' => '✅ ' . __('notifications.viewing_request_accepted'),
-            'rejected' => '❌ ' . __('notifications.viewing_request_rejected'),
+            'cancelled' => '❌ ' . __('notifications.viewing_request_cancelled'),
             'reschedule_admin' => '📅 ' . __('notifications.new_time_for_viewing'),
             default => __('notifications.viewing_update'),
         };
