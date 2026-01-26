@@ -46,7 +46,7 @@ class NewUnitAddedNotification extends Notification implements ShouldQueue
                 'title' => $title,
                 'city' => $cityName
             ]))
-            ->action(__('api.notifications.view_unit'), config('app.frontend_url') . '/units/' . $this->unit->id)
+            ->action(__('api.notifications.view_unit'), config('app.frontend_url') . '/property-details/' . $this->unit->id)
             ->line(__('api.notifications.thank_you'));
     }
 
