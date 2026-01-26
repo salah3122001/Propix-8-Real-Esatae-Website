@@ -85,11 +85,11 @@ class UnitService
 
         // Rooms & Bathrooms
         if (isset($filters['rooms'])) {
-            $query->where('rooms', '>=', $filters['rooms']);
+            $query->where('rooms', '=', $filters['rooms']);
         }
 
         if (isset($filters['bathrooms'])) {
-            $query->where('bathrooms', '>=', $filters['bathrooms']);
+            $query->where('bathrooms', '=', $filters['bathrooms']);
         }
 
         // Area Range
@@ -115,7 +115,7 @@ class UnitService
         }
 
         if (isset($filters['garages'])) {
-            $query->where('garages', '>=', $filters['garages']);
+            $query->where('garages', '=', $filters['garages']);
         }
 
         if (isset($filters['min_land_area'])) {
