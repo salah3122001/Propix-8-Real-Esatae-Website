@@ -22,7 +22,9 @@ class DemoContentSeeder extends Seeder
         $fakerAr = Faker::create('ar_EG');
         $fakerEn = Faker::create('en_US');
         $villaImage = 'modern-luxury-house-with-swimming-pool.jpg';
-        $villaSource = base_path('villa/' . $villaImage);
+        $villaSource = base_path('images/' . $villaImage); // Corrected source path
+        $videoFile = 'videoplayback.mp4';
+        $videoSource = base_path('images/' . $videoFile);
 
         // 1. Create Cities
         $citiesData = [
@@ -192,7 +194,7 @@ class DemoContentSeeder extends Seeder
         $devStatuses = ['ready', 'under_construction', 'handover_soon'];
 
         foreach ($compounds as $compound) {
-            $numUnits = rand(3, 6);
+            $numUnits = 5; // Reduced to 5 per user request
 
             for ($k = 0; $k < $numUnits; $k++) {
                 $seller = $admin;
@@ -254,6 +256,19 @@ class DemoContentSeeder extends Seeder
                             'type' => 'floorplan',
                             'url' => 'units/' . $floorplanName,
                             'order' => 4,
+                            'processing_status' => 'completed'
+                        ]);
+                    }
+
+                    // Add Video
+                    if (File::exists($videoSource)) {
+                        $unitVideoName = "unit-" . $unit->id . ".mp4";
+                        File::copy($videoSource, Storage::disk('public')->path('units/' . $unitVideoName));
+                        UnitMedia::create([
+                            'unit_id' => $unit->id,
+                            'type' => 'video',
+                            'url' => 'units/' . $unitVideoName,
+                            'order' => 5,
                             'processing_status' => 'completed'
                         ]);
                     }
