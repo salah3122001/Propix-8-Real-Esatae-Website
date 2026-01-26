@@ -63,7 +63,7 @@ class ViewingStatusNotification extends Notification
                 ->line("🕐 " . __('notifications.time') . ": {$this->viewing->time}")
                 ->line("📍 " . __('notifications.address') . ": " . ($this->viewing->unit?->address ?? __('notifications.address_coming_soon')))
                 ->line(__('notifications.please_attend'))
-                ->action(__('notifications.view_details'), env('FRONTEND_URL', 'https://www.propix8.com') . '/profile/user-booking');
+                ->action(__('notifications.view_details'), config('app.frontend_url') . '/profile/user-booking');
         } elseif ($this->type === 'reschedule_admin') {
             $mailMessage
                 ->line(__('notifications.new_time_proposed', ['unit' => $unitTitle]))
@@ -71,12 +71,12 @@ class ViewingStatusNotification extends Notification
                 ->line("📅 " . __('notifications.date') . ": {$this->viewing->date}")
                 ->line("🕐 " . __('notifications.time') . ": {$this->viewing->time}")
                 ->line(__('notifications.review_and_approve'))
-                ->action(__('notifications.approve_time'), env('FRONTEND_URL', 'https://www.propix8.com') . '/profile/user-booking')
+                ->action(__('notifications.approve_time'), config('app.frontend_url') . '/profile/user-booking')
                 ->line(__('notifications.suggest_another_time'));
         } elseif ($this->type === 'rejected') {
             $mailMessage
                 ->line(__('notifications.viewing_rejected', ['unit' => $unitTitle]))
-                ->action(__('notifications.view_details'), env('FRONTEND_URL', 'https://www.propix8.com') . '/profile/user-booking');
+                ->action(__('notifications.view_details'), config('app.frontend_url') . '/profile/user-booking');
         }
 
         return $mailMessage
