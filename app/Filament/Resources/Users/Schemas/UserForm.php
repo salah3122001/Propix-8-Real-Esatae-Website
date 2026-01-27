@@ -37,7 +37,7 @@ class UserForm
                     ->maxLength(500),
                 FileUpload::make('avatar')
                     ->label(__('admin.fields.avatar'))
-                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, JPEG')
+                    ->helperText(__('admin.fields.allowed_formats', ['formats' => 'jpg, png, jpeg']))
                     ->image()
                     ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
                     ->directory('avatars')
@@ -48,7 +48,7 @@ class UserForm
                     ->nullable(),
                 FileUpload::make('id_photo')
                     ->label(__('admin.fields.id_photo'))
-                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, JPEG')
+                    ->helperText(__('admin.fields.allowed_formats', ['formats' => 'jpg, png, jpeg']))
                     ->image()
                     ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
                     ->directory('id_photos')
@@ -88,10 +88,19 @@ class UserForm
                 Select::make('status')
                     ->label(__('admin.fields.status'))
                     ->options([
-                        'pending' => __('admin.fields.statuses.pending'),
+                        // 'pending' => __('admin.fields.statuses.pending'),
                         'approved' => __('admin.fields.statuses.approved'),
                         // 'rejected' => __('admin.fields.statuses.rejected'),
                     ])->required(),
+                \Filament\Forms\Components\Toggle::make('email_verified')
+                    ->label(__('admin.fields.email_verified'))
+                    ->helperText(__('admin.fields.email_verified_helper'))
+                    ->afterStateHydrated(function (\Filament\Forms\Components\Toggle $component, $state, $record) {
+                        if ($record) {
+                            $component->state($record->email_verified_at !== null);
+                        }
+                    })
+                    ->live(),
             ]);
     }
 }

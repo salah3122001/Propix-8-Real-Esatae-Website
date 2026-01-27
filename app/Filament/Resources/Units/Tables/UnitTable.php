@@ -65,6 +65,16 @@ class UnitTable
                         default => $state,
                     })
                     ->searchable(),
+                TextColumn::make('owner.email_verified_at')
+                    ->label(__('admin.fields.email_status'))
+                    ->badge()
+                    ->getStateUsing(fn ($record) => $record->owner?->email_verified_at !== null ? 'verified' : 'unverified')
+                    ->formatStateUsing(fn (string $state): string => __('admin.fields.statuses.' . $state))
+                    ->colors([
+                        'success' => 'verified',
+                        'warning' => 'unverified',
+                    ])
+                    ->toggleable(),
                 TextColumn::make('sold_at')
                     ->label(__('admin.fields.sold_at'))
                     ->dateTime()

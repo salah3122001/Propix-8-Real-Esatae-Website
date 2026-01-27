@@ -22,7 +22,7 @@ class UnitTypeForm
                     ->required(),
                 FileUpload::make('icon')
                     ->label(__('admin.fields.icon'))
-                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, JPEG')
+                    ->helperText(__('admin.fields.allowed_formats', ['formats' => 'jpg, png, jpeg']))
                     ->image()
                     ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
                     ->disk('public')

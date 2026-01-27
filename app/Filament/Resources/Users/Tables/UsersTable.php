@@ -38,14 +38,22 @@ class UsersTable
                         'danger' => 'rejected',
                     ])
                     ->formatStateUsing(fn(string $state): string => __("admin.fields.statuses.{$state}")),
+                TextColumn::make('email_verified_at')->label(__('admin.fields.email_status'))
+                    ->badge()
+                    ->getStateUsing(fn ($record) => $record->email_verified_at !== null ? 'verified' : 'unverified')
+                    ->formatStateUsing(fn (string $state): string => __('admin.fields.statuses.' . $state))
+                    ->colors([
+                        'success' => 'verified',
+                        'warning' => 'unverified',
+                    ]),
                 TextColumn::make('phone')->label(__('admin.fields.phone')),
                 TextColumn::make('city.name_ar')->label(__('admin.fields.city')),
                 TextColumn::make('address')->label(__('admin.fields.address'))->limit(30),
-                \Filament\Tables\Columns\ImageColumn::make('id_photo')
-                    ->label(__('admin.fields.id_photo'))
-                    ->disk('public')
-                    ->square()
-                    ->toggleable(isToggledHiddenByDefault: true),
+            //     \Filament\Tables\Columns\ImageColumn::make('id_photo')
+            //         ->label(__('admin.fields.id_photo'))
+            //         ->disk('public')
+            //         ->square()
+            //         ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('role_filter')
@@ -60,21 +68,41 @@ class UsersTable
                             $query->where('role', $data['value']);
                         }
                     }),
-                \Filament\Tables\Filters\SelectFilter::make('status_filter')
-                    ->label(__('admin.fields.status'))
-                    ->options([
-                        'pending' => __('admin.fields.statuses.pending'),
-                        'approved' => __('admin.fields.statuses.approved'),
-                        // 'rejected' => __('admin.fields.statuses.rejected'),
-                    ])
-                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data) {
-                        if ($data['value']) {
-                            $query->where('status', $data['value']);
-                        }
-                    }),
+                // \Filament\Tables\Filters\SelectFilter::make('status_filter')
+                //     ->label(__('admin.fields.status'))
+                //     ->options([
+                //         // 'pending' => __('admin.fields.statuses.pending'),
+                //         'approved' => __('admin.fields.statuses.approved'),
+                //         // 'rejected' => __('admin.fields.statuses.rejected'),
+                //     ])
+                //     ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data) {
+                //         if ($data['value']) {
+                //             $query->where('status', $data['value']);
+                //         }
+                //     }),
+                \Filament\Tables\Filters\TernaryFilter::make('email_verified_at')
+                    ->label(__('admin.fields.email_status'))
+                    ->placeholder(__('admin.fields.statuses.all_statuses'))
+                    ->trueLabel(__('admin.fields.statuses.verified'))
+                    ->falseLabel(__('admin.fields.statuses.unverified'))
+                    ->queries(
+                        true: fn ($query) => $query->whereNotNull('email_verified_at'),
+                        false: fn ($query) => $query->whereNull('email_verified_at'),
+                    ),
             ])
             ->recordActions([
                 EditAction::make(),
+                Action::make('verify_email')
+                    ->label(__('admin.actions.verify_email'))
+                    ->icon('heroicon-o-check-badge')
+                    ->color('success')
+                    ->hidden(fn($record) => $record === null || $record->email_verified_at !== null)
+                    ->action(function ($record) {
+                        $record->update(['email_verified_at' => now()]);
+                    })
+                    ->requiresConfirmation()
+                    ->modalHeading(__('admin.actions.verify_email'))
+                    ->modalDescription(fn($record) => __('admin.fields.email_verified_helper')),
                 Action::make('approve_seller')
                     ->label(__('admin.actions.approve_seller'))
                     ->icon('heroicon-o-check-badge')
