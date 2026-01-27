@@ -37,48 +37,41 @@ class NewViewingRequestNotification extends Notification
      *
      * @return array<string, mixed>
      */
-    public function toArray(object $notifiable): array
+    public function toDatabase(object $notifiable): array
     {
-        $locale = app()->getLocale();
+        $arTitle = __('admin.notifications.new_viewing_request', [], 'ar');
+        $enTitle = __('admin.notifications.new_viewing_request', [], 'en');
 
-        return [
-            'title' => $locale === 'ar'
-                ? 'طلب معاينة جديد'
-                : 'New Viewing Request',
-            'body' => $locale === 'ar'
-                ? "طلب معاينة جديد من {$this->viewing->name} للوحدة #{$this->viewing->unit_id}"
-                : "New viewing request from {$this->viewing->name} for unit #{$this->viewing->unit_id}",
-            'viewing_id' => $this->viewing->id,
-            'unit_id' => $this->viewing->unit_id,
-            'user_name' => $this->viewing->name,
-            'user_email' => $this->viewing->email,
-            'user_phone' => $this->viewing->phone,
-            'date' => $this->viewing->date,
-            'time' => $this->viewing->time,
-            'icon' => 'heroicon-o-calendar',
-            'iconColor' => 'info',
-        ];
-    }
+        $arBody = __('admin.notifications.new_viewing_request_body', [
+            'name' => $this->viewing->name,
+            'unit_id' => $this->viewing->unit_id
+        ], 'ar');
 
-    /**
-     * Get the Filament notification representation.
-     */
-    public function toFilament(): FilamentNotification
-    {
-        $locale = app()->getLocale();
+        $enBody = __('admin.notifications.new_viewing_request_body', [
+            'name' => $this->viewing->name,
+            'unit_id' => $this->viewing->unit_id
+        ], 'en');
+
+        $titleHtml = "<span class='lang-ar'>$arTitle</span><span class='lang-en'>$enTitle</span>";
+        $bodyHtml = "<span class='lang-ar'>$arBody</span><span class='lang-en'>$enBody</span>";
 
         return FilamentNotification::make()
-            ->title($locale === 'ar' ? 'طلب معاينة جديد' : 'New Viewing Request')
-            ->body($locale === 'ar'
-                ? "طلب معاينة جديد من {$this->viewing->name} للوحدة #{$this->viewing->unit_id}"
-                : "New viewing request from {$this->viewing->name} for unit #{$this->viewing->unit_id}")
+            ->title(new \Illuminate\Support\HtmlString($titleHtml))
+            ->body(new \Illuminate\Support\HtmlString($bodyHtml))
             ->icon('heroicon-o-calendar')
             ->iconColor('info')
             ->actions([
-                Action::make('view')
-                    ->label($locale === 'ar' ? 'عرض التفاصيل' : 'View Details')
+                Action::make('view_ar')
+                    ->label(__('admin.actions.view', [], 'ar'))
                     ->url('/admin/viewings/' . $this->viewing->id . '/edit')
+                    ->extraAttributes(['class' => 'lang-ar'])
                     ->markAsRead(),
-            ]);
+                Action::make('view_en')
+                    ->label(__('admin.actions.view', [], 'en'))
+                    ->url('/admin/viewings/' . $this->viewing->id . '/edit')
+                    ->extraAttributes(['class' => 'lang-en'])
+                    ->markAsRead(),
+            ])
+            ->getDatabaseMessage();
     }
 }

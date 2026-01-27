@@ -92,6 +92,7 @@ return [
         'no_changes_made' => 'No changes made',
         'not_found' => 'Viewing not found or you do not have permission to access it',
         'no_viewings_found' => 'No viewing requests found yet',
+        'cannot_update_non_pending' => 'Cannot update a non-pending viewing request',
     ],
 
     // Maintainenance Messages

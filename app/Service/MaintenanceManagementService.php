@@ -107,22 +107,36 @@ class MaintenanceManagementService
     {
         try {
             $admins = User::where('role', 'admin')->get();
-            $locale = app()->getLocale();
             $userName = auth()->user()->name ?? 'مستخدم';
-            $serviceTitle = $locale === 'ar' ? $booking->service->title_ar : ($booking->service->title_en ?? $booking->service->title_ar);
+
+            $serviceTitleAr = $booking->service->title_ar;
+            $serviceTitleEn = $booking->service->title_en ?? $booking->service->title_ar;
+
+            $arTitle = __('admin.notifications.new_maintenance_booking', [], 'ar');
+            $enTitle = __('admin.notifications.new_maintenance_booking', [], 'en');
+
+            $arBody = __('admin.notifications.new_maintenance_booking_body', ['name' => $userName, 'service' => $serviceTitleAr], 'ar');
+            $enBody = __('admin.notifications.new_maintenance_booking_body', ['name' => $userName, 'service' => $serviceTitleEn], 'en');
+
+            $titleHtml = "<span class='lang-ar'>$arTitle</span><span class='lang-en'>$enTitle</span>";
+            $bodyHtml = "<span class='lang-ar'>$arBody</span><span class='lang-en'>$enBody</span>";
 
             foreach ($admins as $admin) {
                 Notification::make()
-                    ->title($locale === 'ar' ? 'طلب حجز خدمة جديد' : 'New Maintenance Booking Request')
-                    ->body($locale === 'ar'
-                        ? "قام {$userName} بطلب خدمة ({$serviceTitle})"
-                        : "{$userName} requested service ({$serviceTitle})")
+                    ->title(new \Illuminate\Support\HtmlString($titleHtml))
+                    ->body(new \Illuminate\Support\HtmlString($bodyHtml))
                     ->icon('heroicon-o-wrench-screwdriver')
                     ->iconColor('success')
                     ->actions([
-                        Action::make('view')
-                            ->label($locale === 'ar' ? 'عرض التفاصيل' : 'View Details')
+                        \Filament\Actions\Action::make('view_ar')
+                            ->label(__('admin.actions.view', [], 'ar'))
                             ->url('/admin/maintenance-bookings/' . $booking->id . '/edit')
+                            ->extraAttributes(['class' => 'lang-ar'])
+                            ->markAsRead(),
+                        \Filament\Actions\Action::make('view_en')
+                            ->label(__('admin.actions.view', [], 'en'))
+                            ->url('/admin/maintenance-bookings/' . $booking->id . '/edit')
+                            ->extraAttributes(['class' => 'lang-en'])
                             ->markAsRead(),
                     ])
                     ->sendToDatabase($admin);
@@ -142,22 +156,36 @@ class MaintenanceManagementService
     {
         try {
             $admins = User::where('role', 'admin')->get();
-            $locale = app()->getLocale();
             $userName = auth()->user()->name ?? 'مستخدم';
-            $serviceTitle = $locale === 'ar' ? $booking->service->title_ar : ($booking->service->title_en ?? $booking->service->title_ar);
+
+            $serviceTitleAr = $booking->service->title_ar;
+            $serviceTitleEn = $booking->service->title_en ?? $booking->service->title_ar;
+
+            $arTitle = __('admin.notifications.maintenance_booking_updated', [], 'ar');
+            $enTitle = __('admin.notifications.maintenance_booking_updated', [], 'en');
+
+            $arBody = __('admin.notifications.maintenance_booking_updated_body', ['name' => $userName, 'service' => $serviceTitleAr], 'ar');
+            $enBody = __('admin.notifications.maintenance_booking_updated_body', ['name' => $userName, 'service' => $serviceTitleEn], 'en');
+
+            $titleHtml = "<span class='lang-ar'>$arTitle</span><span class='lang-en'>$enTitle</span>";
+            $bodyHtml = "<span class='lang-ar'>$arBody</span><span class='lang-en'>$enBody</span>";
 
             foreach ($admins as $admin) {
                 Notification::make()
-                    ->title($locale === 'ar' ? 'تعديل طلب حجز خدمة' : 'Maintenance Booking Updated')
-                    ->body($locale === 'ar'
-                        ? "قام {$userName} بتعديل طلب خدمة ({$serviceTitle})"
-                        : "{$userName} updated service request for ({$serviceTitle})")
+                    ->title(new \Illuminate\Support\HtmlString($titleHtml))
+                    ->body(new \Illuminate\Support\HtmlString($bodyHtml))
                     ->icon('heroicon-o-pencil-square')
                     ->iconColor('info')
                     ->actions([
-                        Action::make('view')
-                            ->label($locale === 'ar' ? 'عرض التفاصيل' : 'View Details')
+                        \Filament\Actions\Action::make('view_ar')
+                            ->label(__('admin.actions.view', [], 'ar'))
                             ->url('/admin/maintenance-bookings/' . $booking->id . '/edit')
+                            ->extraAttributes(['class' => 'lang-ar'])
+                            ->markAsRead(),
+                        \Filament\Actions\Action::make('view_en')
+                            ->label(__('admin.actions.view', [], 'en'))
+                            ->url('/admin/maintenance-bookings/' . $booking->id . '/edit')
+                            ->extraAttributes(['class' => 'lang-en'])
                             ->markAsRead(),
                     ])
                     ->sendToDatabase($admin);

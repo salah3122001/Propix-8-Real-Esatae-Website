@@ -15,12 +15,18 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Faker\Factory as Faker;
 
+use Spatie\Permission\Models\Role;
+
 class DemoContentSeeder extends Seeder
 {
     public function run(): void
     {
         $fakerAr = Faker::create('ar_EG');
         $fakerEn = Faker::create('en_US');
+
+        // Ensure super_admin role exists
+        Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+
         $villaImage = 'modern-luxury-house-with-swimming-pool.jpg';
         $villaSource = base_path('images/' . $villaImage); // Corrected source path
         $videoFile = 'videoplayback.mp4';
@@ -50,29 +56,28 @@ class DemoContentSeeder extends Seeder
 
         // 2. Create Unit Types
         $typesData = [
-            ['en' => 'Apartment', 'ar' => 'شقة', 'icon' => 'apartment'],
-            ['en' => 'Villa', 'ar' => 'فيلا', 'icon' => 'villa'],
-            ['en' => 'Townhouse', 'ar' => 'تاون هاوس', 'icon' => 'home'],
-            ['en' => 'Twin House', 'ar' => 'توين هاوس', 'icon' => 'holiday_village'],
-            ['en' => 'Chalet', 'ar' => 'شاليه', 'icon' => 'beach_access'],
-            ['en' => 'Duplex', 'ar' => 'دوبلكس', 'icon' => 'stairs'],
-            ['en' => 'Penthouse', 'ar' => 'بنتهاوس', 'icon' => 'deck'],
-            ['en' => 'Studio', 'ar' => 'ستوديو', 'icon' => 'weekend'],
-            ['en' => 'Clinic', 'ar' => 'عيادة', 'icon' => 'medical_services'],
-            ['en' => 'Office', 'ar' => 'مكتب', 'icon' => 'business_center'],
-            ['en' => 'Shop', 'ar' => 'محلات', 'icon' => 'store'],
+            ['en' => 'Apartment', 'ar' => 'شقة', 'icon' => 'apartment', 'image_file' => 'apartment.jpg'],
+            ['en' => 'Villa', 'ar' => 'فيلا', 'icon' => 'villa', 'image_file' => 'villa.jpg'],
+            ['en' => 'Townhouse', 'ar' => 'تاون هاوس', 'icon' => 'home', 'image_file' => 'townhouse.jpg'],
+            ['en' => 'Twin House', 'ar' => 'توين هاوس', 'icon' => 'holiday_village', 'image_file' => 'twinhouse.jpg'],
+            ['en' => 'Chalet', 'ar' => 'شاليه', 'icon' => 'beach_access', 'image_file' => 'chalet.jpg'],
+            ['en' => 'Duplex', 'ar' => 'دوبلكس', 'icon' => 'stairs', 'image_file' => 'duplex.jpg'],
+            ['en' => 'Penthouse', 'ar' => 'بنتهاوس', 'icon' => 'deck', 'image_file' => 'penthouse.jpg'],
+            ['en' => 'Studio', 'ar' => 'ستوديو', 'icon' => 'weekend', 'image_file' => 'studio.jpg'],
+            ['en' => 'Shop', 'ar' => 'محلات', 'icon' => 'store', 'image_file' => 'shop.jpg'],
         ];
 
         $unitTypes = [];
+        Storage::disk('public')->makeDirectory('unit-types');
         foreach ($typesData as $type) {
-            if (File::exists($villaSource)) {
-                Storage::disk('public')->makeDirectory('unit-types');
-                File::copy($villaSource, Storage::disk('public')->path('unit-types/' . $villaImage));
+            $sourceImage = base_path('unit types/' . $type['image_file']);
+            if (File::exists($sourceImage)) {
+                File::copy($sourceImage, Storage::disk('public')->path('unit-types/' . $type['image_file']));
             }
 
             $unitTypes[] = UnitType::firstOrCreate(
                 ['name_en' => $type['en']],
-                ['name_ar' => $type['ar'], 'icon' => 'unit-types/' . $villaImage]
+                ['name_ar' => $type['ar'], 'icon' => 'unit-types/' . $type['image_file']]
             );
         }
 
@@ -84,22 +89,6 @@ class DemoContentSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'role' => 'admin',
                 'phone' => '01000000000',
-                'status' => 'approved',
-            ],
-            [
-                'email' => 'mohamed_ashraf4444@hotmail.com',
-                'name' => 'Mohamed Ashraf',
-                'password' => Hash::make('password'),
-                'role' => 'admin',
-                'phone' => '01000000001',
-                'status' => 'approved',
-            ],
-            [
-                'email' => 'mohamed_ashraf44444@hotmail.com',
-                'name' => 'Mohamed Ashraf 2',
-                'password' => Hash::make('password'),
-                'role' => 'admin',
-                'phone' => '01000000002',
                 'status' => 'approved',
             ],
         ];
@@ -131,11 +120,13 @@ class DemoContentSeeder extends Seeder
             ['name_en' => 'Misr Italia', 'name_ar' => 'مصر إيطاليا'],
         ];
 
+        // 4. Create Developers
         $developers = [];
+        Storage::disk('public')->makeDirectory('developers');
         foreach ($developersData as $devData) {
-            if (File::exists($villaSource)) {
-                Storage::disk('public')->makeDirectory('developers');
-                File::copy($villaSource, Storage::disk('public')->path('developers/' . $villaImage));
+            $logoSource = base_path('images/developers.jpg');
+            if (File::exists($logoSource)) {
+                File::copy($logoSource, Storage::disk('public')->path('developers/developers.jpg'));
             }
 
             $developers[] = Developer::firstOrCreate(
@@ -146,7 +137,7 @@ class DemoContentSeeder extends Seeder
                     'phone' => $fakerAr->phoneNumber,
                     'address' => $fakerEn->address,
                     'status' => 'active',
-                    'image' => 'developers/' . $villaImage
+                    'logo' => 'developers/developers.jpg'
                 ]
             );
         }
@@ -193,8 +184,12 @@ class DemoContentSeeder extends Seeder
         $offerTypes = ['sale', 'rent'];
         $devStatuses = ['ready', 'under_construction', 'handover_soon'];
 
+        Storage::disk('public')->makeDirectory('units');
+        $floorplanSource = base_path('unit types/floorplan.png');
+        $videoSource = base_path('unit types/videoplayback.mp4');
+
         foreach ($compounds as $compound) {
-            $numUnits = 5; // Reduced to 5 per user request
+            $numUnits = 5;
 
             for ($k = 0; $k < $numUnits; $k++) {
                 $seller = $admin;
@@ -213,6 +208,7 @@ class DemoContentSeeder extends Seeder
                     'title_ar' => $type->name_ar . ' للـ ' . ($isSale ? 'بيع' : 'إيجار') . ' في ' . $compound->name_ar,
                     'description_en' => $fakerEn->realText(200),
                     'description_ar' => $fakerAr->realText(200),
+                    'address' => $fakerAr->address,
                     'price' => $price,
                     'price_per_m2' => $price / 100, // rough estimate
                     'offer_type' => $selectedOfferType,
@@ -232,11 +228,15 @@ class DemoContentSeeder extends Seeder
                     'latitude' => $compound->latitude + (rand(-100, 100) / 10000), // Slight offset
                     'longitude' => $compound->longitude + (rand(-100, 100) / 10000),
                 ]);
-                if (File::exists($villaSource)) {
-                    Storage::disk('public')->makeDirectory('units');
+
+                // Use the type-specific image
+                $typeIconPath = str_replace('unit-types/', '', $type->icon);
+                $unitTypeSource = base_path('unit types/' . $typeIconPath);
+
+                if (File::exists($unitTypeSource)) {
                     for ($m = 1; $m <= 3; $m++) {
                         $unitImageName = "unit-" . $unit->id . "-" . $m . ".jpg";
-                        File::copy($villaSource, Storage::disk('public')->path('units/' . $unitImageName));
+                        File::copy($unitTypeSource, Storage::disk('public')->path('units/' . $unitImageName));
                         UnitMedia::create([
                             'unit_id' => $unit->id,
                             'type' => 'image',
@@ -245,33 +245,32 @@ class DemoContentSeeder extends Seeder
                             'processing_status' => 'completed'
                         ]);
                     }
+                }
 
-                    // Add Floorplan
-                    $floorplanSource = base_path('images/floorplan.png');
-                    if (File::exists($floorplanSource)) {
-                        $floorplanName = "unit-" . $unit->id . "-floorplan.png";
-                        File::copy($floorplanSource, Storage::disk('public')->path('units/' . $floorplanName));
-                        UnitMedia::create([
-                            'unit_id' => $unit->id,
-                            'type' => 'floorplan',
-                            'url' => 'units/' . $floorplanName,
-                            'order' => 4,
-                            'processing_status' => 'completed'
-                        ]);
-                    }
+                // Add Floorplan
+                if (File::exists($floorplanSource)) {
+                    $floorplanName = "unit-" . $unit->id . "-floorplan.png";
+                    File::copy($floorplanSource, Storage::disk('public')->path('units/' . $floorplanName));
+                    UnitMedia::create([
+                        'unit_id' => $unit->id,
+                        'type' => 'floorplan',
+                        'url' => 'units/' . $floorplanName,
+                        'order' => 4,
+                        'processing_status' => 'completed'
+                    ]);
+                }
 
-                    // Add Video
-                    if (File::exists($videoSource)) {
-                        $unitVideoName = "unit-" . $unit->id . ".mp4";
-                        File::copy($videoSource, Storage::disk('public')->path('units/' . $unitVideoName));
-                        UnitMedia::create([
-                            'unit_id' => $unit->id,
-                            'type' => 'video',
-                            'url' => 'units/' . $unitVideoName,
-                            'order' => 5,
-                            'processing_status' => 'completed'
-                        ]);
-                    }
+                // Add Video
+                if (File::exists($videoSource)) {
+                    $unitVideoName = "unit-" . $unit->id . ".mp4";
+                    File::copy($videoSource, Storage::disk('public')->path('units/' . $unitVideoName));
+                    UnitMedia::create([
+                        'unit_id' => $unit->id,
+                        'type' => 'video',
+                        'url' => 'units/' . $unitVideoName,
+                        'order' => 5,
+                        'processing_status' => 'completed'
+                    ]);
                 }
             }
         }

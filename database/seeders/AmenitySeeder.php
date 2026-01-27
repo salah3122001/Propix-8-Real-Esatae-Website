@@ -15,41 +15,37 @@ class AmenitySeeder extends Seeder
      */
     public function run(): void
     {
-        $villaImage = 'modern-luxury-house-with-swimming-pool.jpg';
-        $villaSource = base_path('villa/' . $villaImage);
         $targetDir = 'amenities';
-
-        if (File::exists($villaSource)) {
-            Storage::disk('public')->makeDirectory($targetDir);
-        }
-
         $amenities = [
-            ['name_en' => 'Private Pool', 'name_ar' => 'حمام سباحة خاص'],
-            ['name_en' => 'Shared Gym', 'name_ar' => 'صالة ألعاب رياضية مشتركة'],
-            ['name_en' => 'Security', 'name_ar' => 'أمن وحراسة'],
-            ['name_en' => 'Parking', 'name_ar' => 'موقف سيارات'],
-            ['name_en' => 'Elevator', 'name_ar' => 'مصعد'],
-            ['name_en' => 'Balcony', 'name_ar' => 'شرفة'],
-            ['name_en' => 'Garden', 'name_ar' => 'حديقة'],
-            ['name_en' => 'Central A/C', 'name_ar' => 'تكييف مركزي'],
-            ['name_en' => 'Maid Service', 'name_ar' => 'خدمة تنظيف'],
-            ['name_en' => 'Sea View', 'name_ar' => 'إطلالة على البحر'],
-            ['name_en' => 'Kitchen Appliances', 'name_ar' => 'أجهزة مطبخ'],
-            ['name_en' => 'Walk-in Closet', 'name_ar' => 'غرفة ملابس'],
-            ['name_en' => 'Pets Allowed', 'name_ar' => 'مسموح بالحيوانات الأليفة'],
-            ['name_en' => 'BBQ Area', 'name_ar' => 'منطقة شواء'],
-            ['name_en' => 'Kids Play Area', 'name_ar' => 'منطقة ألعاب للأطفال'],
+            ['name_en' => 'Private Pool', 'name_ar' => 'حمام سباحة خاص', 'icon_file' => 'pool.jpg'],
+            ['name_en' => 'Shared Gym', 'name_ar' => 'صالة ألعاب رياضية مشتركة', 'icon_file' => 'gym.jpg'],
+            ['name_en' => 'Security', 'name_ar' => 'أمن وحراسة', 'icon_file' => 'security.jpg'],
+            ['name_en' => 'Parking', 'name_ar' => 'موقف سيارات', 'icon_file' => 'parking.jpg'],
+            ['name_en' => 'Elevator', 'name_ar' => 'مصعد', 'icon_file' => 'elevator.jpg'],
+            ['name_en' => 'Garden', 'name_ar' => 'حديقة', 'icon_file' => 'garden.jpg'],
+            ['name_en' => 'Air conditioner', 'name_ar' => 'تكييف', 'icon_file' => 'airconditioner.jpg'],
+            ['name_en' => 'Maid Service', 'name_ar' => 'خدمة تنظيف', 'icon_file' => 'cleaning.jpg'],
+            ['name_en' => 'Maintenance Service', 'name_ar' => 'خدمة الصيانة', 'icon_file' => 'maintenance.jpg'],
+            ['name_en' => 'Sea View', 'name_ar' => 'إطلالة على البحر', 'icon_file' => 'seaview.jpg'],
+            ['name_en' => 'Kitchen Appliances', 'name_ar' => 'أجهزة مطبخ', 'icon_file' => 'kitchenequipments.jpg'],
         ];
+
+        Storage::disk('public')->makeDirectory($targetDir);
 
         foreach ($amenities as $index => $amenity) {
             $imageName = "amenity-" . ($index + 1) . ".jpg";
-            if (File::exists($villaSource)) {
-                File::copy($villaSource, Storage::disk('public')->path($targetDir . '/' . $imageName));
+            $sourceFile = base_path('images/' . $amenity['icon_file']);
+
+            if (File::exists($sourceFile)) {
+                File::copy($sourceFile, Storage::disk('public')->path($targetDir . '/' . $imageName));
             }
 
             \App\Models\Amenity::updateOrCreate(
                 ['name_en' => $amenity['name_en']],
-                array_merge($amenity, ['icon' => $targetDir . '/' . $imageName])
+                [
+                    'name_ar' => $amenity['name_ar'],
+                    'icon' => $targetDir . '/' . $imageName
+                ]
             );
         }
     }

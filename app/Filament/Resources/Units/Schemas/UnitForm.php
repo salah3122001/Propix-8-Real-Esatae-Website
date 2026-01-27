@@ -45,7 +45,7 @@ class UnitForm
                                 ->options([
                                     'pending' => __('admin.fields.statuses.pending'),
                                     'approved' => __('admin.fields.statuses.approved'),
-                                    'rejected' => __('admin.fields.statuses.rejected'),
+                                    // 'rejected' => __('admin.fields.statuses.rejected'),
                                     'sold' => __('admin.fields.statuses.sold'),
                                     'rented' => __('admin.fields.statuses.rented'),
                                 ])

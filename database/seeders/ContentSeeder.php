@@ -213,6 +213,18 @@ class ContentSeeder extends Seeder
                 'is_active' => true,
                 'sort_order' => 3,
             ],
+            [
+                'image' => 'banners/banner4.jpg',
+                'url' => '/contact',
+                'is_active' => true,
+                'sort_order' => 4,
+            ],
+            [
+                'image' => 'banners/banner5.jpg',
+                'url' => '/faq',
+                'is_active' => true,
+                'sort_order' => 5,
+            ],
         ];
 
         foreach ($banners as $banner) {
@@ -253,20 +265,21 @@ class ContentSeeder extends Seeder
             'social_facebook' => 'https://facebook.com',
             'social_instagram' => 'https://instagram.com',
             'social_twitter' => 'https://twitter.com',
-            'site_logo' => 'settings/looogo.png',
+            'site_logo' => 'settings/logo.png',
             'home_hero_image' => json_encode([
-                "settings/heroimage1.jpg",
-                "settings/heroimage2.jpg",
-                "settings/heroimage3.jpg"
+                "settings/hero1.jpg",
+                "settings/hero2.jpg",
+                "settings/hero3.jpeg",
+                "settings/hero4.jpeg"
             ]),
         ];
 
         foreach ($settings as $key => $value) {
             if ($key === 'site_logo') {
-                $source = base_path('images/looogo.png');
+                $source = base_path('images/logo.png');
                 if (File::exists($source)) {
                     Storage::disk('public')->makeDirectory('settings');
-                    File::copy($source, Storage::disk('public')->path('settings/looogo.png'));
+                    File::copy($source, Storage::disk('public')->path('settings/logo.png'));
                 }
             }
             if ($key === 'home_hero_image') {

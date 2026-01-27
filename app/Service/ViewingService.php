@@ -84,49 +84,60 @@ class ViewingService
     protected function notifyAdmins(Viewing $viewing, string $type): void
     {
         $admins = User::where('role', 'admin')->get();
-        $locale = app()->getLocale();
 
         foreach ($admins as $admin) {
-            $title = '';
-            $body = '';
+            $arTitle = '';
+            $enTitle = '';
+            $arBody = '';
+            $enBody = '';
             $color = 'info';
 
-            // Define message based on type
             if ($type === 'user_response') {
-                $title = $locale === 'ar' ? 'تحديث على طلب المعاينة' : 'Viewing Request Updated';
-                $body = $locale === 'ar'
-                    ? "قام {$viewing->name} بتحديث طلب المعاينة للوحدة #{$viewing->unit_id}"
-                    : "{$viewing->name} updated the viewing request for unit #{$viewing->unit_id}";
+                $arTitle = __('admin.notifications.viewing_updated', [], 'ar');
+                $enTitle = __('admin.notifications.viewing_updated', [], 'en');
+
+                $arBody = __('admin.notifications.viewing_updated_body', ['name' => $viewing->name, 'unit_id' => $viewing->unit_id], 'ar');
+                $enBody = __('admin.notifications.viewing_updated_body', ['name' => $viewing->name, 'unit_id' => $viewing->unit_id], 'en');
                 $color = 'warning';
             } elseif ($type === 'cancelled') {
-                $title = $locale === 'ar' ? 'إلغاء طلب المعاينة' : 'Viewing Request Cancelled';
-                $body = $locale === 'ar'
-                    ? "قام {$viewing->name} بإلغاء طلب المعاينة للوحدة #{$viewing->unit_id}"
-                    : "{$viewing->name} cancelled the viewing request for unit #{$viewing->unit_id}";
+                $arTitle = __('admin.notifications.viewing_cancelled', [], 'ar');
+                $enTitle = __('admin.notifications.viewing_cancelled', [], 'en');
+
+                $arBody = __('admin.notifications.viewing_cancelled_body', ['name' => $viewing->name, 'unit_id' => $viewing->unit_id], 'ar');
+                $enBody = __('admin.notifications.viewing_cancelled_body', ['name' => $viewing->name, 'unit_id' => $viewing->unit_id], 'en');
                 $color = 'danger';
             } else {
-                // Fallback for generic updates
-                $title = $locale === 'ar' ? 'تحديث طلب معاينة' : 'Viewing Request Update';
-                $body = $locale === 'ar'
-                    ? "تحديث جديد على طلب المعاينة #{$viewing->id}"
-                    : "New update on viewing request #{$viewing->id}";
+                $arTitle = __('admin.notifications.new_viewing_request', [], 'ar');
+                $enTitle = __('admin.notifications.new_viewing_request', [], 'en');
+
+                $arBody = __('admin.notifications.new_viewing_request_body', ['name' => $viewing->name, 'unit_id' => $viewing->unit_id], 'ar');
+                $enBody = __('admin.notifications.new_viewing_request_body', ['name' => $viewing->name, 'unit_id' => $viewing->unit_id], 'en');
             }
+
+            $titleHtml = "<span class='lang-ar'>$arTitle</span><span class='lang-en'>$enTitle</span>";
+            $bodyHtml = "<span class='lang-ar'>$arBody</span><span class='lang-en'>$enBody</span>";
 
             try {
                 \Filament\Notifications\Notification::make()
-                    ->title($title)
-                    ->body($body)
+                    ->title(new \Illuminate\Support\HtmlString($titleHtml))
+                    ->body(new \Illuminate\Support\HtmlString($bodyHtml))
                     ->icon('heroicon-o-calendar')
                     ->iconColor($color)
                     ->actions([
-                        \Filament\Actions\Action::make('view')
-                            ->label($locale === 'ar' ? 'عرض التفاصيل' : 'View Details')
+                        \Filament\Actions\Action::make('view_ar')
+                            ->label(__('admin.actions.view', [], 'ar'))
                             ->url('/admin/viewings/' . $viewing->id . '/edit')
+                            ->extraAttributes(['class' => 'lang-ar'])
+                            ->markAsRead(),
+                        \Filament\Actions\Action::make('view_en')
+                            ->label(__('admin.actions.view', [], 'en'))
+                            ->url('/admin/viewings/' . $viewing->id . '/edit')
+                            ->extraAttributes(['class' => 'lang-en'])
                             ->markAsRead(),
                     ])
                     ->sendToDatabase($admin);
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Admin Notification failed: ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::error('Admin Viewing Notification failed: ' . $e->getMessage());
             }
         }
     }

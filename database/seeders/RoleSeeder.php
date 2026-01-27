@@ -16,7 +16,8 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         // 0. Create super_admin role first (required by Shield)
-        Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+        $superAdminRole = Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+        $superAdminRole->givePermissionTo(Permission::all());
 
         // 1. Create Roles
         $roles = [
