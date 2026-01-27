@@ -90,7 +90,7 @@ class UserForm
                     ->options([
                         'pending' => __('admin.fields.statuses.pending'),
                         'approved' => __('admin.fields.statuses.approved'),
-                        'rejected' => __('admin.fields.statuses.rejected'),
+                        // 'rejected' => __('admin.fields.statuses.rejected'),
                     ])->required(),
             ]);
     }

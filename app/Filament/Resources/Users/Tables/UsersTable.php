@@ -53,7 +53,7 @@ class UsersTable
                     ->options([
                         'admin' => __('admin.fields.roles.admin'),
                         'buyer' => __('admin.fields.roles.buyer'),
-                        'seller' => __('admin.fields.roles.seller'),
+                        // 'seller' => __('admin.fields.roles.seller'),
                     ])
                     ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data) {
                         if ($data['value']) {
@@ -65,7 +65,7 @@ class UsersTable
                     ->options([
                         'pending' => __('admin.fields.statuses.pending'),
                         'approved' => __('admin.fields.statuses.approved'),
-                        'rejected' => __('admin.fields.statuses.rejected'),
+                        // 'rejected' => __('admin.fields.statuses.rejected'),
                     ])
                     ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data) {
                         if ($data['value']) {
