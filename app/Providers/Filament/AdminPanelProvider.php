@@ -98,15 +98,16 @@ class AdminPanelProvider extends PanelProvider
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
             ])
             ->navigationItems([
-                NavigationItem::make(__('admin.view_website'))
+                NavigationItem::make()
+                    ->label(fn() => __('admin.view_website'))
                     ->url(fn (): string => config('app.frontend_url', '#'))
                     ->icon('heroicon-o-globe-alt')
-                    ->group(__('admin.quick_links'))
+                    ->group(fn() => __('admin.quick_links'))
                     ->sort(-1),
             ])
             ->userMenuItems([
                 'view_website' => MenuItem::make()
-                    ->label(__('admin.view_website'))
+                    ->label(fn() => __('admin.view_website'))
                     ->url(fn (): string => config('app.frontend_url', '#'))
                     ->icon('heroicon-o-globe-alt'),
             ]);
