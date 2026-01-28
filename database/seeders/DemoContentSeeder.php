@@ -24,6 +24,28 @@ class DemoContentSeeder extends Seeder
         $fakerAr = Faker::create('ar_EG');
         $fakerEn = Faker::create('en_US');
 
+        // Arabic descriptions for units and compounds
+        $arabicDescriptions = [
+            'شقة فاخرة بتصميم عصري وإطلالة رائعة على المساحات الخضراء. تتميز بتشطيبات عالية الجودة ومساحات واسعة مناسبة للعائلات.',
+            'وحدة سكنية متميزة في موقع استراتيجي قريب من جميع الخدمات والمرافق الحيوية. تصميم معماري فريد يجمع بين الفخامة والراحة.',
+            'عقار راقي بمواصفات استثنائية يوفر أعلى مستويات الرفاهية والخصوصية. مثالي للباحثين عن حياة عصرية مريحة.',
+            'وحدة سكنية بتشطيبات فاخرة ومرافق متكاملة. موقع متميز يوفر سهولة الوصول لأهم المناطق الحيوية في المدينة.',
+            'شقة دوبلكس بتصميم عصري وتشطيبات خاصة. تحتوي على ريسبشن كبير ومطبخ أمريكي. الموقع قريب جداً من المدارس والجامعات، مما يجعلها مثالية للعائلات.',
+            'فيلا فاخرة محاطة بالحدائق والمساحات الخضراء. تصميم معماري فريد يجمع بين الأصالة والحداثة مع جميع وسائل الراحة العصرية.',
+            'تاون هاوس بموقع مميز وتصميم عملي يناسب الأسر الكبيرة. يتميز بمساحات واسعة وإطلالات خلابة على المناظر الطبيعية.',
+            'شاليه على البحر مباشرة بإطلالة بانورامية ساحرة. مثالي لقضاء عطلات صيفية لا تُنسى مع العائلة والأصدقاء.',
+            'بنتهاوس فاخر في الأدوار العليا مع تراس واسع وإطلالة بانورامية على المدينة. تشطيبات سوبر لوكس ومرافق حصرية.',
+            'ستوديو عصري بتصميم ذكي يستغل المساحة بشكل مثالي. مناسب للشباب والمحترفين الباحثين عن سكن عملي وأنيق.',
+        ];
+
+        $arabicCompoundDescriptions = [
+            'كمبوند سكني متكامل يوفر أرقى مستويات المعيشة مع مساحات خضراء واسعة ومرافق ترفيهية متنوعة. موقع استراتيجي يجمع بين الهدوء والقرب من المدينة.',
+            'مشروع سكني فاخر بتصميم معماري عالمي يضم وحدات متنوعة تناسب جميع الاحتياجات. يتميز بالأمن والخصوصية والخدمات المتكاملة.',
+            'مجتمع سكني راقي يجمع بين الطبيعة الخلابة والحياة العصرية. يحتوي على نوادي رياضية، مدارس دولية، ومراكز تجارية متكاملة.',
+            'كمبوند حديث يوفر نمط حياة عصري ومتكامل مع جميع الخدمات والمرافق على أعلى مستوى. تصميمات معمارية فريدة ومساحات خضراء واسعة.',
+            'مشروع سكني متميز في قلب المدينة يجمع بين الموقع الاستراتيجي والتصميم العصري. يوفر بيئة آمنة ومريحة للعائلات.',
+        ];
+
         // Ensure super_admin role exists
         Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
 
@@ -146,18 +168,9 @@ class DemoContentSeeder extends Seeder
         $compoundsData = [
             ['name_en' => 'Marassi', 'name_ar' => 'مراسي', 'city' => 'North Coast', 'dev' => 'Emaar Misr'],
             ['name_en' => 'Mivida', 'name_ar' => 'ميفيدا', 'city' => 'New Cairo', 'dev' => 'Emaar Misr'],
-            ['name_en' => 'Cairo Gate', 'name_ar' => 'كايرو جيت', 'city' => 'Sheikh Zayed', 'dev' => 'Emaar Misr'],
-            ['name_en' => 'Villette', 'name_ar' => 'فيليت', 'city' => 'New Cairo', 'dev' => 'SODIC'],
             ['name_en' => 'SODIC West', 'name_ar' => 'سوديك ويست', 'city' => 'Sheikh Zayed', 'dev' => 'SODIC'],
-            ['name_en' => 'Palm Hills Alexandria', 'name_ar' => 'بالم هيلز الإسكندرية', 'city' => 'Alexandria', 'dev' => 'Palm Hills'],
-            ['name_en' => 'Badya', 'name_ar' => 'بادية', 'city' => '6th of October', 'dev' => 'Palm Hills'],
             ['name_en' => 'Mountain View iCity', 'name_ar' => 'ماونتن فيو آي سيتي', 'city' => 'New Cairo', 'dev' => 'Mountain View'],
-            ['name_en' => 'Mountain View Chillout Park', 'name_ar' => 'ماونتن فيو تشيل أوت بارك', 'city' => '6th of October', 'dev' => 'Mountain View'],
-            ['name_en' => 'Madinaty', 'name_ar' => 'مدينتي', 'city' => 'New Cairo', 'dev' => 'Talaat Moustafa Group (TMG)'],
-            ['name_en' => 'Noor', 'name_ar' => 'نور', 'city' => 'New Capital', 'dev' => 'Talaat Moustafa Group (TMG)'],
             ['name_en' => 'IL Monte Galala', 'name_ar' => 'المونت جلالة', 'city' => 'Ain Sokhna', 'dev' => 'Tatweer Misr'],
-            ['name_en' => 'Bloomfields', 'name_ar' => 'بلوم فيلدز', 'city' => 'New Cairo', 'dev' => 'Tatweer Misr'],
-            ['name_en' => 'Taj City', 'name_ar' => 'تاج سيتي', 'city' => 'New Cairo', 'dev' => 'Misr Italia'],
         ];
 
         $compounds = [];
@@ -171,7 +184,7 @@ class DemoContentSeeder extends Seeder
                     [
                         'name_ar' => $comp['name_ar'],
                         'description_en' => $fakerEn->paragraph,
-                        'description_ar' => $fakerAr->paragraph,
+                        'description_ar' => $arabicCompoundDescriptions[array_rand($arabicCompoundDescriptions)],
                         'city_id' => $city->id,
                         'latitude' => $fakerEn->latitude(29, 31),
                         'longitude' => $fakerEn->longitude(30, 32),
@@ -189,7 +202,7 @@ class DemoContentSeeder extends Seeder
         $videoSource = base_path('unit types/videoplayback.mp4');
 
         foreach ($compounds as $compound) {
-            $numUnits = 5;
+            $numUnits = 13;
 
             for ($k = 0; $k < $numUnits; $k++) {
                 $seller = $admin;
@@ -207,7 +220,7 @@ class DemoContentSeeder extends Seeder
                     'title_en' => $type->name_en . ' for ' . $selectedOfferType . ' in ' . $compound->name_en,
                     'title_ar' => $type->name_ar . ' للـ ' . ($isSale ? 'بيع' : 'إيجار') . ' في ' . $compound->name_ar,
                     'description_en' => $fakerEn->realText(200),
-                    'description_ar' => $fakerAr->realText(200),
+                    'description_ar' => $arabicDescriptions[array_rand($arabicDescriptions)],
                     'address' => $fakerAr->address,
                     'price' => $price,
                     'price_per_m2' => $price / 100, // rough estimate
@@ -264,13 +277,16 @@ class DemoContentSeeder extends Seeder
                 if (File::exists($videoSource)) {
                     $unitVideoName = "unit-" . $unit->id . ".mp4";
                     File::copy($videoSource, Storage::disk('public')->path('units/' . $unitVideoName));
-                    UnitMedia::create([
+                    $videoMedia = UnitMedia::create([
                         'unit_id' => $unit->id,
                         'type' => 'video',
                         'url' => 'units/' . $unitVideoName,
                         'order' => 5,
-                        'processing_status' => 'completed'
+                        'processing_status' => 'pending'
                     ]);
+
+                    // Dispatch HLS conversion job
+                    \App\Jobs\ProcessVideoHLS::dispatch($videoMedia);
                 }
             }
         }
