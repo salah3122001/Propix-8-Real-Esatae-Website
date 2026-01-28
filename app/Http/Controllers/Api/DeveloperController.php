@@ -7,6 +7,7 @@ use App\Http\Requests\Api\Developer\FetchDevelopersRequest;
 use App\Http\Resources\DeveloperResource;
 use App\Service\DeveloperService;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Storage;
 
 class DeveloperController extends Controller
 {
@@ -33,6 +34,22 @@ class DeveloperController extends Controller
             return $this->error(__('api.developer_not_found'), 404);
         }
 
-        return $this->success(new DeveloperResource($developer));
+        $units = $this->developerService->getDeveloperUnits($id, 10);
+
+        $developerData = new DeveloperResource($developer);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'success',
+            'data' => array_merge($developerData->toArray(request()), [
+                'units' => \App\Http\Resources\UnitListResource::collection($units->items()),
+            ]),
+            'pagination' => [
+                'current_page' => $units->currentPage(),
+                'per_page' => $units->perPage(),
+                'total' => $units->total(),
+                'last_page' => $units->lastPage(),
+            ],
+        ]);
     }
 }

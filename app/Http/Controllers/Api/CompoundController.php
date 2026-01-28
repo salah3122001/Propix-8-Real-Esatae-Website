@@ -27,6 +27,27 @@ class CompoundController extends Controller
     public function show($id)
     {
         $compound = $this->compoundService->getCompoundById($id);
-        return $this->success(new CompoundResource($compound));
+
+        if (!$compound) {
+            return $this->error(__('api.compound_not_found'), 404);
+        }
+
+        $units = $this->compoundService->getCompoundUnits($id, 10);
+
+        $compoundData = new \App\Http\Resources\CompoundResource($compound);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'success',
+            'data' => array_merge($compoundData->toArray(request()), [
+                'units' => \App\Http\Resources\UnitListResource::collection($units->items()),
+            ]),
+            'pagination' => [
+                'current_page' => $units->currentPage(),
+                'per_page' => $units->perPage(),
+                'total' => $units->total(),
+                'last_page' => $units->lastPage(),
+            ],
+        ]);
     }
 }
