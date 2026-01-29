@@ -95,6 +95,8 @@ return [
         'email_verified_helper' => 'Enable this to manually verify the user\'s email',
         'phone' => 'Phone',
         'address' => 'Address',
+        'address_ar' => 'Address (Arabic)',
+        'address_en' => 'Address (English)',
         'user' => 'User',
         'service' => 'Service',
         'message' => 'Message',

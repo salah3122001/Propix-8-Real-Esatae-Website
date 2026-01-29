@@ -23,7 +23,7 @@ class UnitMedia extends Model
         });
 
         static::created(function ($media) {
-            if ($media->type === 'video') {
+            if ($media->type === 'video' && $media->processing_status === 'pending') {
                 \App\Jobs\ProcessVideoHLS::dispatch($media);
             }
         });

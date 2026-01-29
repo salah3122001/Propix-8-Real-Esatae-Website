@@ -12,21 +12,32 @@ class Unit extends Model
 
     protected static function booted()
     {
-        static::updated(function (Unit $unit) {
-            if ($unit->wasChanged('status')) {
-                if ($unit->status === 'approved') {
-                    // Notify buyers in the same city
-                    $buyers = \App\Models\User::where('role', 'buyer')
-                        ->where('city_id', $unit->city_id)
-                        ->whereNotNull('email_verified_at')
-                        ->get();
-
-                    foreach ($buyers as $buyer) {
-                        $buyer->notify(new \App\Notifications\NewUnitAddedNotification($unit));
-                    }
-                }
+        static::created(function (Unit $unit) {
+            if ($unit->status === 'approved') {
+                $unit->notifyBuyersInCity();
             }
         });
+
+        static::updated(function (Unit $unit) {
+            if ($unit->wasChanged('status') && $unit->status === 'approved') {
+                $unit->notifyBuyersInCity();
+            }
+        });
+    }
+
+    /**
+     * Notify all verified buyers in the same city about the new unit.
+     */
+    public function notifyBuyersInCity()
+    {
+        $buyers = \App\Models\User::where('role', 'buyer')
+            ->where('city_id', $this->city_id)
+            ->whereNotNull('email_verified_at')
+            ->get();
+
+        foreach ($buyers as $buyer) {
+            $buyer->notify(new \App\Notifications\NewUnitAddedNotification($this));
+        }
     }
 
     protected $fillable = [
@@ -35,7 +46,8 @@ class Unit extends Model
         'type',
         'description_ar',
         'description_en',
-        'address',
+        'address_ar',
+        'address_en',
         'price',
         'price_per_m2',
         'offer_type',
@@ -112,7 +124,19 @@ class Unit extends Model
     public function getTitleAttribute()
     {
         $locale = app()->getLocale();
-        return $locale === 'ar' ? $this->title_ar : $this->title_en;
+        return ($locale === 'ar' ? $this->title_ar : $this->title_en) ?: $this->title_ar;
+    }
+
+    public function getAddressAttribute()
+    {
+        $locale = app()->getLocale();
+        return ($locale === 'ar' ? $this->address_ar : $this->address_en) ?: $this->address_ar;
+    }
+
+    public function getDescriptionAttribute()
+    {
+        $locale = app()->getLocale();
+        return ($locale === 'ar' ? $this->description_ar : $this->description_en) ?: $this->description_ar;
     }
 
     protected function casts(): array

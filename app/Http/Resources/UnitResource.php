@@ -16,7 +16,7 @@ class UnitResource extends JsonResource
             'id' => $this->id,
             'title' => ($lang === 'ar' ? $this->title_ar : $this->title_en) ?? '',
             'description' => ($lang === 'ar' ? $this->description_ar : $this->description_en) ?? '',
-            'address' => $this->address ?? '',
+            'address' => ($lang === 'ar' ? $this->address_ar : $this->address_en) ?? '',
             'price' => $this->price ?? 0,
             'price_per_m2' => $this->price_per_m2 ?? 0,
             'offer_type' => $this->offer_type ?? '',

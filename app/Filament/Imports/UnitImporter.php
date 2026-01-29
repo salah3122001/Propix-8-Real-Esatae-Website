@@ -37,12 +37,17 @@ class UnitImporter extends Importer
                 ->guess(['الوصف (إنجليزي) (اختياري)', 'الوصف (إنجليزي)', 'description_en'])
                 ->rules(['nullable'])
                 ->example('3 Bedroom apartment with large hall...'),
-            ImportColumn::make('address')
-                ->label('العنوان بالتفصيل')
-                ->guess(['العنوان بالتفصيل', 'العنوان بالكامل', 'address'])
+            ImportColumn::make('address_ar')
+                ->label('العنوان بالتفصيل (عربي)')
+                ->guess(['العنوان بالتفصيل (عربي)', 'العنوان بالتفصيل', 'العنوان بالكامل', 'address_ar', 'address'])
                 ->requiredMapping()
                 ->rules(['required', 'max:255'])
                 ->example('15 شارع النصر، المعادي'),
+            ImportColumn::make('address_en')
+                ->label('العنوان بالتفصيل (إنجليزي) (اختياري)')
+                ->guess(['العنوان بالتفصيل (إنجليزي) (اختياري)', 'العنوان بالتفصيل (إنجليزي)', 'address_en'])
+                ->rules(['nullable', 'max:255'])
+                ->example('15 El Nasr St, Maadi'),
             ImportColumn::make('price')
                 ->label('السعر')
                 ->guess(['السعر', 'سعر', 'price'])

@@ -37,12 +37,12 @@ class UnitRentedNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $title = $this->unit->title_ar ?: $this->unit->title_en ?: 'Unit';
-        
+
         return (new MailMessage)
             ->subject(__('api.notifications.unit_rented_subject'))
             ->greeting(__('api.notifications.greeting', ['name' => $notifiable->name]))
             ->line(__('api.notifications.unit_rented_body', ['title' => $title]))
-            ->action(__('api.notifications.view_unit'), config('app.frontend_url') . '/units/' . $this->unit->id)
+            ->action(__('api.notifications.view_unit'), config('app.frontend_url') . '/property-details/' . $this->unit->id)
             ->line(__('api.notifications.thank_you'));
     }
 

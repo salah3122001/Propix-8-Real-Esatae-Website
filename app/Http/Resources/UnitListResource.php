@@ -26,7 +26,7 @@ class UnitListResource extends JsonResource
                     ->where('unit_id', $this->id)
                     ->exists();
             }),
-            "address" => $this->address ?? "",
+            "address" => ($lang === "ar" ? $this->address_ar : $this->address_en) ?? "",
             "price" => $this->price ?? 0,
             "offer_type" => $this->offer_type ?? "",
             "area" => $this->area ?? 0,

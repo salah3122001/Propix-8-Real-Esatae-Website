@@ -24,6 +24,8 @@ class DemoContentSeeder extends Seeder
         $fakerAr = Faker::create('ar_EG');
         $fakerEn = Faker::create('en_US');
 
+        $amenityIds = \App\Models\Amenity::pluck('id')->toArray();
+
         // Arabic descriptions for units and compounds
         $arabicDescriptions = [
             'شقة فاخرة بتصميم عصري وإطلالة رائعة على المساحات الخضراء. تتميز بتشطيبات عالية الجودة ومساحات واسعة مناسبة للعائلات.',
@@ -266,51 +268,86 @@ class DemoContentSeeder extends Seeder
                     'longitude' => $compound->longitude + (rand(-100, 100) / 10000),
                 ]);
 
+                if (!empty($amenityIds)) {
+                    $randomAmenities = array_rand(array_flip($amenityIds), rand(4, 6));
+                    $unit->amenities()->attach($randomAmenities);
+                }
+
                 // Use the type-specific image
+                static $sharedTypeImages = [];
                 $typeIconPath = str_replace('unit-types/', '', $type->icon);
                 $unitTypeSource = base_path('unit types/' . $typeIconPath);
 
                 if (File::exists($unitTypeSource)) {
-                    for ($m = 1; $m <= 3; $m++) {
-                        $unitImageName = "unit-" . $unit->id . "-" . $m . ".jpg";
-                        File::copy($unitTypeSource, Storage::disk('public')->path('units/' . $unitImageName));
+                    if (!isset($sharedTypeImages[$type->id])) {
+                        $sharedTypeImages[$type->id] = [];
+                        for ($m = 1; $m <= 3; $m++) {
+                            $imageName = "demo-type-{$type->id}-{$m}.jpg";
+                            if (!Storage::disk('public')->exists('units/' . $imageName)) {
+                                File::copy($unitTypeSource, Storage::disk('public')->path('units/' . $imageName));
+                            }
+                            $sharedTypeImages[$type->id][] = 'units/' . $imageName;
+                        }
+                    }
+
+                    foreach ($sharedTypeImages[$type->id] as $index => $imageUrl) {
                         UnitMedia::create([
                             'unit_id' => $unit->id,
                             'type' => 'image',
-                            'url' => 'units/' . $unitImageName,
-                            'order' => $m,
+                            'url' => $imageUrl,
+                            'order' => $index + 1,
                             'processing_status' => 'completed'
                         ]);
                     }
                 }
 
                 // Add Floorplan
+                static $sharedFloorplanUrl = null;
                 if (File::exists($floorplanSource)) {
-                    $floorplanName = "unit-" . $unit->id . "-floorplan.png";
-                    File::copy($floorplanSource, Storage::disk('public')->path('units/' . $floorplanName));
+                    if (!$sharedFloorplanUrl) {
+                        $floorplanName = "demo-floorplan.png";
+                        if (!Storage::disk('public')->exists('units/' . $floorplanName)) {
+                            File::copy($floorplanSource, Storage::disk('public')->path('units/' . $floorplanName));
+                        }
+                        $sharedFloorplanUrl = 'units/' . $floorplanName;
+                    }
+
                     UnitMedia::create([
                         'unit_id' => $unit->id,
                         'type' => 'floorplan',
-                        'url' => 'units/' . $floorplanName,
+                        'url' => $sharedFloorplanUrl,
                         'order' => 4,
                         'processing_status' => 'completed'
                     ]);
                 }
 
                 // Add Video
-                if (File::exists($videoSource)) {
-                    $unitVideoName = "unit-" . $unit->id . ".mp4";
-                    File::copy($videoSource, Storage::disk('public')->path('units/' . $unitVideoName));
-                    $videoMedia = UnitMedia::create([
-                        'unit_id' => $unit->id,
-                        'type' => 'video',
-                        'url' => 'units/' . $unitVideoName,
-                        'order' => 5,
-                        'processing_status' => 'pending'
-                    ]);
+                static $sharedVideoMedia = null;
 
-                    // Dispatch HLS conversion job
-                    \App\Jobs\ProcessVideoHLS::dispatch($videoMedia);
+                if (File::exists($videoSource)) {
+                    if (!$sharedVideoMedia) {
+                        $unitVideoName = "demo-unit-video.mp4";
+                        if (!Storage::disk('public')->exists('units/' . $unitVideoName)) {
+                            File::copy($videoSource, Storage::disk('public')->path('units/' . $unitVideoName));
+                        }
+
+                        $sharedVideoMedia = UnitMedia::create([
+                            'unit_id' => $unit->id,
+                            'type' => 'video',
+                            'url' => 'units/' . $unitVideoName,
+                            'order' => 5,
+                            'processing_status' => 'pending'
+                        ]);
+                    } else {
+                        UnitMedia::create([
+                            'unit_id' => $unit->id,
+                            'type' => 'video',
+                            'url' => $sharedVideoMedia->url,
+                            'order' => 5,
+                            'processed_url' => 'units/hls/' . $sharedVideoMedia->id . '/playlist.m3u8',
+                            'processing_status' => 'completed'
+                        ]);
+                    }
                 }
             }
         }

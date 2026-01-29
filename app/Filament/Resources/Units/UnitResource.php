@@ -59,7 +59,7 @@ class UnitResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['title_ar', 'title_en', 'description_ar', 'description_en'];
+        return ['title_ar', 'title_en', 'description_ar', 'description_en', 'address_ar', 'address_en'];
     }
 
     public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array

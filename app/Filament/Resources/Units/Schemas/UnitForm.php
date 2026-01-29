@@ -218,10 +218,15 @@ class UnitForm
                                         ->maxValue(180)
                                         ->helperText('الرقم الثاني في خرائط جوجل (بعد الفاصلة)')
                                         ->nullable(),
-                                    Textarea::make('address')
-                                        ->label(__('admin.fields.address'))
+                                    TextInput::make('address_ar')
+                                        ->label(__('admin.fields.address_ar'))
                                         ->columnSpanFull()
                                         ->required()
+                                        ->maxLength(500),
+                                    TextInput::make('address_en')
+                                        ->label(__('admin.fields.address_en'))
+                                        ->columnSpanFull()
+                                        ->nullable()
                                         ->maxLength(500),
                                 ]),
                         ]),

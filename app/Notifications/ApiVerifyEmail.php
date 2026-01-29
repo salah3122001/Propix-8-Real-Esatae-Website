@@ -53,8 +53,9 @@ class ApiVerifyEmail extends Notification implements ShouldQueue
      */
     protected function verificationUrl($notifiable)
     {
-        return route(
+        return URL::temporarySignedRoute(
             'api.verification.verify',
+            Carbon::now()->addMinutes(10),
             [
                 'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification()),
