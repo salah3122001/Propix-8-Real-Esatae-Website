@@ -28,10 +28,7 @@ class LatestUnits extends TableWidget
                     ->label(__('admin.fields.title'))
                     ->limit(50),
                 Tables\Columns\TextColumn::make('price')
-                    ->label(__('admin.fields.price'))
-                    // ->money(app()->getLocale() === 'ar' ? 'EGP' : 'EGP') // money might be tricky with locale, simple text for now or confirm
-                    ->numeric()
-                    ->sortable(),
+                    ->label(__('admin.fields.price'))->money('EGP'),
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('admin.fields.status'))
                     ->badge()
@@ -53,8 +50,7 @@ class LatestUnits extends TableWidget
                     }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('admin.fields.created_at'))
-                    ->dateTime()
-                    ->sortable(),
+                    ->dateTime(),
             ])
             ->recordUrl(fn (Unit $record): string => \App\Filament\Resources\Units\UnitResource::getUrl('edit', ['record' => $record]));
     }

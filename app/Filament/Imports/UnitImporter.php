@@ -175,18 +175,18 @@ class UnitImporter extends Importer
                 ->example('أولي'),
             ImportColumn::make('status')
                 ->label('الحالة')
-                ->guess(['الحالة (approved/pending/rejected) (اختياري)', 'الحالة', 'status'])
+                ->guess(['الحالة (approved/pending) (اختياري)', 'الحالة', 'status'])
                 ->castStateUsing(function (?string $state): ?string {
                     if (blank($state)) return null;
                     $state = trim($state);
                     return match ($state) {
                         'مقبول', 'موافقة', 'تم الموافقة', 'approved' => 'approved',
                         'قيد الانتظار', 'انتظار', 'pending' => 'pending',
-                        'مرفوض', 'rejected' => 'rejected',
+                        // 'مرفوض', 'rejected' => 'rejected',
                         default => $state,
                     };
                 })
-                ->rules(['nullable', 'in:approved,pending,rejected'])
+                ->rules(['nullable', 'in:approved,pending'])
                 ->example('مقبول'),
 
             // البحث عن المدينة باسمها العربي
@@ -244,7 +244,7 @@ class UnitImporter extends Importer
                 }])
                 ->example('31.2357'),
             ImportColumn::make('images')
-                ->label('الوسائط (الأسماء مفصولة بفاصلة). للفيديو: video:name.mp4')
+                ->label('(اختياري) الوسائط (الأسماء مفصولة بفاصلة). للفيديو: video:name.mp4')
                 ->guess(['الوسائط (الأسماء مفصولة بفاصلة). للفيديو: video:name.mp4', 'الوسائط', 'الصور', 'images'])
                 ->fillRecordUsing(fn () => null)
                 ->rules(['nullable', 'string'])

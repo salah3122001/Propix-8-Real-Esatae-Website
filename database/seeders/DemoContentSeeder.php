@@ -169,16 +169,38 @@ class DemoContentSeeder extends Seeder
             ['name_en' => 'Marassi', 'name_ar' => 'مراسي', 'city' => 'North Coast', 'dev' => 'Emaar Misr'],
             ['name_en' => 'Mivida', 'name_ar' => 'ميفيدا', 'city' => 'New Cairo', 'dev' => 'Emaar Misr'],
             ['name_en' => 'SODIC West', 'name_ar' => 'سوديك ويست', 'city' => 'Sheikh Zayed', 'dev' => 'SODIC'],
-            ['name_en' => 'Mountain View iCity', 'name_ar' => 'ماونتن فيو آي سيتي', 'city' => 'New Cairo', 'dev' => 'Mountain View'],
             ['name_en' => 'IL Monte Galala', 'name_ar' => 'المونت جلالة', 'city' => 'Ain Sokhna', 'dev' => 'Tatweer Misr'],
+            ['name_en' => 'Palm Hills Alexandria', 'name_ar' => 'بالم هيلز الإسكندرية', 'city' => 'Alexandria', 'dev' => 'Palm Hills'],
+            ['name_en' => 'Noor City', 'name_ar' => 'نور سيتي', 'city' => 'New Capital', 'dev' => 'Talaat Moustafa Group (TMG)'],
+            ['name_en' => 'Badya', 'name_ar' => 'بادية', 'city' => '6th of October', 'dev' => 'Palm Hills'],
+            ['name_en' => 'Heliopolis Gardens', 'name_ar' => 'حدائق مصر الجديدة', 'city' => 'Cairo', 'dev' => 'Emaar Misr'],
+            ['name_en' => 'Pyramids Heights', 'name_ar' => 'مرتفعات الأهرام', 'city' => 'Giza', 'dev' => 'SODIC'],
+            ['name_en' => 'Mansoura Gardens', 'name_ar' => 'حدائق المنصورة', 'city' => 'Mansoura', 'dev' => 'Mountain View'],
         ];
 
         $compounds = [];
+
+        // Real coordinates for each city in Egypt
+        $cityCoordinates = [
+            'Cairo' => ['lat' => 30.0444, 'lng' => 31.2357],
+            'Giza' => ['lat' => 30.0131, 'lng' => 31.2089],
+            'Alexandria' => ['lat' => 31.2001, 'lng' => 29.9187],
+            'North Coast' => ['lat' => 30.8481, 'lng' => 29.0547],
+            'Ain Sokhna' => ['lat' => 29.6000, 'lng' => 32.3500],
+            'New Capital' => ['lat' => 30.0258, 'lng' => 31.7310],
+            '6th of October' => ['lat' => 29.9668, 'lng' => 30.9290],
+            'Sheikh Zayed' => ['lat' => 30.0181, 'lng' => 30.9714],
+            'New Cairo' => ['lat' => 30.0330, 'lng' => 31.4913],
+            'Mansoura' => ['lat' => 31.0409, 'lng' => 31.3785],
+        ];
+
         foreach ($compoundsData as $comp) {
             $city = City::where('name_en', $comp['city'])->first();
             $dev = Developer::where('name_en', $comp['dev'])->first();
 
             if ($city && $dev) {
+                $coords = $cityCoordinates[$comp['city']] ?? ['lat' => 30.0444, 'lng' => 31.2357];
+
                 $compounds[] = Compound::firstOrCreate(
                     ['name_en' => $comp['name_en']],
                     [
@@ -186,8 +208,8 @@ class DemoContentSeeder extends Seeder
                         'description_en' => $fakerEn->paragraph,
                         'description_ar' => $arabicCompoundDescriptions[array_rand($arabicCompoundDescriptions)],
                         'city_id' => $city->id,
-                        'latitude' => $fakerEn->latitude(29, 31),
-                        'longitude' => $fakerEn->longitude(30, 32),
+                        'latitude' => $coords['lat'] + (rand(-100, 100) / 10000), // Slight offset
+                        'longitude' => $coords['lng'] + (rand(-100, 100) / 10000),
                     ]
                 );
             }
@@ -195,14 +217,13 @@ class DemoContentSeeder extends Seeder
 
         // 6. Create Units
         $offerTypes = ['sale', 'rent'];
-        $devStatuses = ['ready', 'under_construction', 'handover_soon'];
 
         Storage::disk('public')->makeDirectory('units');
         $floorplanSource = base_path('unit types/floorplan.png');
         $videoSource = base_path('unit types/videoplayback.mp4');
 
         foreach ($compounds as $compound) {
-            $numUnits = 13;
+            $numUnits = 7;
 
             for ($k = 0; $k < $numUnits; $k++) {
                 $seller = $admin;
@@ -215,6 +236,9 @@ class DemoContentSeeder extends Seeder
 
                 $selectedOfferType = $offerTypes[array_rand($offerTypes)];
                 $isSale = ($selectedOfferType == 'sale');
+
+                // development_status: primary/resale للبيع، null للإيجار
+                $developmentStatus = $isSale ? (['primary', 'resale'][array_rand(['primary', 'resale'])]) : '';
 
                 $unit = Unit::create([
                     'title_en' => $type->name_en . ' for ' . $selectedOfferType . ' in ' . $compound->name_en,
@@ -232,7 +256,7 @@ class DemoContentSeeder extends Seeder
                     'build_year' => $fakerEn->year,
                     'status' => 'approved', // Active/Approved
                     'is_visible' => true,
-                    'development_status' => $devStatuses[array_rand($devStatuses)],
+                    'development_status' => $developmentStatus,
                     'owner_id' => $seller->id,
                     'city_id' => $compound->city_id,
                     'unit_type_id' => $type->id,

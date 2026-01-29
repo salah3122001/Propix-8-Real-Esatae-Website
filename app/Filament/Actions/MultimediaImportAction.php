@@ -500,7 +500,7 @@ class MultimediaImportAction extends Action
                         } elseif ($columnName === 'development_status') {
                              $commentText = "القيم المسموحة:\n- أولي\n- إعادة بيع";
                         } elseif ($columnName === 'status') {
-                             $commentText = "القيم المسموحة:\n- مقبول\n- قيد الانتظار\n- مرفوض";
+                             $commentText = "القيم المسموحة:\n- مقبول\n- قيد الانتظار";
                         } elseif ($columnName === 'is_visible') {
                              $commentText = "القيم المسموحة:\n- 1 (مرئي)\n- 0 (مخفي)";
                         }

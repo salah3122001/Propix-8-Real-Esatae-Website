@@ -50,31 +50,25 @@ class UnitTable
                 TextColumn::make('status')->label(__('admin.fields.status'))
                     ->badge()
                     ->colors([
-                        'warning' => 'pending',
+                        // 'warning' => 'pending',
                         'success' => 'approved',
-                        'danger' => 'rejected',
+                        // 'danger' => 'rejected',
                         'info' => 'sold',
                         'gray' => 'rented',
                     ])
                     ->formatStateUsing(fn(string $state): string => match ($state) {
-                        'pending' => __('admin.fields.statuses.pending'),
+                        // 'pending' => __('admin.fields.statuses.pending'),
                         'approved' => __('admin.fields.statuses.approved'),
-                        'rejected' => __('admin.fields.statuses.rejected'),
+                        // 'rejected' => __('admin.fields.statuses.rejected'),
                         'sold' => __('admin.fields.statuses.sold'),
                         'rented' => __('admin.fields.statuses.rented'),
                         default => $state,
                     })
                     ->searchable(),
-                TextColumn::make('owner.email_verified_at')
-                    ->label(__('admin.fields.email_status'))
-                    ->badge()
-                    ->getStateUsing(fn ($record) => $record->owner?->email_verified_at !== null ? 'verified' : 'unverified')
-                    ->formatStateUsing(fn (string $state): string => __('admin.fields.statuses.' . $state))
-                    ->colors([
-                        'success' => 'verified',
-                        'warning' => 'unverified',
-                    ])
-                    ->toggleable(),
+                \Filament\Tables\Columns\ToggleColumn::make('is_visible')
+                    ->label(__('admin.fields.is_visible'))
+                    ->onColor('success')
+                    ->offColor('danger'),
                 TextColumn::make('sold_at')
                     ->label(__('admin.fields.sold_at'))
                     ->dateTime()
@@ -92,9 +86,9 @@ class UnitTable
                 \Filament\Tables\Filters\SelectFilter::make('status_filter')
                     ->label(__('admin.fields.status'))
                     ->options([
-                        'pending' => __('admin.fields.statuses.pending'),
+                        // 'pending' => __('admin.fields.statuses.pending'),
                         'approved' => __('admin.fields.statuses.approved'),
-                        'rejected' => __('admin.fields.statuses.rejected'),
+                        // 'rejected' => __('admin.fields.statuses.rejected'),
                         'sold' => __('admin.fields.statuses.sold'),
                         'rented' => __('admin.fields.statuses.rented'),
                     ])
@@ -133,7 +127,7 @@ class UnitTable
                     }),
             ])
 
-            ->recordActions([
+            ->actions([
                 EditAction::make(),
                 Action::make('approve')
                     ->label(__('admin.actions.approve'))
@@ -141,12 +135,6 @@ class UnitTable
                     ->color('success')
                     ->hidden(fn($record) => $record === null || in_array($record->status, ['approved', 'sold', 'rented']))
                     ->action(fn($record) => $record->update(['status' => 'approved'])),
-                Action::make('reject')
-                    ->label(__('admin.actions.reject'))
-                    ->icon('heroicon-o-x-circle')
-                    ->color('danger')
-                    ->hidden(fn($record) => $record === null || in_array($record->status, ['rejected', 'sold', 'rented']))
-                    ->action(fn($record) => $record->update(['status' => 'rejected'])),
                 Action::make('mark_as_done')
                     ->label(fn($record) => $record->getAttribute('offer_type') === 'sale' ? __('admin.fields.statuses.sold') : __('admin.fields.statuses.rented'))
                     ->icon(fn($record) => $record->getAttribute('offer_type') === 'sale' ? 'heroicon-o-currency-dollar' : 'heroicon-o-key')
@@ -204,7 +192,7 @@ class UnitTable
                             } elseif ($columnName === 'development_status') {
                                  $commentText = "القيم المسموحة:\n- أولي\n- إعادة بيع";
                             } elseif ($columnName === 'status') {
-                                 $commentText = "القيم المسموحة:\n- مقبول\n- قيد الانتظار\n- مرفوض";
+                                 $commentText = "القيم المسموحة:\n- مقبول\n- قيد الانتظار";
                             } elseif ($columnName === 'is_visible') {
                                  $commentText = "القيم المسموحة:\n- 1 (مرئي)\n- 0 (مخفي)";
                             }

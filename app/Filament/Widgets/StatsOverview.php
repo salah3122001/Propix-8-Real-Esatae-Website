@@ -24,23 +24,23 @@ class StatsOverview extends StatsOverviewWidget
                 ->color('primary')
                 ->url(route('filament.admin.resources.units.index')),
 
-            Stat::make(__('admin.widgets.stats_overview.pending_units'), Unit::where('status', 'pending')->count())
-                ->description(__('admin.widgets.stats_overview.pending_units_desc'))
-                ->descriptionIcon('heroicon-m-clock')
-                ->icon('heroicon-o-clock')
-                ->color('warning')
-                ->url(route('filament.admin.resources.units.index', [
-                    'tableFilters' => [
-                        'status_filter' => [
-                            'value' => 'pending',
-                        ],
-                    ],
-                    'filters' => [
-                        'status_filter' => [
-                            'value' => 'pending',
-                        ],
-                    ],
-                ])),
+            // Stat::make(__('admin.widgets.stats_overview.pending_units'), Unit::where('status', 'pending')->count())
+            //     ->description(__('admin.widgets.stats_overview.pending_units_desc'))
+            //     ->descriptionIcon('heroicon-m-clock')
+            //     ->icon('heroicon-o-clock')
+            //     ->color('warning')
+            //     ->url(route('filament.admin.resources.units.index', [
+            //         'tableFilters' => [
+            //             'status_filter' => [
+            //                 'value' => 'pending',
+            //             ],
+            //         ],
+            //         'filters' => [
+            //             'status_filter' => [
+            //                 'value' => 'pending',
+            //             ],
+            //         ],
+            //     ])),
 
             Stat::make(__('admin.resources.users'), User::count())
                 ->description(__('admin.widgets.stats_overview.total_users'))

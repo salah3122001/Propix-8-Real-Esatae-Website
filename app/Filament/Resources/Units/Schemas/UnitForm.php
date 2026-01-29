@@ -43,13 +43,13 @@ class UnitForm
                             Select::make('status')
                                 ->label(__('admin.fields.status'))
                                 ->options([
-                                    'pending' => __('admin.fields.statuses.pending'),
+                                    // 'pending' => __('admin.fields.statuses.pending'),
                                     'approved' => __('admin.fields.statuses.approved'),
                                     // 'rejected' => __('admin.fields.statuses.rejected'),
                                     'sold' => __('admin.fields.statuses.sold'),
                                     'rented' => __('admin.fields.statuses.rented'),
                                 ])
-                                ->default('pending')
+                                ->default('approved')
                                 ->required(),
 
                             Select::make('development_status')
