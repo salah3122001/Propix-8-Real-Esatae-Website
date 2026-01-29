@@ -12,3 +12,9 @@ use Illuminate\Support\Facades\Schedule;
 Schedule::command('queue:work --max-time=55')
     ->everyMinute()
     ->withoutOverlapping();
+
+// Clean up expired password reset tokens hourly
+Schedule::command('auth:clear-resets')->hourly();
+
+// Clean up expired API tokens daily to keep the database light
+Schedule::command('sanctum:prune-expired --hours=24')->daily();
