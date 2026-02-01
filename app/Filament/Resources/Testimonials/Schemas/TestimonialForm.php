@@ -39,11 +39,11 @@ class TestimonialForm
                 ->label(__('admin.fields.name'))
                 // ->helperText(__('admin.fields.auto_generated_name'))
                 ->required()
-                ->disabled(fn ($record) => $record !== null),
+                ->disabled(fn($record) => $record !== null),
 
             TextInput::make('position')
                 ->label(__('admin.fields.position'))
-                ->disabled(fn ($record) => $record !== null),
+                ->disabled(fn($record) => $record !== null),
 
             Textarea::make('content')
                 ->label(__('admin.fields.content'))
@@ -51,19 +51,19 @@ class TestimonialForm
                 ->minLength(10)
                 ->maxLength(500)
                 ->columnSpanFull()
-                ->disabled(fn ($record) => $record !== null),
+                ->disabled(fn($record) => $record !== null),
 
             FileUpload::make('image')
                 ->label(__('admin.fields.image'))
                 ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG,JPEG')
                 ->image()
-                ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
                 ->directory('testimonials')
                 ->disk('public')
                 ->visibility('public')
                 ->downloadable()
                 ->openable()
-                ->disabled(fn ($record) => $record !== null),
+                ->disabled(fn($record) => $record !== null),
 
             Toggle::make('status')
                 ->label(__('admin.fields.active_site'))

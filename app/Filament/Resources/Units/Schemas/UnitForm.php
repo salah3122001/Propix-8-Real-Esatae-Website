@@ -253,7 +253,7 @@ class UnitForm
                                         ->helperText(fn($get) => match ($get('type')) {
                                             'video' => __('admin.fields.allowed_formats', ['formats' => 'mp4, mov, avi, webm']),
                                             'image' => __('admin.fields.allowed_formats', ['formats' => 'jpg, png, jpeg']),
-                                            '3d' => __('admin.fields.allowed_formats', ['formats' => 'obj, fbx, glb, gltf']),
+                                            // '3d' => __('admin.fields.allowed_formats', ['formats' => 'obj, fbx, glb, gltf']),
                                             'floorplan' => __('admin.fields.allowed_formats', ['formats' => 'jpg, png, jpeg']),
                                             default => __('admin.fields.keep_current'),
                                         })
@@ -270,7 +270,7 @@ class UnitForm
                                         ->options([
                                             'image' => __('admin.fields.media_types.image'),
                                             'video' => __('admin.fields.media_types.video'),
-                                            '3d' => __('admin.fields.media_types.3d'),
+                                            // '3d' => __('admin.fields.media_types.3d'),
                                             'floorplan' => __('admin.fields.media_types.floorplan'),
                                         ])
                                         ->default('image')
