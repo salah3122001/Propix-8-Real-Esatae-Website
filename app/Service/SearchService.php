@@ -22,7 +22,8 @@ class SearchService
                 // Search as whole phrase
                 $sub->where('title_ar', 'like', "%{$query}%")
                     ->orWhere('title_en', 'like', "%{$query}%")
-                    ->orWhere('address', 'like', "%{$query}%")
+                    ->orWhere('address_ar', 'like', "%{$query}%")
+                    ->orWhere('address_en', 'like', "%{$query}%")
                     ->orWhere('description_ar', 'like', "%{$query}%")
                     ->orWhere('description_en', 'like', "%{$query}%");
 
@@ -30,7 +31,8 @@ class SearchService
                 foreach ($words as $word) {
                     $sub->orWhere('title_ar', 'like', "%{$word}%")
                         ->orWhere('title_en', 'like', "%{$word}%")
-                        ->orWhere('address', 'like', "%{$word}%");
+                        ->orWhere('address_ar', 'like', "%{$word}%")
+                        ->orWhere('address_en', 'like', "%{$word}%");
                 }
 
                 $sub->orWhereHas('city', function ($q) use ($query) {
@@ -46,11 +48,11 @@ class SearchService
             // Simple ordering: Matches in address or title come first
             ->orderByRaw("
                 CASE
-                    WHEN address LIKE ? THEN 1
+                    WHEN address_ar LIKE ? OR address_en LIKE ? THEN 1
                     WHEN title_ar LIKE ? OR title_en LIKE ? THEN 2
                     ELSE 3
                 END
-            ", ["%{$query}%", "%{$query}%", "%{$query}%"])
+            ", ["%{$query}%", "%{$query}%", "%{$query}%", "%{$query}%"])
             ->take(20) // Increased limit to find more potential matches
             ->get();
 

@@ -23,7 +23,8 @@ class UnitService
             $query->where(function ($sub) use ($q) {
                 $sub->where('title_ar', 'like', "%{$q}%")
                     ->orWhere('title_en', 'like', "%{$q}%")
-                    ->orWhere('address', 'like', "%{$q}%")
+                    ->orWhere('address_ar', 'like', "%{$q}%")
+                    ->orWhere('address_en', 'like', "%{$q}%")
                     ->orWhere('description_ar', 'like', "%{$q}%")
                     ->orWhere('description_en', 'like', "%{$q}%");
             });
