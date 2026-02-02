@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ReviewResource extends JsonResource
 {
@@ -21,6 +22,7 @@ class ReviewResource extends JsonResource
             'user' => [
                 'id' => $this->user_id,
                 'name' => $this->user->name,
+                'avatar' => $this->user->avatar ? env('APP_URL') . Storage::disk('public')->url($this->user->avatar) : '',
             ],
             // Only include unit if it's loaded (useful for getUserReviews)
             'unit' => $this->whenLoaded('unit', function () {

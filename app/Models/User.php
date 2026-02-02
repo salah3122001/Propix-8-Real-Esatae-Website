@@ -103,4 +103,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    // public function getAvatarUrlAttribute()
+    // {
+    //     return $this->avatar ? env('APP_URL') . \Illuminate\Support\Facades\Storage::disk('public')->url($this->avatar) : '';
+    // }
 }

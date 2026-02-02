@@ -27,7 +27,7 @@ class ReviewService
     // Get all reviews for a specific unit
     public function getUnitReviews(int $unitId)
     {
-        return Review::with('user:id,name')
+        return Review::with('user:id,name,avatar')
             ->where('unit_id', $unitId)
             ->latest()
             ->paginate(3);
