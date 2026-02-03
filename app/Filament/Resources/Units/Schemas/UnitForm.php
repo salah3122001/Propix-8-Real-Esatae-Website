@@ -190,6 +190,13 @@ class UnitForm
                                         ->preload()
                                         ->nullable(),
 
+                                    Select::make('owner_id')
+                                        ->label(__('admin.fields.user'))
+                                        ->relationship('owner', 'name')
+                                        ->searchable()
+                                        ->preload()
+                                        ->required(),
+
                                     Select::make('developer_id')
                                         ->label(__('admin.resources.developer'))
                                         ->relationship('developer', 'name_' . app()->getLocale())
@@ -257,7 +264,7 @@ class UnitForm
                                             'floorplan' => __('admin.fields.allowed_formats', ['formats' => 'jpg, png, jpeg']),
                                             default => __('admin.fields.keep_current'),
                                         })
-                                        ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg', 'video/*', 'application/octet-stream'])
+                                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg', 'video/*', 'application/octet-stream'])
                                         ->disk('public')
                                         ->visibility('public')
                                         ->directory('units/media')
