@@ -14,7 +14,7 @@ class UnitService
             ->with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'amenities'])
             ->withAvg('reviews', 'rating')
             ->withCount('reviews')
-            ->where('status', 'approved') // Only show approved units for public
+            ->whereIn('status', ['approved', 'sold', 'rented']) // Only show approved/sold/rented units for public
             ->where('is_visible', true);
 
         // Keyword Search
@@ -169,7 +169,7 @@ class UnitService
         return Unit::with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'reviews.user', 'amenities'])
             ->withAvg('reviews', 'rating')
             ->withCount('reviews')
-            ->where('status', 'approved')
+            ->whereIn('status', ['approved', 'sold', 'rented'])
             ->where('is_visible', true)
             ->findOrFail($id);
     }
@@ -177,7 +177,7 @@ class UnitService
     public function getLatestUnits($limit = 6)
     {
         return Unit::with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'amenities'])
-            ->where('status', 'approved')
+            ->whereIn('status', ['approved', 'sold', 'rented'])
             ->where('is_visible', true)
             ->latest()
             ->take($limit)
@@ -188,7 +188,7 @@ class UnitService
         $unit = Unit::findOrFail($unitId);
 
         return Unit::with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'amenities'])
-            ->where('status', 'approved')
+            ->whereIn('status', ['approved', 'sold', 'rented'])
             ->where('is_visible', true)
             ->where('id', '!=', $unitId)
             ->where(function ($query) use ($unit) {
@@ -203,7 +203,7 @@ class UnitService
     public function getNearbyUnits($user, $perPage = 10)
     {
         $query = Unit::with(['owner', 'city', 'compound', 'developer', 'type', 'media', 'amenities'])
-            ->where('status', 'approved')
+            ->whereIn('status', ['approved', 'sold', 'rented'])
             ->where('is_visible', true);
 
 

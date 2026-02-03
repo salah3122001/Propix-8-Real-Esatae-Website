@@ -28,6 +28,7 @@ class UnitListResource extends JsonResource
             }),
             "address" => ($lang === "ar" ? $this->address_ar : $this->address_en) ?? "",
             "price" => $this->price ?? 0,
+            "status" => $this->status ?? "",
             "offer_type" => $this->offer_type ?? "",
             "area" => $this->area ?? 0,
             "rooms" => $this->rooms ?? 0,

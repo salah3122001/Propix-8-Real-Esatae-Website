@@ -55,9 +55,9 @@ class UnitForm
                             Select::make('development_status')
                                 ->label(__('admin.fields.development_status'))
                                 ->options([
-                                    'under_construction' => __('admin.fields.development_statuses.under_construction'),
-                                    'ready' => __('admin.fields.development_statuses.ready'),
-                                    'handover_soon' => __('admin.fields.development_statuses.handover_soon'),
+                                    // 'under_construction' => __('admin.fields.development_statuses.under_construction'),
+                                    // 'ready' => __('admin.fields.development_statuses.ready'),
+                                    // 'handover_soon' => __('admin.fields.development_statuses.handover_soon'),
                                     'primary' => __('admin.fields.development_statuses.primary'),
                                     'resale' => __('admin.fields.development_statuses.resale'),
                                 ])
