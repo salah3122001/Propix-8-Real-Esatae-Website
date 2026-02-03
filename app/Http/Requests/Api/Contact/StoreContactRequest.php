@@ -11,6 +11,22 @@ class StoreContactRequest extends FormRequest
         return true;
     }
 
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if ($this->unit_id) {
+                $unit = \App\Models\Unit::find($this->unit_id);
+                if ($unit) {
+                    if ($unit->status === 'sold') {
+                        $validator->errors()->add('unit_id', __('api.unit_already_sold'));
+                    } elseif ($unit->status === 'rented') {
+                        $validator->errors()->add('unit_id', __('api.unit_already_rented'));
+                    }
+                }
+            }
+        });
+    }
+
     public function rules(): array
     {
         return [

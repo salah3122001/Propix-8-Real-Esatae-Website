@@ -23,12 +23,22 @@ class StoreViewingRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $exists = \App\Models\Viewing::where('unit_id', $this->unit_id)
-                ->where('user_id', $this->user()->id)
-                ->exists();
+            $unit = \App\Models\Unit::find($this->unit_id);
 
-            if ($exists) {
-                $validator->errors()->add('unit_id', __('api.viewing.already_requested'));
+            if ($unit) {
+                if ($unit->status === 'sold') {
+                    $validator->errors()->add('unit_id', __('api.unit_already_sold'));
+                } elseif ($unit->status === 'rented') {
+                    $validator->errors()->add('unit_id', __('api.unit_already_rented'));
+                }
+
+                $exists = \App\Models\Viewing::where('unit_id', $this->unit_id)
+                    ->where('user_id', $this->user()->id)
+                    ->exists();
+
+                if ($exists) {
+                    $validator->errors()->add('unit_id', __('api.viewing.already_requested'));
+                }
             }
         });
     }
