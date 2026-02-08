@@ -22,9 +22,6 @@ class ServicesTable
                     ->label(__('admin.fields.title_en'))
                     ->searchable(['title_ar', 'title_en'])
                     ->visible(fn () => app()->getLocale() === 'en'),
-                \Filament\Tables\Columns\ImageColumn::make('icon')
-                    ->label(__('admin.fields.icon'))
-                    ->disk('public'),
                 TextColumn::make('created_at')->label(__('admin.fields.created_at'))->date(),
 
             ])

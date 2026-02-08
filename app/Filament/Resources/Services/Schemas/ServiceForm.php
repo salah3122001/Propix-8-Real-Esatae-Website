@@ -5,9 +5,12 @@ namespace App\Filament\Resources\Services\Schemas;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Illuminate\Support\HtmlString;
+
+use function Laravel\Prompts\textarea;
 
 class ServiceForm
 {
@@ -19,29 +22,18 @@ class ServiceForm
                     ->label(__('admin.fields.title_ar'))
                     ->required(),
                 TextInput::make('title_en')
-                    ->label(__('admin.fields.title_en'))
-                    ->required(),
-                RichEditor::make('content_ar')
+                    ->label(__('admin.fields.title_en')),
+                    // ->required(),
+                Textarea::make('content_ar')
                     ->label(__('admin.fields.content_ar'))
                     ->required()
                     ->fileAttachmentsDirectory('services')
                     ->columnSpanFull(),
-                RichEditor::make('content_en')
+                Textarea::make('content_en')
                     ->label(__('admin.fields.content_en'))
-                    ->required()
+                    // ->required()
                     ->fileAttachmentsDirectory('services')
                     ->columnSpanFull(),
-                FileUpload::make('icon')
-                    ->label(__('admin.fields.icon'))
-                    ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, JPEG')
-                    ->image()
-                    ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
-                    ->disk('public')
-                    ->visibility('public')
-                    ->directory('services-icons')
-                    ->downloadable()
-                    ->openable()
-                    ->nullable(),
             ]);
     }
 }
