@@ -63,7 +63,8 @@ class AmenityResource extends Resource
                     ->directory('amenities')
                     ->downloadable()
                     ->openable()
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->required(),
             ]);
     }
 

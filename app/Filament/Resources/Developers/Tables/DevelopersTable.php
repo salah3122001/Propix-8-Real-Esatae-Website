@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class DevelopersTable
@@ -20,13 +21,12 @@ class DevelopersTable
                 TextColumn::make('name_ar')->label(__('admin.fields.name_ar'))->searchable(),
                 TextColumn::make('name_en')->label(__('admin.fields.name_en'))->searchable(),
                 TextColumn::make('email')->label(__('admin.fields.email'))->searchable(),
-                TextColumn::make('status')->label(__('admin.fields.status'))
-                    ->badge()
-                    ->colors([
-                        'success' => 'active',
-                        'danger' => 'inactive',
-                    ])
-                    ->formatStateUsing(fn($state) => __("admin.fields.statuses.{$state}")),
+                ToggleColumn::make('status')
+                    ->label(__('admin.fields.status'))
+                    ->getStateUsing(fn($record) => $record->status === 'active')
+                    ->updateStateUsing(fn($record, $state) => $record->update(['status' => $state ? 'active' : 'inactive']))
+                    ->onColor('success')
+                    ->offColor('danger'),
             ])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('status_filter')

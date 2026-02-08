@@ -224,7 +224,7 @@ class UnitImporter extends Importer
                 ->label('المطور العقاري (اختياري)')
                 ->guess(['المطور العقاري (اختياري)', 'المطور العقاري', 'المطور', 'developer'])
                 ->relationship(resolveUsing: 'name_ar')
-                ->example('اعمار مصر'),
+                ->example('إعمار مصر'),
 
             ImportColumn::make('latitude')
                 ->label('خط العرض (اختياري)')

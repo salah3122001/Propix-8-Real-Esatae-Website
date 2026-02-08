@@ -52,7 +52,6 @@ class UnitListResource extends JsonResource
             "unit_type" => [
                 "id" => $this->unit_type_id,
                 "name" => ($lang === "ar" ? ($this->type->name_ar ?? "") : ($this->type->name_en ?? "")),
-                "icon" => $this->type->icon ? env('APP_URL') . Storage::disk("public")->url($this->type->icon) : "",
             ],
             "main_image" => $this->whenLoaded("media", function () {
                 $image = $this->media->where("type", "image")->first();

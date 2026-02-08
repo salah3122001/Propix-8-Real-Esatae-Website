@@ -38,12 +38,11 @@ class DeveloperForm
                                             ->label(__('admin.fields.phone'))
                                             ->tel(),
 
-                                        Select::make('status')
+                                        \Filament\Forms\Components\Toggle::make('status')
                                             ->label(__('admin.fields.status'))
-                                            ->options([
-                                                'active' => __('admin.fields.statuses.active'),
-                                                'inactive' => __('admin.fields.statuses.inactive'),
-                                            ])
+                                            ->formatStateUsing(fn($record) => $record?->status === 'active')
+                                            ->dehydrateStateUsing(fn($state) => $state ? 'active' : 'inactive')
+                                            ->default(true)
                                             ->required(),
                                     ]),
 
@@ -57,13 +56,14 @@ class DeveloperForm
                                     ->label(__('admin.fields.logo'))
                                     ->helperText('يرجى استخدام صيغ الصور المدعومة: JPG, PNG, JPEG')
                                     ->image()
-                                    ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
                                     ->disk('public')
                                     ->visibility('public')
                                     ->directory('developers')
                                     ->downloadable()
                                     ->openable()
-                                    ->columnSpanFull(),
+                                    ->columnSpanFull()
+                                    ->required(),
                             ]),
                     ])
                     ->columnSpanFull(),

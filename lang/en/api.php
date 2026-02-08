@@ -12,6 +12,7 @@ return [
     'account_pending' => 'Your account is pending approval. You cannot perform this action yet.',
     'review_submitted' => 'Review submitted successfully',
     'testimonial_submitted' => 'Testimonial submitted successfully, it will be visible after approval.',
+    'developer_not_found' => 'Developer not found',
     'passwords' => [
         'sent' => 'We have emailed your password reset link',
         'throttled' => 'Please wait before retrying',

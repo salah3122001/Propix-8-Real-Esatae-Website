@@ -39,19 +39,6 @@ class CompoundForm
                                     ->searchable()
                                     ->preload()
                                     ->required(),
-                                \Filament\Schemas\Components\Grid::make(2)
-                                    ->schema([
-                                        TextInput::make('latitude')
-                                            ->label(__('admin.fields.latitude'))
-                                            ->numeric()
-                                            ->step('0.00000001')
-                                            ->nullable(),
-                                        TextInput::make('longitude')
-                                            ->label(__('admin.fields.longitude'))
-                                            ->numeric()
-                                            ->step('0.00000001')
-                                            ->nullable(),
-                                    ]),
                             ]),
                     ])
                     ->columnSpanFull(),

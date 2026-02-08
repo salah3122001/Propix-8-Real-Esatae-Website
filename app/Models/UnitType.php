@@ -10,9 +10,10 @@ class UnitType extends Model
     //
     use HasFactory;
 
-    protected $fillable = ['name_ar', 'name_en', 'icon'];
+    protected $fillable = ['name_ar', 'name_en'];
 
-    public function units() {
+    public function units()
+    {
         return $this->hasMany(Unit::class, 'unit_type_id');
     }
 }

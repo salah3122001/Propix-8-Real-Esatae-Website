@@ -14,11 +14,8 @@ class UnitTypesTable
     {
         return $table
             ->columns([
-                \Filament\Tables\Columns\ImageColumn::make('icon')
-                    ->label(__('admin.fields.icon'))
-                    ->disk('public'),
-                TextColumn::make('name_ar')->label(__('admin.fields.name_ar'))->searchable(['name_ar', 'name_en'])->visible(fn () => app()->getLocale() === 'ar'),
-                TextColumn::make('name_en')->label(__('admin.fields.name_en'))->searchable(['name_ar', 'name_en'])->visible(fn () => app()->getLocale() === 'en'),
+                TextColumn::make('name_ar')->label(__('admin.fields.name_ar'))->searchable(['name_ar', 'name_en'])->visible(fn() => app()->getLocale() === 'ar'),
+                TextColumn::make('name_en')->label(__('admin.fields.name_en'))->searchable(['name_ar', 'name_en'])->visible(fn() => app()->getLocale() === 'en'),
             ])
             ->filters([
                 //

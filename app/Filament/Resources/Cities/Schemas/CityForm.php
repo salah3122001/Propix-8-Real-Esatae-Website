@@ -15,8 +15,8 @@ class CityForm
                     ->label(__('admin.fields.name_ar'))
                     ->required(),
                 TextInput::make('name_en')
-                    ->label(__('admin.fields.name_en'))
-                    ->required(),
+                    ->label(__('admin.fields.name_en')),
+                    // ->required(),
             ]);
     }
 }

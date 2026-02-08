@@ -30,7 +30,8 @@ class MaintenanceServiceForm
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
                     ->helperText(__('admin.fields.allowed_formats', ['formats' => 'jpg, png, jpeg']))
                     ->directory('maintenance-services')
-                    ->disk('public'),
+                    ->disk('public')
+                    ->required(),
             ]);
     }
 }

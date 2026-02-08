@@ -20,17 +20,6 @@ class UnitTypeForm
                 TextInput::make('name_en')
                     ->label(__('admin.fields.name_en'))
                     ->required(),
-                FileUpload::make('icon')
-                    ->label(__('admin.fields.icon'))
-                    ->helperText(__('admin.fields.allowed_formats', ['formats' => 'jpg, png, jpeg']))
-                    ->image()
-                    ->acceptedFileTypes(['image/jpeg', 'image/png','image/jpg'])
-                    ->disk('public')
-                    ->visibility('public')
-                    ->directory('unit-types')
-                    ->downloadable()
-                    ->openable()
-                    ->nullable(),
             ]);
     }
 }

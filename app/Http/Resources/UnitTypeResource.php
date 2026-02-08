@@ -14,7 +14,6 @@ class UnitTypeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $lang === 'ar' ? $this->name_ar : $this->name_en,
-            'icon' => $this->icon ? env('APP_URL') . Storage::disk('public')->url($this->icon) : '',
         ];
     }
 }
