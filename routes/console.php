@@ -9,7 +9,7 @@ Artisan::command('inspire', function () {
 
 use Illuminate\Support\Facades\Schedule;
 
-Schedule::command('queue:work --max-time=55')
+Schedule::command('queue:work --stop-when-empty')
     ->everyMinute()
     ->withoutOverlapping();
 
