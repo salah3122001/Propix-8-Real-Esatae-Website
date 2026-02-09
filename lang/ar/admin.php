@@ -260,4 +260,14 @@ return [
     ],
     'view_website' => 'زيارة الموقع',
     'quick_links' => 'روابط سريعة',
+    'frontend_links' => [
+        'home' => 'الرئيسية',
+        'units' => 'قائمة العقارات',
+        'compare_selection' => 'مقارنة العقارات (تحتاج ID)',
+        'compare_result' => 'نتائج المقارنة',
+        'terms' => 'الشروط والأحكام',
+        'about' => 'من نحن',
+        'services' => 'الخدمات',
+        'contact_us' => 'اتصل بنا',
+    ],
 ];

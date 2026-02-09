@@ -10,8 +10,67 @@ class Unit extends Model
     //
     use HasFactory;
 
+    /**
+     * Normalize Arabic string to standard form (remove hamzas, tashkeel, etc.)
+     */
+    public static function normalizeArabic(?string $text): string
+    {
+        if (blank($text)) return '';
+
+        // Standardize whitespace
+        $text = preg_replace('/\s+/u', ' ', trim($text));
+
+        // Remove tashkeel (diacritics)
+        $tashkeel = ['ِ', 'ُ', 'ٓ', 'ٰ', 'ّ', 'ٌ', 'ً', 'ٍ', 'َ', 'ْ'];
+        $text = str_replace($tashkeel, '', $text);
+
+        // Standardize Alef
+        $text = str_replace(['أ', 'إ', 'آ', 'ٱ'], 'ا', $text);
+
+        // Standardize Teh Marbuta
+        $text = str_replace('ة', 'ه', $text);
+
+        // Standardize Ya (Maqsura)
+        $text = str_replace(['ى', 'ئ', 'ؤ'], 'ي', $text);
+
+        return $text;
+    }
+
+    public static function isRent(?string $text): bool
+    {
+        if (blank($text)) return false;
+        $normalized = static::normalizeArabic($text);
+        return in_array(strtolower($normalized), ['rent', 'ايجار']);
+    }
+
+    public static function isSale(?string $text): bool
+    {
+        if (blank($text)) return false;
+        $normalized = static::normalizeArabic($text);
+        return in_array(strtolower($normalized), ['sale', 'بيع']);
+    }
+
     protected static function booted()
     {
+        static::saving(function (Unit $unit) {
+            // Final safety net: ensure development_status is cleared if it's a rental unit
+            if (static::isRent($unit->offer_type)) {
+                $unit->development_status = null;
+            }
+        });
+
+        static::creating(function (Unit $unit) {
+            // Ensure imported units (or any unit created without these values)
+            // get the desired defaults.
+            if (!isset($unit->status) || empty($unit->status)) {
+                $unit->status = 'approved';
+            }
+
+            if (!isset($unit->is_visible)) {
+                $unit->is_visible = false;
+            }
+        });
+
         static::created(function (Unit $unit) {
             if ($unit->status === 'approved') {
                 $unit->notifyBuyersInCity();
@@ -26,16 +85,29 @@ class Unit extends Model
     }
 
     /**
+     * Enforce business rules for development status.
+     * Rent units should not have a development status.
+     */
+    public function enforceDevelopmentStatusRules(): void
+    {
+        if (static::isRent($this->offer_type)) {
+            $this->development_status = null;
+        }
+    }
+
+    /**
      * Notify all verified buyers in the same city about the new unit.
      */
     public function notifyBuyersInCity()
     {
+        /** @var \App\Models\User[] $buyers */
         $buyers = \App\Models\User::where('role', 'buyer')
             ->where('city_id', $this->city_id)
             ->whereNotNull('email_verified_at')
             ->get();
 
         foreach ($buyers as $buyer) {
+            /** @var \App\Models\User $buyer */
             $buyer->notify(new \App\Notifications\NewUnitAddedNotification($this));
         }
     }

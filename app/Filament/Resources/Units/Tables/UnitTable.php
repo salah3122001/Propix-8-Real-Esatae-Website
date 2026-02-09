@@ -182,19 +182,21 @@ class UnitTable
                                 $names = \App\Models\City::pluck('name_ar')->toArray();
                                 $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد مدن مسجلة.";
                             } elseif ($columnName === 'type') {
-                                 $names = \App\Models\UnitType::pluck('name_ar')->toArray();
-                                 $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد أنواع عقارات مسجلة.";
+                                $names = \App\Models\UnitType::pluck('name_ar')->toArray();
+                                $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد أنواع عقارات مسجلة.";
                             } elseif ($columnName === 'developer') {
-                                 $names = \App\Models\Developer::pluck('name_ar')->toArray();
-                                 $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا يوجد مطورين مسجلين.";
+                                $names = \App\Models\Developer::pluck('name_ar')->toArray();
+                                $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا يوجد مطورين مسجلين.";
                             } elseif ($columnName === 'offer_type') {
-                                 $commentText = "القيم المسموحة:\n- بيع\n- إيجار";
+                                $commentText = "القيم المسموحة:\n- بيع\n- إيجار";
                             } elseif ($columnName === 'development_status') {
-                                 $commentText = "القيم المسموحة:\n- أولي\n- إعادة بيع";
+                                $commentText = "القيم المسموحة:\n- أولي\n- إعادة بيع";
                             } elseif ($columnName === 'status') {
-                                 $commentText = "القيم المسموحة:\n- مقبول\n- قيد الانتظار";
+                                $commentText = "القيم المسموحة:\n- مقبول";
+                                /*
                             } elseif ($columnName === 'is_visible') {
                                  $commentText = "القيم المسموحة:\n- 1 (مرئي)\n- 0 (مخفي)";
+                            */
                             }
 
                             if (!empty($commentText)) {

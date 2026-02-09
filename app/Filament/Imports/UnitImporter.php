@@ -7,10 +7,51 @@ use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
 use Illuminate\Support\Number;
+use Illuminate\Support\Facades\Log;
 
 class UnitImporter extends Importer
 {
     protected static ?string $model = Unit::class;
+
+    /**
+     * Normalize Arabic string to standard form (remove hamzas, tashkeel, etc.)
+     */
+    protected static function normalizeArabic(?string $text): string
+    {
+        if (blank($text)) return '';
+
+        // Standardize whitespace
+        $text = preg_replace('/\s+/u', ' ', trim($text));
+
+        // Remove tashkeel (diacritics)
+        $tashkeel = ['ِ', 'ُ', 'ٓ', 'ٰ', 'ّ', 'ٌ', 'ً', 'ٍ', 'َ', 'ْ'];
+        $text = str_replace($tashkeel, '', $text);
+
+        // Standardize Alef
+        $text = str_replace(['أ', 'إ', 'آ', 'ٱ'], 'ا', $text);
+
+        // Standardize Teh Marbuta
+        $text = str_replace('ة', 'ه', $text);
+
+        // Standardize Ya (Maqsura)
+        $text = str_replace(['ى', 'ئ', 'ؤ'], 'ي', $text);
+
+        return $text;
+    }
+
+    protected static function isRent(?string $text): bool
+    {
+        if (blank($text)) return false;
+        $normalized = static::normalizeArabic($text);
+        return in_array(strtolower($normalized), ['rent', 'ايجار']);
+    }
+
+    protected static function isSale(?string $text): bool
+    {
+        if (blank($text)) return false;
+        $normalized = static::normalizeArabic($text);
+        return in_array(strtolower($normalized), ['sale', 'بيع']);
+    }
 
     public static function getColumns(): array
     {
@@ -71,12 +112,9 @@ class UnitImporter extends Importer
                 ->guess(['نوع العرض (sale/rent)', 'نوع العرض', 'offer_type'])
                 ->requiredMapping()
                 ->castStateUsing(function (string $state): string {
-                    $state = trim($state);
-                    return match ($state) {
-                        'بيع', 'sale' => 'sale',
-                        'إيجار', 'ايجار', 'rent' => 'rent',
-                        default => $state,
-                    };
+                    if (static::isRent($state)) return 'rent';
+                    if (static::isSale($state)) return 'sale';
+                    return (strtolower($state) === 'rent' || strtolower($state) === 'sale') ? strtolower($state) : $state;
                 })
                 ->rules(['required', 'in:sale,rent'])
                 ->example('بيع'),
@@ -149,6 +187,7 @@ class UnitImporter extends Importer
                     }
                 }])
                 ->example('180'),
+            /*
             ImportColumn::make('is_visible')
                 ->label('مرئي للجمهور')
                 ->guess(['مرئي للجمهور (1 أو 0)', 'مرئي للجمهور', 'is_visible'])
@@ -163,21 +202,26 @@ class UnitImporter extends Importer
                 })
                 ->boolean()
                 ->rules(['required', 'boolean'])
-                ->example('1'),
+                ->example('0'),
+*/
             ImportColumn::make('development_status')
                 ->label('حالة التطوير')
                 ->guess(['حالة التطوير (primary/resale) (اختياري)', 'حالة التطوير', 'development_status'])
                 ->castStateUsing(function (?string $state): ?string {
                     if (blank($state)) return null;
-                    $state = trim($state);
-                    return match ($state) {
-                        'أولي', 'اولى', 'جديد', 'primary' => 'primary',
-                        'إعادة بيع', 'اعادة بيع', 'resale' => 'resale',
-                        default => $state,
+
+                    $normalized = static::normalizeArabic($state);
+                    $normalized = strtolower($normalized);
+
+                    return match ($normalized) {
+                        'اولي', 'جديد', 'اول', 'primary' => 'primary',
+                        'اعاده بيع', 'resale' => 'resale',
+                        default => (strtolower($state) === 'primary' || strtolower($state) === 'resale') ? strtolower($state) : $state,
                     };
                 })
                 ->rules(['nullable', 'max:255', 'in:primary,resale'])
                 ->example('أولي'),
+            /*
             ImportColumn::make('status')
                 ->label('الحالة')
                 ->guess(['الحالة (approved/pending) (اختياري)', 'الحالة', 'status'])
@@ -186,13 +230,14 @@ class UnitImporter extends Importer
                     $state = trim($state);
                     return match ($state) {
                         'مقبول', 'موافقة', 'تم الموافقة', 'approved' => 'approved',
-                        'قيد الانتظار', 'انتظار', 'pending' => 'pending',
+                        // 'قيد الانتظار', 'انتظار', 'pending' => 'pending',
                         // 'مرفوض', 'rejected' => 'rejected',
                         default => $state,
                     };
                 })
                 ->rules(['nullable', 'in:approved,pending'])
                 ->example('مقبول'),
+*/
 
             // البحث عن المدينة باسمها العربي
             ImportColumn::make('city')
@@ -248,34 +293,89 @@ class UnitImporter extends Importer
                     }
                 }])
                 ->example('31.2357'),
-            ImportColumn::make('images')
-                ->label('(اختياري) الوسائط (الأسماء مفصولة بفاصلة). للفيديو: video:name.mp4')
-                ->guess(['الوسائط (الأسماء مفصولة بفاصلة). للفيديو: video:name.mp4', 'الوسائط', 'الصور', 'images'])
-                ->fillRecordUsing(fn () => null)
-                ->rules(['nullable', 'string'])
-                ->example('img1.jpg,video:tour.mp4,floorplan:p1.jpg'),
         ];
     }
 
     public function resolveRecord(): Unit
     {
-        // Get the first admin user to be the owner of imported units
-        $adminId = \App\Models\User::where('role', 'admin')->first()?->id;
+        Log::info('UnitImporter resolveRecord - Starting', [
+            'row_data' => $this->data,
+        ]);
 
         $unit = new Unit();
 
-        // Set default values for imported units
-        // Default status logic: pending if no images, approved if images exist
-        $defaultStatus = empty($this->data['images']) ? 'pending' : 'approved';
-        $unit->status = $this->data['status'] ?? $defaultStatus;
-        $unit->owner_id = $adminId; // Set admin as owner
+        // Set current user as owner from the import record
+        $unit->owner_id = $this->import->user_id;
+        $unit->is_visible = false; // Default to hidden (User requested)
+
+        Log::info('UnitImporter resolveRecord - Unit created with defaults', [
+            'status' => $unit->status,
+            'is_visible' => $unit->is_visible,
+            'owner_id' => $unit->owner_id,
+        ]);
 
         return $unit;
+    }
+
+    protected function beforeFill(): void
+    {
+        Log::info('UnitImporter beforeFill - Starting', [
+            'data_before' => $this->data,
+        ]);
+
+        // Force set default values in the data array before filling the model
+        $this->data['status'] = 'approved';
+        $this->data['is_visible'] = false;
+
+        // If offer_type is rent, development_status MUST be empty
+        if (static::isRent($this->data['offer_type'] ?? '')) {
+            Log::info('UnitImporter beforeFill - Detected RENT, clearing development_status');
+            $this->data['development_status'] = null;
+        }
+
+        Log::info('UnitImporter beforeFill - After setting defaults', [
+            'status' => $this->data['status'] ?? null,
+            'is_visible' => $this->data['is_visible'] ?? null,
+            'development_status' => $this->data['development_status'] ?? 'NOT_CLEARED',
+        ]);
+    }
+
+    protected function beforeSave(): void
+    {
+        Log::info('UnitImporter beforeSave - Trace', [
+            'offer_type' => $this->record->offer_type,
+            'development_status' => $this->record->development_status,
+            'is_rent' => static::isRent($this->record->offer_type),
+        ]);
+
+        // Force set these values to ensure they are correct
+        $this->record->is_visible = false;
+        $this->record->status = 'approved';
+
+        // FORCE clear development_status if offer_type is rent
+        if (static::isRent($this->record->offer_type)) {
+            Log::info('UnitImporter beforeSave - FORCE clearing development_status for RENT');
+            $this->record->development_status = null;
+            $this->record->setAttribute('development_status', null);
+        }
+
+        Log::info('UnitImporter beforeSave - Final record state', [
+            'status' => $this->record->status,
+            'is_visible' => $this->record->is_visible,
+            'offer_type' => $this->record->offer_type,
+            'development_status' => $this->record->development_status,
+        ]);
     }
 
     protected function afterSave(): void
     {
         $unit = $this->record;
+
+        Log::info('UnitImporter afterSave - Record saved', [
+            'unit_id' => $unit->id,
+            'status' => $unit->status,
+            'is_visible' => $unit->is_visible,
+        ]);
 
         // Handle Images
         if (!empty($this->data['images'])) {
@@ -290,7 +390,7 @@ class UnitImporter extends Importer
 
             if ($imagesSourcePath && is_dir($imagesSourcePath)) {
                 foreach ($mediaItems as $mediaItem) {
-                     // Determine type and filename
+                    // Determine type and filename
                     $type = 'image';
                     $filename = $mediaItem;
 

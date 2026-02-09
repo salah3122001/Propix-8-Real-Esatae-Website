@@ -78,17 +78,17 @@ class MultimediaImportAction extends Action
     {
         parent::setUp();
 
-        $this->label(fn (MultimediaImportAction $action): string => __('filament-actions::import.label', ['label' => $action->getPluralModelLabel()]));
+        $this->label(fn(MultimediaImportAction $action): string => __('filament-actions::import.label', ['label' => $action->getPluralModelLabel()]));
 
-        $this->modalHeading(fn (MultimediaImportAction $action): string => __('filament-actions::import.modal.heading', ['label' => $action->getTitleCasePluralModelLabel()]));
+        $this->modalHeading(fn(MultimediaImportAction $action): string => __('filament-actions::import.modal.heading', ['label' => $action->getTitleCasePluralModelLabel()]));
 
-        $this->modalDescription(fn (MultimediaImportAction $action): ?Htmlable => $action->getModalAction('downloadExample'));
+        $this->modalDescription(fn(MultimediaImportAction $action): ?Htmlable => $action->getModalAction('downloadExample'));
 
         $this->modalSubmitActionLabel(__('filament-actions::import.modal.actions.import.label'));
 
         $this->groupedIcon(FilamentIcon::resolve(ActionsIconAlias::IMPORT_ACTION_GROUPED) ?? Heroicon::ArrowUpTray);
 
-        $this->schema(fn (MultimediaImportAction $action): array => array_merge([
+        $this->schema(fn(MultimediaImportAction $action): array => array_merge([
             FileUpload::make('file')
                 ->label(__('filament-actions::import.modal.form.file.label'))
                 ->placeholder(__('filament-actions::import.modal.form.file.placeholder'))
@@ -130,13 +130,11 @@ class MultimediaImportAction extends Action
                     );
 
                     $set('columnMap', array_reduce($action->getImporter()::getColumns(), function (array $carry, ImportColumn $column) use ($lowercaseCsvColumnKeys, $lowercaseCsvColumnValues) {
-                        $guesses = array_map(fn ($guess) => Str::lower(trim($guess)), $column->getGuesses());
-                        $header = $lowercaseCsvColumnKeys[
-                            Arr::first(
+                        $guesses = array_map(fn($guess) => Str::lower(trim($guess)), $column->getGuesses());
+                        $header = $lowercaseCsvColumnKeys[Arr::first(
                                 $lowercaseCsvColumnValues,
-                                fn ($value) => in_array(trim($value), $guesses)
-                            )
-                        ] ?? null;
+                                fn($value) => in_array(trim($value), $guesses)
+                            )] ?? null;
 
                         $carry[$column->getName()] = $header;
 
@@ -154,7 +152,8 @@ class MultimediaImportAction extends Action
                 ->visibility('private')
                 ->required()
                 ->hiddenLabel(),
-             // ZIP Upload Field
+            // ZIP Upload Field (Commented out)
+            /*
             FileUpload::make('images_zip')
                 ->label('ملف الصور (ZIP)')
                 ->helperText('ارفع ملف مضغوط يحتوي على جميع الصور والفيديوهات.')
@@ -162,6 +161,7 @@ class MultimediaImportAction extends Action
                 ->disk('public')
                 ->directory('imports/zips'),
                 // ->required(), // Made optional
+            */
 
             Fieldset::make(__('filament-actions::import.modal.form.columns.label'))
                 ->columns(1)
@@ -191,12 +191,12 @@ class MultimediaImportAction extends Action
                     $csvColumnOptions = array_combine($csvColumns, $csvColumns);
 
                     return array_map(
-                        fn (ImportColumn $column): Select => $column->getSelect()->options($csvColumnOptions),
+                        fn(ImportColumn $column): Select => $column->getSelect()->options($csvColumnOptions),
                         $action->getImporter()::getColumns(),
                     );
                 })
                 ->statePath('columnMap')
-                ->visible(fn (Get $get): bool => $get('file') instanceof TemporaryUploadedFile),
+                ->visible(fn(Get $get): bool => $get('file') instanceof TemporaryUploadedFile),
         ], $action->getImporter()::getOptionsFormComponents()));
 
         $this->action(function (MultimediaImportAction $action, array $data): void {
@@ -236,6 +236,7 @@ class MultimediaImportAction extends Action
                 return;
             }
 
+            /*
              // --- Validation: Require ZIP if images are present in CSV ---
              $columnMap = $data['columnMap'] ?? [];
              $imagesColumnHeader = $columnMap['images'] ?? null;
@@ -262,7 +263,9 @@ class MultimediaImportAction extends Action
                  }
              }
              // -----------------------------------------------------------
+             */
 
+            /*
             // --- Custom ZIP Extraction Logic ---
             $extractionPath = null;
             $extractionFullPath = null;
@@ -287,6 +290,7 @@ class MultimediaImportAction extends Action
                  }
             }
             // -----------------------------------
+            */
 
             $authGuard = $action->getAuthGuard();
 
@@ -338,7 +342,7 @@ class MultimediaImportAction extends Action
             $optionsArray = array_merge(
                 $action->getOptions(),
                 Arr::except($data, ['file', 'columnMap', 'images_zip']),
-                ['images_source_path' => $extractionFullPath]
+                ['images_source_path' => $extractionFullPath ?? null]
             );
 
             // Force JSON encode
@@ -349,20 +353,21 @@ class MultimediaImportAction extends Action
             $importChunkIterator = new ChunkIterator($csvResults->getRecords(), chunkSize: $action->getChunkSize());
 
             /** @var array<array<array<string, string>>> $importChunks */
-            $importChunks = $importChunkIterator->get(); /** @phpstan-ignore varTag.nativeType */
+            $importChunks = $importChunkIterator->get();
+            /** @phpstan-ignore varTag.nativeType */
             $job = $action->getJob();
 
             // We do not want to send the loaded user relationship to the queue in job payloads,
             // in case it contains attributes that are not serializable, such as binary columns.
             $import->unsetRelation('user');
 
-             // We need to pass valid OPTIONS array to the Job so Importer can use it.
-             // Importer expects array.
-             // The Job constructor expects array.
-             $optionsForJob = $optionsArray;
+            // We need to pass valid OPTIONS array to the Job so Importer can use it.
+            // Importer expects array.
+            // The Job constructor expects array.
+            $optionsForJob = $optionsArray;
 
             $importJobs = collect($importChunks)
-                ->map(fn (array $importChunk): object => app($job, [
+                ->map(fn(array $importChunk): object => app($job, [
                     'import' => $import,
                     'rows' => base64_encode(serialize($importChunk)),
                     'columnMap' => $data['columnMap'],
@@ -382,22 +387,23 @@ class MultimediaImportAction extends Action
                 ->allowFailures()
                 ->when(
                     filled($jobQueue = $importer->getJobQueue()),
-                    fn (PendingBatch $batch) => $batch->onQueue($jobQueue),
+                    fn(PendingBatch $batch) => $batch->onQueue($jobQueue),
                 )
                 ->when(
                     filled($jobConnection = $importer->getJobConnection()),
-                    fn (PendingBatch $batch) => $batch->onConnection($jobConnection),
+                    fn(PendingBatch $batch) => $batch->onConnection($jobConnection),
                 )
                 ->when(
                     filled($jobBatchName = $importer->getJobBatchName()),
-                    fn (PendingBatch $batch) => $batch->name($jobBatchName),
+                    fn(PendingBatch $batch) => $batch->name($jobBatchName),
                 )
                 ->finally(function () use ($authGuard, $columnMap, $import, $jobConnection, $optionsForJob): void {
                     $import->touch('completed_at');
 
                     event(new ImportCompleted($import, $columnMap, $optionsForJob));
 
-                    if (! $import->user instanceof Authenticatable) { /** @phpstan-ignore instanceof.alwaysTrue */
+                    if (! $import->user instanceof Authenticatable) {
+                        /** @phpstan-ignore instanceof.alwaysTrue */
                         return;
                     }
 
@@ -408,19 +414,19 @@ class MultimediaImportAction extends Action
                         ->body($import->importer::getCompletedNotificationBody($import))
                         ->when(
                             ! $failedRowsCount,
-                            fn (Notification $notification) => $notification->success(),
+                            fn(Notification $notification) => $notification->success(),
                         )
                         ->when(
                             $failedRowsCount && ($failedRowsCount < $import->total_rows),
-                            fn (Notification $notification) => $notification->warning(),
+                            fn(Notification $notification) => $notification->warning(),
                         )
                         ->when(
                             $failedRowsCount === $import->total_rows,
-                            fn (Notification $notification) => $notification->danger(),
+                            fn(Notification $notification) => $notification->danger(),
                         )
                         ->when(
                             $failedRowsCount,
-                            fn (Notification $notification) => $notification->actions([
+                            fn(Notification $notification) => $notification->actions([
                                 Action::make('downloadFailedRowsCsv')
                                     ->label(trans_choice('filament-actions::import.notifications.completed.actions.download_failed_rows_csv.label', $failedRowsCount, [
                                         'count' => Number::format($failedRowsCount),
@@ -432,11 +438,11 @@ class MultimediaImportAction extends Action
                         )
                         ->when(
                             ($jobConnection === 'sync') ||
-                            (blank($jobConnection) && (config('queue.default') === 'sync')),
-                            fn (Notification $notification) => $notification
+                                (blank($jobConnection) && (config('queue.default') === 'sync')),
+                            fn(Notification $notification) => $notification
                                 ->persistent()
                                 ->send(),
-                            fn (Notification $notification) => $notification->sendToDatabase($import->user, isEventDispatched: true),
+                            fn(Notification $notification) => $notification->sendToDatabase($import->user, isEventDispatched: true),
                         );
                 })
                 ->dispatch();
@@ -490,19 +496,19 @@ class MultimediaImportAction extends Action
                             $names = \App\Models\City::pluck('name_ar')->toArray();
                             $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد مدن مسجلة.";
                         } elseif ($columnName === 'type') {
-                             $names = \App\Models\UnitType::pluck('name_ar')->toArray();
-                             $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد أنواع عقارات مسجلة.";
+                            $names = \App\Models\UnitType::pluck('name_ar')->toArray();
+                            $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا توجد أنواع عقارات مسجلة.";
                         } elseif ($columnName === 'developer') {
-                             $names = \App\Models\Developer::pluck('name_ar')->toArray();
-                             $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا يوجد مطورين مسجلين.";
+                            $names = \App\Models\Developer::pluck('name_ar')->toArray();
+                            $commentText = !empty($names) ? "القيم المتاحة:\n- " . implode("\n- ", $names) : "لا يوجد مطورين مسجلين.";
                         } elseif ($columnName === 'offer_type') {
-                             $commentText = "القيم المسموحة:\n- بيع\n- إيجار";
+                            $commentText = "القيم المسموحة:\n- بيع\n- إيجار";
                         } elseif ($columnName === 'development_status') {
-                             $commentText = "القيم المسموحة:\n- أولي\n- إعادة بيع";
+                            $commentText = "القيم المسموحة:\n- أولي\n- إعادة بيع";
                         } elseif ($columnName === 'status') {
-                             $commentText = "القيم المسموحة:\n- مقبول\n- قيد الانتظار";
+                            $commentText = "القيم المسموحة:\n- مقبول";
                         } elseif ($columnName === 'is_visible') {
-                             $commentText = "القيم المسموحة:\n- 1 (مرئي)\n- 0 (مخفي)";
+                            $commentText = "القيم المسموحة:\n- 1 (مرئي)\n- 0 (مخفي)";
                         }
 
                         if (!empty($commentText)) {
@@ -532,9 +538,9 @@ class MultimediaImportAction extends Action
                     // Write example row
                     $columnIndex = 1;
                     foreach ($exampleRows as $value) {
-                         $cellCoordinate = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex) . '2';
-                         $sheet->setCellValue($cellCoordinate, $value);
-                         $columnIndex++;
+                        $cellCoordinate = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex) . '2';
+                        $sheet->setCellValue($cellCoordinate, $value);
+                        $columnIndex++;
                     }
 
                     return response()->streamDownload(function () use ($spreadsheet): void {
@@ -552,7 +558,7 @@ class MultimediaImportAction extends Action
 
         $this->successNotificationTitle(__('filament-actions::import.notifications.started.title'));
 
-        $this->model(fn (MultimediaImportAction $action): string => $action->getImporter()::getModel());
+        $this->model(fn(MultimediaImportAction $action): string => $action->getImporter()::getModel());
     }
 
     /**
@@ -566,14 +572,16 @@ class MultimediaImportAction extends Action
             return $this->convertExcelToCsvStream($file);
         }
 
-        $fileDisk = invade($file)->disk; /** @phpstan-ignore-line */
+        $fileDisk = invade($file)->disk;
+        /** @phpstan-ignore-line */
         if (config("filesystems.disks.{$fileDisk}.driver") !== 's3') {
             $resource = $file->readStream();
         } else {
             /** @var AwsS3V3Adapter $s3Adapter */
             $s3Adapter = Storage::disk($fileDisk)->getAdapter();
 
-            invade($s3Adapter)->client->registerStreamWrapper(); /** @phpstan-ignore-line */
+            invade($s3Adapter)->client->registerStreamWrapper();
+            /** @phpstan-ignore-line */
             $fileS3Path = (string) str('s3://' . config("filesystems.disks.{$fileDisk}.bucket") . '/' . $file->getRealPath())->replace('\\', '/');
 
             $resource = fopen($fileS3Path, mode: 'r', context: stream_context_create([
@@ -814,7 +822,7 @@ class MultimediaImportAction extends Action
     {
         $fileRules = [
             'extensions:csv,txt,xlsx,xls',
-            fn (): Closure => function (string $attribute, mixed $value, Closure $fail): void {
+            fn(): Closure => function (string $attribute, mixed $value, Closure $fail): void {
                 $csvStream = $this->getUploadedFileStream($value);
 
                 if (! $csvStream) {
@@ -845,7 +853,7 @@ class MultimediaImportAction extends Action
                     return;
                 }
 
-                $filledDuplicateCsvColumns = array_filter($duplicateCsvColumns, fn ($value): bool => filled($value));
+                $filledDuplicateCsvColumns = array_filter($duplicateCsvColumns, fn($value): bool => filled($value));
 
                 $fail(trans_choice('filament-actions::import.modal.form.file.rules.duplicate_columns', count($filledDuplicateCsvColumns), [
                     'columns' => implode(', ', $filledDuplicateCsvColumns),

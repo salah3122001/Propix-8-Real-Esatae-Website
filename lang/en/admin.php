@@ -259,4 +259,14 @@ return [
     ],
     'view_website' => 'View Website',
     'quick_links' => 'Quick Links',
+    'frontend_links' => [
+        'home' => 'Home',
+        'units' => 'Units Listing',
+        'compare_selection' => 'Compare Selection (Needs ID)',
+        'compare_result' => 'Compare Result',
+        'terms' => 'Terms',
+        'about' => 'About Us',
+        'services' => 'Services',
+        'contact_us' => 'Contact Us',
+    ],
 ];

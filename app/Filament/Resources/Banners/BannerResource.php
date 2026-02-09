@@ -12,6 +12,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -65,9 +66,17 @@ class BannerResource extends Resource
                     ->directory('banners')
                     ->disk('public')
                     ->required(),
-                TextInput::make('url')
+                Select::make('url')
                     ->label(__('admin.fields.link'))
-                    ->maxLength(255),
+                    ->options([
+                        '/units' => __('admin.frontend_links.units'),
+                        '/terms' => __('admin.frontend_links.terms'),
+                        '/about' => __('admin.frontend_links.about'),
+                        '/services' => __('admin.frontend_links.services'),
+                        '/contactUs' => __('admin.frontend_links.contact_us'),
+                    ])
+                    ->searchable()
+                    ->required(),
                 Toggle::make('is_active')
                     ->label(__('admin.fields.active_site'))
                     ->default(true)

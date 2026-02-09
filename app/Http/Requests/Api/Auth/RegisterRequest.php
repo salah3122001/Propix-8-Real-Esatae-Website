@@ -46,6 +46,8 @@ class RegisterRequest extends FormRequest
             'phone.regex' => __('validation.custom.phone.regex'),
             'address.required_if' => __('validation.custom.address.required_if'),
             'password.min' => __('validation.min.string', ['min' => 8]),
+            'password.letters' => __('validation.password.letters'),
+            'password.numbers' => __('validation.password.numbers'),
         ];
     }
 }
