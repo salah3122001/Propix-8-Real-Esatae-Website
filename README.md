@@ -13,7 +13,7 @@
 
 The project is built with maintainability in mind, utilizing advanced design patterns:
 - **SOLID Principles:** Decoupled business logic ensuring each component has a single responsibility.
-- **Service Layer Pattern:** Implementation of dedicated services (e.g., `PaymentService`, `PaymobService`) to handle complex logic outside of controllers.
+- **Service Layer Pattern:** Implementation of dedicated services (e.g., `PaymentService`, `UnitService`, `MaintenanceManagementService`) to handle complex logic outside of controllers.
 - **Repository-like Resource Management:** Optimized API resources (`UnitListResource`, `UnitResource`) for blazing-fast responses.
 - **Dependency Injection:** Extensive use of DI for better testability and loosely coupled components.
 
@@ -31,7 +31,7 @@ A fully integrated, secure payment gateway using **Paymob**:
 ### 💎 Powerful Admin Dashboard (Filament PHP)
 A world-class administrative interface featuring:
 - **Comprehensive Resource Management:** Units, Cities, Compounds, Developers, Amenities, and Banners.
-- **Arabic-First Design:** Complete RTL support with a seamless language switcher.
+- **Arabic-First Design:** Complete RTL support with a seamless language switcher using `filament-language-switch`.
 - **Role-Based Access Control (RBAC):** Granular permissions powered by `spatie/laravel-permission` and `filament-shield`.
 - **Media Hub:** Advanced handling of unit images and video processing using FFmpeg.
 
@@ -40,6 +40,13 @@ A world-class administrative interface featuring:
 - **Advanced Filtering Engine:** Multi-criteria search (City, Compound, Price, Area, Ownership, etc.).
 - **Live Search:** High-relevance global search across the entire ecosystem.
 - **Quality Control:** Approval/Rejection workflow for seller-submitted units.
+
+### 🛠 Extended Ecosystem Features
+- **Maintenance Management:** Full lifecycle for maintenance services and bookings.
+- **Viewing Bookings:** Seamless scheduling for property viewings.
+- **Interaction System:** Integrated user reviews, ratings, and a personalized favorites list.
+- **Content CMS:** Manage FAQs, dynamic banners, testimonials, and custom pages directly from the dashboard.
+- **Communication Hub:** Unified contact and messaging system.
 
 ### 🛠 Technical Highlights
 - **Laravel 12 & PHP 8.2+:** Utilizing latest language features and performance enhancements.
@@ -56,7 +63,7 @@ A world-class administrative interface featuring:
 - **Payment Gateway:** Paymob (Accept)
 - **Database:** MySQL 8.x
 - **Auth:** Laravel Sanctum
-- **Tools:** Spatie Permission, Laravel FFmpeg, DomPDF, PHPSpreadsheet.
+- **Tools:** Spatie Permission, Laravel FFmpeg, DomPDF, OpenSpout, PHPSpreadsheet.
 
 ---
 
